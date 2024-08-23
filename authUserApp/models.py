@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from shortuuid.django_fields import ShortUUIDField
+from django_resized import ResizedImageField
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extrafields):
@@ -23,10 +24,15 @@ class CustomUserManager(BaseUserManager):
         return self.get(email=email)
 
 
+def user_dir_path(instance, filename) -> str:
+    user_dir = 'user_{0}/{1}'.format(instance.user.email, filename)
+    return str(user_dir)
+
 class User(AbstractBaseUser, PermissionsMixin):
     userId = ShortUUIDField(max_length=35, prefix="user", primary_key=True, editable=False)
     email = models.EmailField(unique=True)
-    password = models.CharField(max_length=50)
+    password = models.CharField(max_length=250)
+    avatar = ResizedImageField(quality=60,upload_to=f"Users/{user_dir_path}", blank=True, null=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
@@ -39,3 +45,4 @@ class User(AbstractBaseUser, PermissionsMixin):
         return f"{self.email}"
     class Meta:
         verbose_name_plural = "Users"
+
