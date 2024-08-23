@@ -6,7 +6,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .serializer import UserSerializer
+from .serializer import UserSerializer, LoginSerializer
 # Create your views here.
 
 def get_token_for_user(user):
@@ -29,25 +29,42 @@ def register(request):
 
                 "data": {
                     "userId": user.userId,
-                    "email": user.email
+                    "email": user.email,
                     },
                 "token": {
                     "refresh_token": token["refresh_token"],
-                    "access_token": token["access_token"]
-                }
+                    "access_token": token["access_token"],
+                },
             }
             return Response(output, status.HTTP_201_CREATED)
         return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 def login_user(request):
-    if request.user.is_authenticated:
-        return Response({"login": "Done"}, status.HTTP_200_OK)
-    
-    return Response({"error": "You need to log in"}, status.HTTP_401_UNAUTHORIZED)
+    if request.method == 'POST':
+        serializer = LoginSerializer(data=request.data,context={"request":request})
+        if serializer.is_valid():
+            user = serializer.validated_data['user']
+            token = get_token_for_user(user)
+            user_output = {
+                    "message": "Login Succesfull",
+                    "data": {
+                        "userId": user.userId,
+                        "email": user.email,
+                        },
+                    "tokens":{
+                        "refresh_token":token['refresh_token'],
+                        "access_token": token['access_oken'],
+                        },
+                    }
+            return Response(user_output, status.HTTP_200_OK)
+        return Response(serializer.errors, status.HTTP_401_UNAUTHORIZED)
 
+@api_view(['GET'])
 def logout_user(request):
+    if request.user.is_authenticated:
+        return Response({"success": "Token Worked"}, status.HTTP_400_OK)
     return JsonResponse({
         "logout": "Coming soon"
     })
