@@ -7,13 +7,13 @@ from datetime import timezone,datetime
 utc_time = datetime.now(timezone.utc)
 from django.conf import settings
 
-def get_user_email(instance):
-    user_email = '{0}'.format(instance.user.email)
-    return user_email
+# def get_user_email(instance):
+#     user_email = '{0}'.format(instance.user.email)
+#     return user_email
 
-def user_dir_path(instance, filename) -> str:
-    user_dir = 'user_{0}/{1}'.format(instance.user.email, filename)
-    return str(user_dir)
+# def user_dir_path(instance, filename) -> str:
+#     user_dir = 'user_{0}/{1}'.format(instance.user.email, filename)
+#     return str(user_dir)
 
 
 SHIPPING_STATUS = (
@@ -33,10 +33,10 @@ STAR_RATINGS = (
 User = settings.AUTH_USER_MODEL
 ##### Designers, Tailors, Stylists etc ########
 class Designer(models.Model):
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True)
     brand_name= models.CharField(max_length=150, blank=False)
-    brand_email = models.EmailField(default=get_user_email)
-    brand_logo = ResizedImageField(quality=60, upload_to=f"Designers/{user_dir_path}", blank=True, null=True)
+    brand_email = models.EmailField()
+    brand_logo = ResizedImageField(quality=60, upload_to=f"Designers", blank=True, null=True)
     location = models.CharField(max_length=150, default="here")
     google_map = models.URLField(blank=True)
     website_url = models.URLField(blank=True)
@@ -71,7 +71,7 @@ class Style(models.Model):
     title = models.CharField(max_length=150)
     description = models.TextField(blank=True)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
-    images = ResizedImageField(quality=60, upload_to=f"Styles/{user_dir_path}")
+    images = ResizedImageField(quality=60, upload_to=f"Styles")
     likes = models.PositiveBigIntegerField(default=0)
     num_of_reviews = models.PositiveBigIntegerField(default=0)
 
