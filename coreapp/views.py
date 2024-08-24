@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http.response import JsonResponse
-from .serializer import DesignerSerializer
+from .serializer import DesignerSerializer, Designer
 #rest_framework
 from rest_framework.response import Response
 from rest_framework import status
@@ -20,9 +20,7 @@ def designer(request):
     if request.method == 'POST':
         serializer = DesignerSerializer(data=request.data)
         if serializer.is_valid():
-            d = serializer.save(commit=False)
-            d.user = request.user
-            d = serializer.save(commit=True)
+            d = serializer.save(user=request.user)
 
             user_response = {
                 "message": "Designer successfully created",
@@ -32,3 +30,9 @@ def designer(request):
 
                 }
             }
+            return Response(user_response, status.HTTP_201_CREATED)
+        return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
+    
+    ds = Designer.objects.all()
+    dss = DesignerSerializer(ds, many=True)
+    return JsonResponse(dss.data, safe=False)
