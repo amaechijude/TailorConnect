@@ -12,7 +12,7 @@ class StyleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Style
         # fields = ('title', 'description', 'category', 'images', 'can_request')
-        exclude = ['styleId', 'designer', 'likes', 'num_of_reviews', 'created_at', 'last_updated']
+        exclude = [ ]
 
 
 class ReviewSerializer(serializers.ModelSerializer):

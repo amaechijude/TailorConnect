@@ -31,9 +31,17 @@ STAR_RATINGS = (
 )
 
 User = settings.AUTH_USER_MODEL
+
+class DesignerManager(models.Manager):
+    def get_queryset(self) -> models.QuerySet:
+        return super().get_queryset().filter(is_verified=Designer.Status.YES)
 ##### Designers, Tailors, Stylists etc ########
 class Designer(models.Model):
-    user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True)
+    class Status(models.TextChoices):
+        NO = 'NO', 'No'
+        YES = 'YES', 'YES'
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     brand_name= models.CharField(max_length=150, blank=False)
     brand_email = models.EmailField()
     brand_logo = ResizedImageField(quality=60, upload_to=f"Designers", blank=True, null=True)
@@ -46,7 +54,10 @@ class Designer(models.Model):
     other_online_link = models.URLField(blank=True)
     joined_on = models.DateTimeField(auto_now_add=True)
 
-    is_verified = models.BooleanField(default=False)
+    is_verified = models.CharField(max_length=4, choices=Status, default=Status.NO)
+
+    objects = models.Manager()
+    verified = DesignerManager()
 
     def __str__(self) -> str:
         return f"{self.brand_name}"
@@ -63,25 +74,35 @@ class Category(models.Model):
         verbose_name = "Category"
         verbose_name_plural = "Categories"
 
-
+#### Style Manager
+class StyleManager(models.Manager):
+    def get_queryset(self) -> models.QuerySet:
+        return super().get_queryset().filter(status=Style.Status.PUBLISHED)
 ###### Designs, styles, creations etc. #######
 class Style(models.Model):
+    class Status(models.TextChoices):
+        DRAFT = 'DF', 'Draft'
+        PUBLISHED = 'PB', 'Published'
+
     sytleId = ShortUUIDField(primary_key=True, unique=True, max_length=35, prefix="style", editable=False)
     designer = models.ForeignKey(Designer, on_delete=models.SET_NULL, null=True)
     title = models.CharField(max_length=150)
     description = models.TextField(blank=True)
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, default=None)
     images = ResizedImageField(quality=60, upload_to=f"Styles")
-    likes = models.PositiveBigIntegerField(default=0)
-    num_of_reviews = models.PositiveBigIntegerField(default=0)
+    likes = models.PositiveIntegerField(default=0)
+    num_of_reviews = models.PositiveIntegerField(default=0)
 
     can_request = models.BooleanField(default=False)
     asking_price = models.DecimalField(max_digits=9999999999, decimal_places=2, default=0.99)
     created_at = models.DateTimeField(auto_now_add=True)
-    last_updated = models.DateTimeField(utc_time)
+
+    status = models.CharField(max_length=5, choices=Status, default=Status.DRAFT)
+    objects = models.Manager()
+    published = StyleManager()
 
     def __str__(self) -> str:
-        return f"{self.name} --- created_by  {self.designer.brand_name}"
+        return f"{self.title} --- created_by  {self.designer.brand_name}"
     
     class Meta:
         verbose_name = "Style"
