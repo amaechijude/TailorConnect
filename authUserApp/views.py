@@ -6,6 +6,9 @@ from django.contrib import messages
 
 User = get_user_model
 
+def chat(request):
+    return render(request, 'auth/chat.html')
+
 def register(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)

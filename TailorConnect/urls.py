@@ -27,6 +27,7 @@ urlpatterns = [
     path('login', av.login_user, name='login_user'),
     path('logout', av.logout_user, name='logout_user'),
     path('register', av.register, name='register'),
+    path('chat', av.chat, name='chat'),
 
 ]
 
