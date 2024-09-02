@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     #custom app
     'authUserApp',
     'coreapp',
+    'coreapi',
     #rest framework
     'rest_framework',
     'rest_framework_simplejwt'

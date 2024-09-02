@@ -16,6 +16,23 @@ def index(request):
     }
     return render(request, 'core/index.html', context)
 
+def cartView(request):
+    return render(request, 'core/cart.html')
+
+def checkout(request):
+    return render(request, 'core/checkout.html')
+
+def contact(request):
+    return render(request, 'core/contact.html')
+
+def detail(request):
+    return render(request, 'core/detail.html')
+
+def shop(request):
+    return render(request, 'core/shop.html')
+
+def status(request):
+    return render(request, 'core/status.html')
 
 def designer(request, pk):
     ds = Designer.verified.get(id=pk)

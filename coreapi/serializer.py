@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import *
+from coreapp.models import *
 
 
 class DesignerSerializer(serializers.ModelSerializer):
