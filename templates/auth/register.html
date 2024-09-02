@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="{% static 'auth.css' %}">
+
+</head>
+
+<body>
+
+    <div class="login-container">
+        <h2>Login</h2>
+        <form action="{% url 'register' %}" method="post">
+            {% csrf_token %}
+            {{ form.email }}
+            {{ form.password1 }}
+            {{ form.password2 }}
+            <button type="submit" style="background-color: rgb(10, 176, 10);">Register</button>
+        </form>
+
+        <div class="oauth-buttons">
+            <button class="oauth-google">Google</button>
+            <button class="oauth-facebook">Facebook</button>
+            <button class="oauth-github">GitHub</button>
+        </div>
+        <br>
+        <a class="other-link" href="{% url 'login_user' %}">
+            <button class="other-link">Login</button>
+        </a>
+    </div>
+
+</body>
+
+</html>
