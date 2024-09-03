@@ -1,0 +1,227 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="shortcut icon" href="{% static 'img/cat-4.jpg' %}" type="image/x-icon">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+
+        /* Top Bar Styling */
+        .topbar {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        /* Navbar Styling */
+        .navbar {
+            background-color: #444;
+            overflow: hidden;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+
+        .navbar a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+        }
+
+        .navbar a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+
+        .navbar .cart-icon {
+            float: right;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 14px;
+            color: white;
+        }
+
+        .navbar .cart-icon:hover {
+            color: #ddd;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: 200px;
+            position: fixed;
+            top: 90px;
+            /* Adjust this if the topbar and navbar height changes */
+            left: 0;
+            background-color: #333;
+            padding-top: 20px;
+            height: calc(100% - 90px);
+            /* Adjust this if the topbar and navbar height changes */
+            overflow: auto;
+            color: white;
+        }
+
+        .sidebar a {
+            padding: 15px;
+            text-decoration: none;
+            font-size: 18px;
+            color: white;
+            display: block;
+        }
+
+        .sidebar a:hover {
+            background-color: #575757;
+        }
+
+        /* Main Content Styling */
+        .main-content {
+            margin-left: 220px;
+            /* Same as the width of the sidebar */
+            padding: 20px;
+            background-color: #ffffff;
+            min-height: calc(100vh - 150px);
+            /* Adjust based on the topbar, navbar, and footer heights */
+        }
+
+        .login-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            margin: 50px auto;
+        }
+
+        .login-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .login-container input[type="email"],
+        .login-container input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .login-container button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .login-container button:hover {
+            background-color: #45a049;
+        }
+
+        .oauth-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .oauth-buttons button {
+            width: 32%;
+            padding: 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: 4px;
+        }
+
+        .oauth-google {
+            background-color: #dd4b39;
+            color: white;
+        }
+
+        .oauth-facebook {
+            background-color: #3b5998;
+            color: white;
+        }
+
+        .oauth-github {
+            background-color: #333;
+            color: white;
+        }
+
+        /* Footer Styling */
+        .footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+
+</head>
+
+<body>
+    <!-- Top Bar -->
+    <div class="topbar">
+        {% for m in mesages %}
+        <p>{{ m }}</p>
+        {% endfor %}
+        Welcome to Our Platform! | Call us: +1 234 567 890
+    </div>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="navbar-links">
+            <a href="#home">Home</a>
+            <a href="#about">About</a>
+            <a href="#services">Services</a>
+            <a href="#contact">Contact</a>
+        </div>
+        <div class="cart-icon">
+            🛒 <!-- Unicode character for cart icon -->
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <a href="#dashboard">Dashboard</a>
+        <a href="#profile">Profile</a>
+        <a href="#settings">Settings</a>
+        <a href="#logout">Logout</a>
+    </div>
+
+    <!-- Main Content -->
+    {% block content %}
+
+    {% endblock %}
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>Footer Content Here. © 2024 Platform Name</p>
+    </div>
+
+</body>
+
+</html>
