@@ -23,11 +23,10 @@ from authUserApp import views as av
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('coreapp.urls')),
-    path('api/', include('coreapi.urls')),
     path('login', av.login_user, name='login_user'),
     path('logout', av.logout_user, name='logout_user'),
     path('register', av.register, name='register'),
-    path('chat', av.chat, name='chat'),
+    path('profile', av.profile, name='profile'),
 
 ]
 
