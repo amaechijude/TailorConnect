@@ -12,10 +12,10 @@ def register(request):
             form.save()
             email = form.cleaned_data['email']
             messages.info(request, f"Your account is created with eamil {str(email)} You can now login")
-            return redirect('login')
+            return redirect('login_user')
         return redirect('login_user')
     form = RegisterForm()
-    return render(request, 'auth/register.html', {'form': form})
+    return render(request, 'account/signup.html', {'form': form})
 
 def login_user(request):
     if request.method == 'POST':
@@ -40,7 +40,7 @@ def login_user(request):
         return redirect('index')
     
     form = LoginForm()
-    return render(request, 'auth/login.html', {'form': form})
+    return render(request, 'account/login.html', {'form': form})
 
 
 @login_required(login_url='login_user')
@@ -50,4 +50,4 @@ def logout_user(request):
     return redirect('login_user')
 
 def profile(request):
-    return render(request, 'auth/profile')
+    return render(request, 'account/profile')
