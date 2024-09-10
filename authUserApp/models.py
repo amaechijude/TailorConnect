@@ -26,6 +26,7 @@ class CustomUserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     userId = ShortUUIDField(max_length=35, prefix="user", primary_key=True, editable=False)
+    username = models.CharField(max_length=150, unique=False,null=True, blank=True, default="user")
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=250)
     avatar = ResizedImageField(quality=60,upload_to=f"Users", blank=True, null=True)
