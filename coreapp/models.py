@@ -1,19 +1,61 @@
 from django.db import models
-from shortuuid.django_fields import ShortUUIDField
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django_resized import ResizedImageField
-from django.core.validators import URLValidator
 
-from datetime import timezone,datetime
-utc_time = datetime.now(timezone.utc)
-from django.conf import settings
 
-# def get_user_email(instance):
-#     user_email = '{0}'.format(instance.user.email)
-#     return user_email
 
-# def user_dir_path(instance, filename) -> str:
-#     user_dir = 'user_{0}/{1}'.format(instance.user.email, filename)
-#     return str(user_dir)
+class CustomUserManager(BaseUserManager):
+    def create_user(self, email, password=None, **extrafields):
+        if not email:
+            raise ValueError("Email cant be empty")
+        if not password:
+            raise ValueError("Provide password")
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extrafields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+    
+    def create_superuser(self, email, password=None, **extrafields):
+        extrafields.setdefault("is_staff", True)
+        extrafields.setdefault("is_superuser", True)
+        return self.create_user(email, password, **extrafields)
+    
+    def get_by_natural_key(self, email: str):
+        return self.get(email=email)
+
+
+class User(AbstractBaseUser, PermissionsMixin):
+    userId = models.BigAutoField(primary_key=True)
+    username = models.CharField(max_length=150, unique=False,null=True, blank=True, default="user")
+    email = models.EmailField(unique=True)
+    password = models.CharField(max_length=250)
+    avatar = ResizedImageField(quality=60,upload_to=f"Users", blank=True, null=True)
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+    is_superuser = models.BooleanField(default=False)
+
+    objects = CustomUserManager()
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
+
+    def __str__(self):
+        return f"{self.email}"
+    class Meta:
+        verbose_name_plural = "Users"
+
+
+class ShippingAddress(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=150, blank=False)
+    last_name = models.CharField(max_length=150, blank=False)
+    phone = models.CharField(max_length=13, help_text="+234")
+    address1 = models.CharField(max_length=150, blank=False)
+    address2 =models.CharField(max_length=150, blank=True, help_text="Optional")
+    country = models.CharField(max_length=100)
+    state = models.CharField(max_length=150)
+    lga = models.CharField(max_length=150)
+    zip_code = models.CharField(max_length=10)
 
 
 SHIPPING_STATUS = (
@@ -30,7 +72,6 @@ STAR_RATINGS = (
     (5, "★★★★★"),
 )
 
-User = settings.AUTH_USER_MODEL
 
 class DesignerManager(models.Manager):
     def get_queryset(self) -> models.QuerySet:
@@ -69,10 +110,10 @@ class Designer(models.Model):
 ##### Category like shirt skirt etc#######
 class Category(models.Model):
     name = models.CharField(max_length=150)
-    thumbnail = ResizedImageField(quality=60, upload_to="Categories", blank=True, null=True)
     class Meta:
         verbose_name = "Category"
         verbose_name_plural = "Categories"
+
 
 #### Style Manager
 class StyleManager(models.Manager):
@@ -84,7 +125,6 @@ class Style(models.Model):
         DRAFT = 'DF', 'Draft'
         PUBLISHED = 'PB', 'Published'
 
-    sytleId = ShortUUIDField(primary_key=True, unique=True, max_length=35, prefix="style", editable=False)
     designer = models.ForeignKey(Designer, on_delete=models.SET_NULL, null=True)
     title = models.CharField(max_length=150)
     description = models.TextField(blank=True)
@@ -109,6 +149,7 @@ class Style(models.Model):
         verbose_name_plural = "Styles"
 
 
+###### Reviews for styles#####
 class Review(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     style = models.ForeignKey(Style, on_delete=models.CASCADE)
@@ -121,25 +162,10 @@ class Review(models.Model):
         verbose_name = "Review"
         verbose_name_plural = "Reviews"
 
-
-class ShippingAddress(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    full_name = models.CharField(max_length=150, blank=False)
-    phone = models.CharField(max_length=13, help_text="+234")
-    address1 = models.CharField(max_length=150, blank=False)
-    address2 =models.CharField(max_length=150, blank=True, help_text="Optional")
-    country = models.CharField(max_length=100)
-    state = models.CharField(max_length=150)
-    zip_code = models.CharField(max_length=10)
-
-
-class Order(models.Model):
-    orderId = models.BigAutoField(primary_key=True)
+    
+####### order items ###################
+class OrderItems(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    designer = models.ForeignKey(Designer, on_delete=models.SET_NULL, null=True)
-    total_amount = models.DecimalField(max_digits=9999999999999, decimal_places=2)
-    shippingStatus = models.CharField(max_length=50,choices=SHIPPING_STATUS, default=SHIPPING_STATUS[0])
-    shipping_address = models.ForeignKey(ShippingAddress, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __strr__(self) -> str:

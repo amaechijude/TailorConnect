@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     #custom app
-    'authUserApp',
     'coreapp',
     #rest framework
     'rest_framework',
@@ -51,7 +50,6 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.github', #github
-    'allauth.socialaccount.providers.google', # Google
 
 
 ]
@@ -147,7 +145,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media') #Also change in production
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'authUserApp.User'
+AUTH_USER_MODEL = 'coreapp.User'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [

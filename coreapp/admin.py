@@ -5,6 +5,7 @@ from .models import *
 admin.site.register(Designer)
 admin.site.register(Style)
 admin.site.register(Review)
-admin.site.register(Order)
+admin.site.register(OrderItems)
 admin.site.register(ShippingAddress)
 admin.site.register(Category)
+admin.site.register(User)
