@@ -154,6 +154,7 @@ class Review(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     style = models.ForeignKey(Style, on_delete=models.CASCADE)
     text_content = models.TextField()
+    image = models.ImageField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
@@ -164,8 +165,9 @@ class Review(models.Model):
 
     
 ####### order items ###################
-class OrderItems(models.Model):
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+class Order(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    styles = models.ManyToManyField(Style)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __strr__(self) -> str:
@@ -173,4 +175,16 @@ class OrderItems(models.Model):
     class Meta:
         verbose_name = "Order"
         verbose_name_plural = "Orders"
+
+
+####### order items ###################
+class WishList(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    members = models.ManyToManyField(Style)
+
+    def __strr__(self) -> str:
+        return f"Wishlist of {self.user.email}"
+    class Meta:
+        verbose_name = "Wishlist"
+        verbose_name_plural = "Wishlists"
 

@@ -18,16 +18,12 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from coreapp import views as av
+from coreapp import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('coreapp.urls')),
     path('accounts/', include('allauth.urls')),#allauth 
-    path('accounts/login', av.login_user, name='login_user'),
-    path('logout', av.logout_user, name='logout_user'),
-    path('accounts/signup/', av.register, name='register'),
-    path('profile', av.profile, name='profile'),
 
 ]
 

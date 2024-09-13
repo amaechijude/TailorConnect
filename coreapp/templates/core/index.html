@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
 {% load static %}
-
+<link rel="stylesheet" href="{% static 'css/index.css' %}">
 
 <!-- Sidebar -->
-<!-- <div class="sidebar">
+<div class="sidebar">
     <a href="{% url 'index' %}">Home</a>
     {% if request.user.is_authenticated %}
     <a href="{% url 'profile' %}">Profile</a>
@@ -12,31 +12,40 @@
     {% else %}
     <a href="{% url 'login_user' %}">Login</a>
     <a href="{% url 'register' %}">Register</a>
-    {% endif %} -->
-
+    {% endif %}
+</div>
 <!-- Main Content -->
 
-<div class="container my-4">
-    <div class="row row-cols-1 row-cols-md-3 g-4">
-        <!-- Item 1 -->
-         {% if styles %}
-         {% for style in styles %}
-        <div class="col"  width="400" height="300">
-            <div class="card h-100 d-flex flex-column">
-                <img src="{{ style.images.url }}" class="card-img-top" alt="Item Image">
-                <div class="card-body flex-grow-1">
-                    <h5 class="card-title">{{ style.title }}</h5>
-                    <p class="card-text">{{ style.description }}</p>
+<div class="main-content">
+    <h2 class="mb-4">Featured Products</h2>
+    <div class="container">
+        <div class="row g-3">
+            {% if styles %}
+            {% for style in styles %}
+           <div class="col-md-4 d-flex">
+               <div class="product-item">
+                   <img src="{{ style.images.url }}" alt="Product 1" class="product-image">
+                   <h3 class="product-title">{{ style.title }}</h3>
+                   <p class="product-description">{{ style.description }} </p>
+                   <div class="product-price">${{ style.asking_price }}</div>
+                   <button onclick="WishList('{{style.id}}')" class="btn btn-primary w-100">Add to WishList</button>
+               </div>
+           </div>
+           {% endfor %}
+           {% endif %}
+            <!-- Product Item 1 -->
+            <!-- <div class="col-md-4 d-flex">
+                <div class="product-item">
+                    <img src="https://via.placeholder.com/300x200" alt="Product 1" class="product-image">
+                    <h3 class="product-title">Product 1</h3>
+                    <p class="product-description">This is a short description of Product 1.</p>
+                    <div class="product-price">$49.99</div>
+                    <button class="btn btn-primary w-100">Add to Wishlist</button>
                 </div>
-                <div class="card-footer d-flex justify-content-between align-items-center">
-                    <span class="fw-bold">$ {{ style.asking_price }}</span>
-                    <button class="btn btn-primary" id="style_{{ style.id }}_btn">Add to Cart</button>
-                </div>
-            </div>
+            </div> -->
+
         </div>
-        {% endfor %}
-        {% endif %}
     </div>
 </div>
-
+<script src="{% static 'js/base.js' %}"></script>
 {% endblock %}

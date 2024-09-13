@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 {% block content %}
-{% load socialaccount %}
 {% load static %}
 
 
@@ -35,13 +34,13 @@
             <button type="submit" class="btn btn-primary w-100">Signup</button>
         </form>
         <div class="text-center mt-3">
-            <p>Or Signup with</p>
+            <!-- <p>Or Signup with</p> -->
                 <!-- <button class="btn btn-danger me-2"><i class="bi bi-google"></i> Google</button>
                 <button class="btn btn-primary me-2"><i class="bi bi-facebook"></i> Facebook</button> -->
 
-            <a href="{% provider_login_url "github" %}">
+            <!-- <a href="">
                 <button class="btn btn-dark"><i class="bi bi-github"></i>GitHub</button>
-            </a>
+            </a> -->
             <p> </p>
             <p style="margin-bottom: 0%;">Have an Account?</p>
             <button class="btn btn-secondary  w-100">Login</button>

@@ -4,8 +4,8 @@ from .models import User
 
 class RegisterForm(UserCreationForm):
     email = forms.EmailField(required=True, widget=forms.EmailInput(attrs={"id":"email", "class":"form-control","placeholder":"Enter your Email"}))
-    password1 = forms.CharField(required=True, widget=forms.PasswordInput(attrs={"id":"password1", "class":"form-control", "placeholder": "password"}))
-    password2 = forms.CharField(required=True, widget=forms.PasswordInput(attrs={"id":"password2", "class":"form-control", "placeholder": "Confirm password"}))
+    password1 = forms.CharField(required=True, widget=forms.PasswordInput(attrs={"id":"password1","autocomplete": True, "class":"form-control", "placeholder": "password"}))
+    password2 = forms.CharField(required=True, widget=forms.PasswordInput(attrs={"id":"password2", "autocomplete": True, "class":"form-control", "placeholder": "Confirm password"}))
 
     class Meta:
         model = User
@@ -20,5 +20,5 @@ class RegisterForm(UserCreationForm):
 
 class LoginForm(forms.Form):
     email = forms.EmailField(required=True, widget=forms.EmailInput(attrs={"id":"email", "class":"form-control","placeholder":"Enter your Email"}))
-    password= forms.CharField(required=True, widget=forms.PasswordInput(attrs={"id":"password", "class":"form-control", "placeholder": "Enter password"}))
+    password= forms.CharField(required=True, widget=forms.PasswordInput(attrs={"id":"password", "autocomplete": True, "class":"form-control", "placeholder": "Enter password"}))
 
