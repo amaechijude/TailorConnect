@@ -80,17 +80,17 @@ def AddWishlist(request, pk):
        wish = WishList.objects.get_or_create(user=request.user)
        
        if wish.members.filter(id=style.id).exist():
-           return Response({"exist": "Already in your wishlist"}, status=st.HTTP_204_NO_CONTENT)
+           return JsonResponse({"exist": "Already in your wishlist"}, status=st.HTTP_204_NO_CONTENT)
        
        wish.members.add(style)
        context = {
            "add": "Added to wishlist"
        }
-       return Response(context, status=st.HTTP_200_OK)
+       return JsonResponse(context, status=st.HTTP_200_OK)
     err = {
         "err": "You need to login"
     }
-    return Response(err, status=st.HTTP_401_UNAUTHORIZED)
+    return JsonResponse(err, status=st.HTTP_401_UNAUTHORIZED)
 
 def checkout(request):
     return render(request, 'core/checkout.html')
