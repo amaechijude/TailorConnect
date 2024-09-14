@@ -7,6 +7,7 @@ urlpatterns = [
     path('logout', views.logout_user, name='logout_user'),
     path('signup/', views.register, name='register'),
     path('wishlist/<int:pk>', views.AddWishlist, name="wishlist"),
+    path('rm_wishlist/<int:pk>', views.RemoveWishlist),
     path('profile', views.profile, name='profile'),
     # path('cart', views.cartView, name='cart'),
     path('contact', views.contact, name='contact'),

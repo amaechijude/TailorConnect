@@ -77,20 +77,30 @@ def index(request):
 def AddWishlist(request, pk):
     if request.user.is_authenticated:
        style = Style.objects.get(id=pk)
-       wish = WishList.objects.get_or_create(user=request.user)
-       
-       if wish.members.filter(id=style.id).exist():
-           return JsonResponse({"exist": "Already in your wishlist"}, status=st.HTTP_204_NO_CONTENT)
+       wish, created = WishList.objects.get_or_create(user=request.user)
+
+       if wish.members.filter(id=style.id).exists():
+           return JsonResponse({"exist": "Already in your wishlist"}, status=st.HTTP_200_OK)
        
        wish.members.add(style)
-       context = {
-           "add": "Added to wishlist"
-       }
-       return JsonResponse(context, status=st.HTTP_200_OK)
-    err = {
-        "err": "You need to login"
-    }
-    return JsonResponse(err, status=st.HTTP_401_UNAUTHORIZED)
+       return JsonResponse({"add": "Added to wishlist"}, status=st.HTTP_201_CREATED)
+    
+    return JsonResponse({"err": "You need to login"}, status=st.HTTP_401_UNAUTHORIZED)
+
+#### remove wishlist ########
+def RemoveWishlist(request, pk):
+    if request.user.is_authenticated:
+       style = Style.objects.get(id=pk)
+       wish = WishList.objects.get(user=request.user)
+
+       if wish.members.filter(id=style.id).exists():
+           wish.members.remove(style)
+           return JsonResponse({"removed": "Removed from your wishlist"}, status=st.HTTP_200_OK)
+       
+       return JsonResponse({"not": "item not in your wishlist"}, status=st.HTTP_200_OK)
+    
+    return JsonResponse({"err": "You need to login"}, status=st.HTTP_401_UNAUTHORIZED)
+
 
 def checkout(request):
     return render(request, 'core/checkout.html')

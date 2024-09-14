@@ -18,13 +18,17 @@
 // });
 
 async function WishList(styleid) {
-  const response = await fetch(`/wishlist/${styleid}`);
-  try {
 
-  const data = await response.json();
-  console.log(data);
-    
-  } catch (error) {
-    alert(error);
-  }
+    const response = await fetch(`/wishlist/${styleid}`);
+    const data = await response.json();
+    console.log(data);
+
+}
+
+async function RmWishList(styleid) {
+
+    const response = await fetch(`/rm_wishlist/${styleid}`);
+    const data = await response.json();
+    console.log(data);
+
 }

@@ -29,6 +29,7 @@
                    <p class="product-description">{{ style.description }} </p>
                    <div class="product-price">${{ style.asking_price }}</div>
                    <button onclick="WishList('{{style.id}}')" class="btn btn-primary w-100">Add to WishList</button>
+                   <button onclick="RmWishList('{{style.id}}')" class="btn btn-danger w-100">Remove WishList</button>
                </div>
            </div>
            {% endfor %}
