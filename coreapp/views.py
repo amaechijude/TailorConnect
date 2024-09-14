@@ -120,9 +120,11 @@ def RemoveWishlist(request, pk):
 
 
 ###### designers page ########
-def designer(request):
-    # ds = Designer.verified.get(id=pk)
-    return render(request, 'core/designer.html')
+def designers(request, pk):
+    ds = Designer.verified.get(id=pk)
+    styles = Style.published.filter(designer=ds)
+    context = {"ds":ds, "styles": styles}
+    return render(request, 'core/designer.html', context)
 
 def contact(request):
     return render(request, 'core/contact.html')
