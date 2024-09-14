@@ -19,9 +19,16 @@
 
 async function WishList(styleid) {
 
-    const response = await fetch(`/wishlist/${styleid}`);
+    const response = await fetch(`/add_wishlist/${styleid}`);
     const data = await response.json();
     console.log(data);
+
+    const keys = Object.keys(data)[1];
+    if (keys == "wcount") {
+        const count = data.wcount;
+        const wishcount = document.getElementById("wishcount");
+        wishcount.textContent = count;  
+    }
 
 }
 
@@ -30,5 +37,8 @@ async function RmWishList(styleid) {
     const response = await fetch(`/rm_wishlist/${styleid}`);
     const data = await response.json();
     console.log(data);
+
+    const div = document.getElementById(`${styleid}`);
+    div.remove();
 
 }

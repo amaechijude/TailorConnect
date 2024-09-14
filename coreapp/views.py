@@ -74,52 +74,65 @@ def index(request):
     return render(request, 'core/index.html', context)
 
 
+####wishlist view ######
+@login_required(login_url='login_user')
+def wishlist(request):
+    wishl = WishList.objects.filter(user=request.user).first()
+    styles = wishl.members.all()
+    return render(request, 'core/wishlist.html', {"styles": styles})
+
+####### add wishlist ######
 def AddWishlist(request, pk):
     if request.user.is_authenticated:
+       user=request.user
        style = Style.objects.get(id=pk)
-       wish, created = WishList.objects.get_or_create(user=request.user)
+       wish, created = WishList.objects.get_or_create(user=user)
 
        if wish.members.filter(id=style.id).exists():
            return JsonResponse({"exist": "Already in your wishlist"}, status=st.HTTP_200_OK)
        
        wish.members.add(style)
-       return JsonResponse({"add": "Added to wishlist"}, status=st.HTTP_201_CREATED)
+       user.wishlist_count += 1
+       user.save()
+       return JsonResponse({"add": "Added to wishlist", "wcount": user.wishlist_count}, status=st.HTTP_201_CREATED)
     
     return JsonResponse({"err": "You need to login"}, status=st.HTTP_401_UNAUTHORIZED)
 
 #### remove wishlist ########
 def RemoveWishlist(request, pk):
     if request.user.is_authenticated:
+       user=request.user
        style = Style.objects.get(id=pk)
        wish = WishList.objects.get(user=request.user)
 
        if wish.members.filter(id=style.id).exists():
            wish.members.remove(style)
-           return JsonResponse({"removed": "Removed from your wishlist"}, status=st.HTTP_200_OK)
+           if user.wishlist_count <= 0:
+               pass
+           else:
+               user.wishlist_count -= 1
+               user.save()
+           return JsonResponse({"removed": "Removed from your wishlist", "wcount": request.user.wishlist_count}, status=st.HTTP_200_OK)
        
        return JsonResponse({"not": "item not in your wishlist"}, status=st.HTTP_200_OK)
     
     return JsonResponse({"err": "You need to login"}, status=st.HTTP_401_UNAUTHORIZED)
 
 
-def checkout(request):
-    return render(request, 'core/checkout.html')
+###### designers page ########
+def designer(request):
+    # ds = Designer.verified.get(id=pk)
+    return render(request, 'core/designer.html')
 
 def contact(request):
     return render(request, 'core/contact.html')
 
-def detail(request):
-    return render(request, 'core/detail.html')
 
 def shop(request):
     return render(request, 'core/shop.html')
 
 def status(request):
     return render(request, 'core/status.html')
-
-def designer(request, pk):
-    ds = Designer.verified.get(id=pk)
-    return render(request, 'core/designer.html', {'ds':ds})
 
 
 def category(request, pk):

@@ -8,38 +8,14 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/">Home</a>
+                    <a class="nav-link active" aria-current="page" href="{% url 'designer' %}">Shop</a>
                 </li>
-                <!-- Category dropdown if at homepage -->
-                {% if designers %}
+               
                 <li class="nav-item">
-                    <!-- <a class="nav-link" href="#"></a> -->
-                    <div class="btn-group nav-link" id="category">
-                        <button type="button" class="btn btn-danger btn-sm">Designers</button>
-                        <button type="button" class="btn btn-danger dropdown-toggle dropdown-toggle-split"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            <span class="visually-hidden">Toggle Dropdown</span>
-                        </button>
-                        <ul class="dropdown-menu">
-                            
-                            <li><a class="dropdown-item" href="#">Action</a></li>
-                            <li><a class="dropdown-item" href="#">Another action</a></li>
-                            <li><a class="dropdown-item" href="#">Something else here</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="#">Separated link</a></li>
-                        </ul>
-                    </div>
-                </li>
-                {% endif %}
-                <!-- End Category -->
-
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Services</a>
+                    <a class="nav-link" href="{% url 'detail' %}">Detaul</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Contact</a>
+                    <a class="nav-link" href="/contact">Contact</a>
                 </li>
             </ul>
             <ul class="navbar-nav" style="margin-right: 2%;">
@@ -50,20 +26,20 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'logout_user' %}">Logout</a>
                 </li>
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a class="nav-link" href="#">
                         <i class="bi bi-cart"></i>
                         Wishlist
                     </a>
-                </li>
+                </li> -->
                 <li class="nav-item">
-                    <a class="nav-link" href="">
-                        <div class="wishlist-icon">
-                            <span class="heart"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
-                              </svg></span>
-                            <span class="count">4</span>
-                          </div>
+                    <a class="nav-link" href="{% url 'wishlist' %}">
+                        <span class="heart"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                    d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314" />
+                            </svg></span>
+                        <span id="wishcount" class="count">{{ request.user.wishlist_count }}</span>
                     </a>
                 </li>
                 {% else %}
