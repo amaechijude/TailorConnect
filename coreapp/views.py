@@ -126,9 +126,35 @@ def designers(request, pk):
     context = {"ds":ds, "styles": styles}
     return render(request, 'core/designer.html', context)
 
-def contact(request):
-    return render(request, 'core/contact.html')
+###### profile page ########
+@login_required(login_url='login_user')
+def profile(request):
+    user = request.user
+    return render(request, 'core/profile.html')
 
+###### add shipping address ########
+def shippingAddr(request):
+    if request.user.is_authenticated:
+        body = request.body.decode("utf-8")
+        data = json.loads(data)
+        user = request.user
+        first_name =
+        last_name =
+        phone =
+        address1 = "" or None
+        address2 = " or" None
+        country =
+        state =
+        lga =
+        zip_code =
+        
+        shippAddr = ShippingAddress.objects.create(user=user,
+            first_name=first_name, last_name=last_name
+            phone=phone, address1=address, address2=address2,
+            country=country, state=state, zip_code=zip_code)
+        return JsonResponse({"added": "Added shipping address"})
+
+    return JsonResponse({"err": "You need to login"}, status=st.HTTP_401_UNAUTHORIZED)
 
 def shop(request):
     return render(request, 'core/shop.html')
