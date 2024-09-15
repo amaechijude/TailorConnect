@@ -16,24 +16,42 @@
 </div>
 <!-- Main Content -->
 
-<div class="main-content">
-    <!-- <h2 class="mb-4">Featured Products</h2> -->
+<div class="main-content" style="margin-top: -4%;">
+    <div class="row">
+        <!-- Profile Header -->
+        <div class="col-12 d-flex align-items-center mb-4">
+            <img src="https://via.placeholder.com/100" class="rounded-circle me-3" alt="Profile Image">
+            <div>
+                {% if shipaddr %}
+                <h2>{{ shipaddr.first_name }} {{ shipaddr.last_name }}</h2>
+                {% endif %}
+                <p class="text-muted">{{ user.email }}</p>
+            </div>
+        </div>
+    </div>
+    <hr style="width: 100%; margin-top: -1%;">
+    <h5 class="mb-4" style="margin-top: 0%;">WishList Products</h5>
+    <hr style="width: 100%; margin-top: -1%;">
     <div class="container">
         <div class="row g-3">
             {% if styles %}
             {% for style in styles %}
-           <div class="col-md-4 d-flex" id="{{ style.id }}">
-               <div class="product-item">
-                   <img src="{{ style.images.url }}" alt="Product 1" class="product-image">
-                   <h3 class="product-title">{{ style.title }}</h3>
-                   <p class="product-description">{{ style.description }} </p>
-                   <div class="product-price">${{ style.asking_price }}</div>
-                   <!-- <button onclick="WishList('{{style.id}}')" class="btn btn-primary w-100">Add to WishList</button> -->
-                   <button onclick="RmWishList('{{style.id}}')" class="btn btn-danger w-100">Remove WishList</button>
-               </div>
-           </div>
-           {% endfor %}
-           {% endif %}
+            <div class="col-md-4 d-flex" id="{{ style.id }}">
+                <div class="product-item">
+                    <div class="shop-name-inside">
+                        Made By <br>
+                        <a target="_blank" href="{% url 'designer' style.designer.id %}" style="text-decoration: none;">{{ style.designer.brand_name }}</a>
+                    </div>
+                    <hr style="border: 1px solid #333; width: 100%; margin-top: -0.5%;">
+                    <img src="{{ style.images.url }}" alt="Product 1" class="product-image">
+                    <h3 class="product-title">{{ style.title }}</h3>
+                    <p class="product-description">{{ style.description }} </p>
+                    <div class="product-price">${{ style.asking_price }}</div>
+                    <button onclick="RmWishList('{{style.id}}')" class="btn btn-danger w-100">Remove WishList</button>
+                </div>
+            </div>
+            {% endfor %}
+            {% endif %}
         </div>
     </div>
 </div>

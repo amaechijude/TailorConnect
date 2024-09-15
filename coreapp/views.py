@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .models import *
 from django.core.mail import send_mail
-
+from django.core.paginator import Paginator
 from django.http.response import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
@@ -65,7 +65,10 @@ def profile(request):
 
 
 def index(request):
-    styles = Style.published.all()
+    st = Style.published.all().order_by("-created_at")
+    page_number = request.GET.get('page', 1)
+    st_paginator = Paginator(st, 20)
+    styles = st_paginator.get_page(page_number)
     category = Category.objects.all()
     context = {
         "styles": styles,
@@ -130,34 +133,38 @@ def designers(request, pk):
 @login_required(login_url='login_user')
 def profile(request):
     user = request.user
-    return render(request, 'core/profile.html')
+    shipaddr = ShippingAddress.objects.filter(user=user).first()
+    wishl = WishList.objects.filter(user=request.user).first()
+    styles = wishl.members.all().order_by("-created_at")[:2]
+    context = {"user": user, "shipaddr": shipaddr, "sty": styles}
+    return render(request, 'account/profile.html', context)
 
 ###### add shipping address ########
 def shippingAddr(request):
     if request.user.is_authenticated:
-        body = request.body.decode("utf-8")
-        data = json.loads(data)
+        # body = request.body.decode("utf-8")
+        # data = json.loads(data)
         user = request.user
-        first_name =
-        last_name =
-        phone =
-        address1 = "" or None
-        address2 = " or" None
-        country =
-        state =
-        lga =
-        zip_code =
+        first_name = request.POST.get("first_name")
+        last_name = request.POST.get("last_name")
+        phone = request.POST.get("phone")
+        address = request.POST.get("address")
+        country = request.POST.get("country")
+        state = request.POST.get("state")
+        lga = request.POST.get("lga")
+        zip_code = request.POST.get("zip_code")
         
-        shippAddr = ShippingAddress.objects.create(user=user,
-            first_name=first_name, last_name=last_name
-            phone=phone, address1=address, address2=address2,
-            country=country, state=state, zip_code=zip_code)
+        ShippingAddress.objects.create(
+            user=user,first_name=first_name, last_name=last_name,
+            phone=phone, address=address,
+            country=country, state=state,lga=lga, zip_code=zip_code
+            )
         return JsonResponse({"added": "Added shipping address"})
 
     return JsonResponse({"err": "You need to login"}, status=st.HTTP_401_UNAUTHORIZED)
 
 def shop(request):
-    return render(request, 'core/shop.html')
+    return render(request, 'core/box.html')
 
 def status(request):
     return render(request, 'core/status.html')

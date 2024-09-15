@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+{% block title %}Profile Settings{% endblock %}
+{% block content %}
+{% load static %}
+<style>
+    .sidebar {
+        background-color: #333;
+        color: white;
+        height: 100%;
+        padding-top: 20px;
+        position: fixed;
+        top: 120px;
+        left: 0;
+        width: 200px;
+        overflow-x: hidden;
+        overflow-y: auto;
+        z-index: 1020;
+    }
+
+    .sidebar a {
+        color: white;
+        padding: 15px;
+        text-decoration: none;
+        display: block;
+    }
+
+    .sidebar a:hover {
+        background-color: #575757;
+    }
+
+    .main-content {
+        margin-left: 220px;
+        margin-top: -5%;
+        padding: 20px;
+        min-height: 100vh;
+    }
+</style>
+<!-- Sidebar -->
+<div class="sidebar">
+    <a href="{% url 'index' %}">Home</a>
+    {% if request.user.is_authenticated %}
+    <!-- <a href="{% url 'wishlist' %}">WishList<span id="wishcount" class="count"> {{ request.user.wishlist_count }}</span></a> -->
+    <a href="{% url 'profile' %}">Profile</a>
+    <a href="{% url 'logout_user' %}">Logout</a>
+    {% else %}
+    <a href="{% url 'login_user' %}">Login</a>
+    <a href="{% url 'register' %}">Register</a>
+    {% endif %}
+</div>
+
+<!-- Main Content (Profile Info) -->
+<main class="col-md-9 col-lg-10 main-content">
+    <div class="container my-4">
+        <div class="row">
+            <!-- Profile Header -->
+            <div class="col-12 d-flex align-items-center mb-4">
+                <img src="https://via.placeholder.com/100" class="rounded-circle me-3" alt="Profile Image">
+                <div>
+                    {% if shipaddr %}
+                    <h2>{{ shipaddr.first_name }} {{ shipaddr.last_name }}</h2>
+                    {% endif %}
+                    <p class="text-muted">{{ user.email }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Profile Info Section -->
+            <div class="col-12 col-lg-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        Personal Information
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Email:</strong>{{ user.email }}</p>
+                        {% if shipaddr %}
+                        <p><strong>Full Name: </strong> {{ shipaddr.first_name }} {{ shipaddr.last_name }}</p>
+                        <p><strong>Phone: </strong> {{ shipaddr.phone }}</p>
+                        <p><strong>Address: </strong> {{ shipaddr.address }}</p>
+                        {% endif %}
+                        <button class="btn btn-outline-primary" data-bs-toggle="modal"
+                            data-bs-target="#editInfoModal">Add Shiping Address</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order History Section -->
+            <div class="col-12 col-lg-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        Recent Orders
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Order #1234</strong> - $49.99 - <span class="text-success">Delivered</span></p>
+                        <p><strong>Order #1235</strong> - $19.99 - <span class="text-warning">Processing</span></p>
+                        <p><strong>Order #1236</strong> - $34.99 - <span class="text-danger">Canceled</span></p>
+                        <button class="btn btn-outline-primary">View All Orders</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Wishlist Section -->
+            <div class="col-12 col-lg-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        Recent Wishlist
+                    </div>
+                    <div class="card-body">
+                        {% if sty %}
+                        {% for s in sty %}
+                        <p id="{{ s.id }}">
+                            <strong>{{ s.title }}</strong> - ${{ s.asking_price }}
+                            <span style="display: inline; margin-left: 90%; margin-right: 15%;">
+                                <svg onclick="RmWishList('{{s.id}}')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                                    <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                                  </svg>
+                            </span>
+                        </p>
+                        {% endfor %}
+                        {% endif %}
+                        <a href="{% url 'wishlist' %}">
+                            <button class="btn btn-outline-primary">View Wishlist</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Account Settings Section -->
+            <div class="col-12 col-lg-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        Account Settings
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Password:</strong> ********</p>
+                        <button class="btn btn-outline-primary">Change Password</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+</div>
+</div>
+
+<!-- Modal (Edit Info Form) -->
+<div class="modal fade" id="editInfoModal" tabindex="-1" aria-labelledby="editInfoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editInfoModalLabel">Add shipping Address</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {% include 'forms/shipaddr.html' %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'js/ship.js' %}"></script>
+{% endblock %}

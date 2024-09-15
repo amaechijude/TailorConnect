@@ -1,249 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bootstrap 5 E-commerce Homepage</title>
-    <!-- Bootstrap 5 CSS -->
+    <title>Profile Page with Overlay Form</title>
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            padding-top: 120px;
+        /* Additional styling for the modal's z-index to ensure it overlays correctly */
+        .modal-backdrop {
+            z-index: 1040 !important;
         }
-
-        .topbar {
-            background-color: #333;
-            color: white;
-            padding: 10px;
-            font-size: 14px;
-            text-align: center;
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1030;
-        }
-
-        .navbar-nav .nav-item {
-            margin-left: 15px;
-        }
-
-        .sidebar {
-            background-color: #333;
-            color: white;
-            height: 100%;
-            padding-top: 20px;
-            position: fixed;
-            top: 120px;
-            left: 0;
-            width: 200px;
-            overflow-x: hidden;
-            overflow-y: auto;
-            z-index: 1020;
-        }
-
-        .sidebar a {
-            color: white;
-            padding: 15px;
-            text-decoration: none;
-            display: block;
-        }
-
-        .sidebar a:hover {
-            background-color: #575757;
-        }
-
-        .main-content {
-            margin-left: 220px;
-            padding: 20px;
-            min-height: 100vh;
-        }
-
-        .product-item {
-            background-color: white;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 20px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s;
-        }
-
-        .product-item:hover {
-            transform: scale(1.05);
-        }
-
-        .product-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-        }
-
-        .product-title {
-            font-size: 18px;
-            margin: 10px 0;
-        }
-
-        .product-description {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 10px;
-        }
-
-        .product-price {
-            font-size: 20px;
-            color: #28a745;
-            margin-bottom: 10px;
-        }
-
-        .footer {
-            background-color: #333;
-            color: white;
-            text-align: center;
-            padding: 10px;
-        }
-
-        @media (max-width: 768px) {
-            .sidebar {
-                position: static;
-                width: 100%;
-                height: auto;
-                top: 0;
-            }
-
-            .main-content {
-                margin-left: 0;
-            }
+        .modal {
+            z-index: 1050 !important;
         }
     </style>
 </head>
-
 <body>
 
-    <!-- Top Bar -->
-    <div class="topbar">
-        Welcome to Our Platform! | Call us: +1 234 567 890
-    </div>
-
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">BrandName</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar py-4">
+            <div class="position-sticky">
+                <h5 class="px-3">Profile</h5>
+                <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                        <a class="nav-link active" href="#">Profile Info</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">About</a>
+                        <a class="nav-link" href="#">Order History</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Services</a>
+                        <a class="nav-link" href="#">Account Settings</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Contact</a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <i class="bi bi-cart"></i> <!-- Bootstrap Icons for Cart -->
-                            Cart
-                        </a>
+                        <a class="nav-link" href="#">Wishlist</a>
                     </li>
                 </ul>
             </div>
-        </div>
-    </nav>
+        </nav>
 
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <a href="#">Dashboard</a>
-        <a href="#">Profile</a>
-        <a href="#">Settings</a>
-        <a href="#">Logout</a>
-    </div>
+        <!-- Main Content (Profile Info) -->
+        <main class="col-md-9 col-lg-10">
+            <div class="container my-4">
+                <div class="row">
+                    <!-- Profile Header -->
+                    <div class="col-12 d-flex align-items-center mb-4">
+                        <img src="https://via.placeholder.com/100" class="rounded-circle me-3" alt="Profile Image">
+                        <div>
+                            <h2>John Doe</h2>
+                            <p class="text-muted">johndoe@example.com</p>
+                        </div>
+                    </div>
+                </div>
 
-    <!-- Main Content -->
-    <div class="main-content">
-        <h2 class="mb-4">Featured Products</h2>
-        <div class="container">
-            <div class="row g-3">
-                <!-- Product Item 1 -->
-                <div class="col-md-4 d-flex">
-                    <div class="product-item">
-                        <img src="https://via.placeholder.com/300x200" alt="Product 1" class="product-image">
-                        <h3 class="product-title">Product 1</h3>
-                        <p class="product-description">This is a short description of Product 1.</p>
-                        <div class="product-price">$49.99</div>
-                        <button class="btn btn-primary w-100">Add to Cart</button>
-                    </div>
-                </div>
-                <!-- Product Item 2 -->
-                <div class="col-md-4 d-flex">
-                    <div class="product-item">
-                        <img src="https://via.placeholder.com/300x200" alt="Product 2" class="product-image">
-                        <h3 class="product-title">Product 2</h3>
-                        <p class="product-description">This is a short description of Product 2.</p>
-                        <div class="product-price">$59.99</div>
-                        <button class="btn btn-primary w-100">Add to Cart</button>
-                    </div>
-                </div>
-                <!-- Product Item 3 -->
-                <div class="col-md-4 d-flex">
-                    <div class="product-item">
-                        <img src="https://via.placeholder.com/300x200" alt="Product 3" class="product-image">
-                        <h3 class="product-title">Product 3</h3>
-                        <p class="product-description">This is a short description of Product 3.</p>
-                        <div class="product-price">$39.99</div>
-                        <button class="btn btn-primary w-100">Add to Cart</button>
-                    </div>
-                </div>
-                <!-- Product Item 4 -->
-                <div class="col-md-4 d-flex">
-                    <div class="product-item">
-                        <img src="https://via.placeholder.com/300x200" alt="Product 4" class="product-image">
-                        <h3 class="product-title">Product 4</h3>
-                        <p class="product-description">This is a short description of Product 4.</p>
-                        <div class="product-price">$79.99</div>
-                        <button class="btn btn-primary w-100">Add to Cart</button>
-                    </div>
-                </div>
-                <!-- Product Item 5 -->
-                <div class="col-md-4 d-flex">
-                    <div class="product-item">
-                        <img src="https://via.placeholder.com/300x200" alt="Product 5" class="product-image">
-                        <h3 class="product-title">Product 5</h3>
-                        <p class="product-description">This is a short description of Product 5.</p>
-                        <div class="product-price">$99.99</div>
-                        <button class="btn btn-primary w-100">Add to Cart</button>
-                    </div>
-                </div>
-                <!-- Product Item 6 -->
-                <div class="col-md-4 d-flex">
-                    <div class="product-item">
-                        <img src="https://via.placeholder.com/300x200" alt="Product 6" class="product-image">
-                        <h3 class="product-title">Product 6</h3>
-                        <p class="product-description">This is a short description of Product 6.</p>
-                        <div class="product-price">$29.99</div>
-                        <button class="btn btn-primary w-100">Add to Cart</button>
+                <div class="row">
+                    <!-- Profile Info Section -->
+                    <div class="col-12 col-lg-6 mb-4">
+                        <div class="card">
+                            <div class="card-header">
+                                Personal Information
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Full Name:</strong> John Doe</p>
+                                <p><strong>Email:</strong> johndoe@example.com</p>
+                                <p><strong>Phone:</strong> +1 234 567 890</p>
+                                <p><strong>Address:</strong> 1234 Main St, Anytown, USA</p>
+                                <!-- Trigger Modal Button -->
+                                <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editInfoModal">Edit Info</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
+        </main>
+    </div>
+</div>
+
+<!-- Modal (Edit Info Form) -->
+<div class="modal fade" id="editInfoModal" tabindex="-1" aria-labelledby="editInfoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editInfoModalLabel">Edit Personal Information</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="fullName" class="form-label">Full Name</label>
+                        <input type="text" class="form-control" id="fullName" value="John Doe">
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email address</label>
+                        <input type="email" class="form-control" id="email" value="johndoe@example.com">
+                    </div>
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Phone Number</label>
+                        <input type="tel" class="form-control" id="phone" value="+1 234 567 890">
+                    </div>
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Address</label>
+                        <input type="text" class="form-control" id="address" value="1234 Main St, Anytown, USA">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
         </div>
     </div>
+</div>
 
-    <!-- Footer -->
-    <div class="footer">
-        Footer Content Here. © 2024 Platform Name
-    </div>
+<!-- Bootstrap JS and dependencies -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Bootstrap 5 JS and dependencies -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
+</html>
