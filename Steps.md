@@ -3,11 +3,12 @@ index {
     Paginate the styles **Not yet Complete**
     Wishlist{
         Check if item in Wishlist **Done**
-        if true{
+        if true or not {
             Remove wishlist Button {
                 Set display of add to wishlist to none and swap on click"tRmWishlist(styleid)"
 
         }}
+        **Done**
 
     }
     
@@ -17,11 +18,10 @@ profile {
     view and/or edit profile -- zindex with javascript **Done**
     view add and/or edit shipping address -- zindex with javascript **DONE**
     create designshop {
-        recieveve details via form.
-        send emails to admins
-        construct celery tasks to handle email sendings to admins to verify users;
+        recieveve details via form. **done**
+        send emails to admins **done
     }
-    view wishlist.
+    view wishlist. **Done**
     view Orders
     view payments etc
 }
@@ -30,7 +30,17 @@ every flexbox {
     **like** with async fetch api
 }
 
+next
 Order {
     Order models
+    order from details page and or Wishlist
+    attach measurement to the the order
+    attach shipping address to the order
+    create order mark not paid:
+    Payment wall (paystack, or any free platform) save to payment models
+    Confirm order and mark paid
+    else {
+        handle errors
+    }
     
 }
