@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import User
+from .models import User, Designer
 
 class RegisterForm(UserCreationForm):
     email = forms.EmailField(required=True, widget=forms.EmailInput(attrs={"id":"email", "class":"form-control","placeholder":"Enter your Email"}))
@@ -22,3 +22,20 @@ class LoginForm(forms.Form):
     email = forms.EmailField(required=True, widget=forms.EmailInput(attrs={"id":"email", "class":"form-control","placeholder":"Enter your Email"}))
     password= forms.CharField(required=True, widget=forms.PasswordInput(attrs={"id":"password", "autocomplete": True, "class":"form-control", "placeholder": "Enter password"}))
 
+
+# class CreateDesignForm(forms.ModelForm):
+#     brand_name = 
+#     brand_email = 
+#     brand_logo = 
+#     description = 
+#     location = 
+#     phone_no = 
+#     google_map_url =
+#     website_url = 
+#     instagram_link = 
+#     twiiter_link =
+#     facebook_link = 
+
+#     class Meta:
+#         model = Designer
+#         exclude = ('user', 'is_verified', 'joined_on')

@@ -23,11 +23,20 @@ async function WishList(styleid) {
     const data = await response.json();
     console.log(data);
 
-    const keys = Object.keys(data)[1];
-    if (keys == "wcount") {
+    const keys = Object.keys(data);
+    if (keys[1] == "wcount") {
         const count = data.wcount;
         const wishcount = document.getElementById("wishcount");
         wishcount.textContent = count;  
+    }
+    if (keys[0] == "add") {
+        const button = document.getElementById(`btn_${styleid}`);
+        button.textContent = "Added to wishlist ";
+        button.className = "btn btn-danger w-100";
+        alert(data.add);
+    }
+    if (keys[0] == "err") {
+        alert(data.err);
     }
 
 }

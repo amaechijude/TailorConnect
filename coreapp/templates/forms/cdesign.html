@@ -1,0 +1,56 @@
+<form id="dform" action="{% url 'createDesign' %}" method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="brand_name" class="form-label">Brand Name</label>
+        <input type="text" class="form-control" id="brand_name" name="brand_name" required minlength="3">
+    </div>
+    <div class="mb-3">
+        <label for="brand_email" class="form-label">Brand Email</label>
+        <input type="text" class="form-control" id="brand_email" name="brand_email" required>
+    </div>
+    <div class="mb-3">
+        <label for="brand_phone" class="form-label"> Brand Phone Number</label>
+        <input type="text" onkeypress="return validateDigit(event)" oninput="validateDigit(event)" class="form-control"
+            id="brand_phone" name="brand_phone" required minlength="11" maxlength="14">
+    </div>
+    <div class="mb-3">
+        <label for="brand_logo" class="form-label">Brand Logo</label>
+        <!-- <input type="image" class="form-control" id="brand_logo" name="brand_logo" required> -->
+        <input type="file" class="form-control" id="brand_logo">
+    </div>
+    <div class="mb-3">
+        <label for="brand_bio" class="form-label">Bio</label>
+        <input type="text" class="form-control" id="brand_bio" name="brand_bio" required>
+    </div>
+    <div class="mb-3">
+        <label for="brand_bio1" class="form-label">Bio 1</label>
+        <textarea class="form-control" id="brand_bio1" rows="3"></textarea>
+   </div>
+    <div class="mb-3">
+        <label for="brand_location" class="form-label">Brand Location</label>
+        <input type="text" class="form-control" id="brand_location" name="brand_location" required>
+    </div>
+    <div class="mb-3">
+        <label for="google_map_url" class="form-label">Google Map Url</label>
+        <input type="text" class="form-control" id="google_map_url" name="google_map_url" minlength="3">
+    </div>
+    <div class="mb-3">
+        <label for="website_url" class="form-label">Website</label>
+        <input type="text" class="form-control" id="website_url" name="website_url" minlength="3">
+    </div>
+    <div class="mb-3">
+        <label for="instagram_link" class="form-label">Instagram Link</label>
+        <input type="text" class="form-control" id="instagram_link" name="instagram_link" minlength="3">
+    </div>
+    <div class="mb-3">
+        <label for="twitter_link" class="form-label">Twitter(X) Link</label>
+        <input type="text" class="form-control" id="twitter_link" name="twitter_link" minlength="3">
+    </div>
+    <div class="mb-3">
+        <label for="facebook_link" class="form-label">Facebook Link</label>
+        <input type="text" class="form-control" id="facebook_link" name="facebook_link" minlength="3">
+    </div> 
+    <div class="mb-3">
+        <button type="submit" class="btn btn-primary w-100">Create</button>
+    </div>
+</form>

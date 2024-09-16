@@ -1,6 +1,6 @@
 profile {
-    view and/or edit profile -- zindex with javascript
-    view add and/or edit shipping address -- zindex with javascript
+    view and/or edit profile -- zindex with javascript **Done**
+    view add and/or edit shipping address -- zindex with javascript **DONE**
     create designshop
     view wishlist.
     view Orders

@@ -59,11 +59,7 @@ def logout_user(request):
     messages.error(request, f"You are logged out")
     return redirect('login_user')
 
-def profile(request):
-    return render(request, 'account/profile')
-
-
-
+####### index ##########
 def index(request):
     st = Style.published.all().order_by("-created_at")
     page_number = request.GET.get('page', 1)
@@ -135,7 +131,10 @@ def profile(request):
     user = request.user
     shipaddr = ShippingAddress.objects.filter(user=user).first()
     wishl = WishList.objects.filter(user=request.user).first()
-    styles = wishl.members.all().order_by("-created_at")[:2]
+    if wishl is None:
+        styles = None
+    else:
+        styles = wishl.members.all().order_by("-created_at")[:2]
     context = {"user": user, "shipaddr": shipaddr, "sty": styles}
     return render(request, 'account/profile.html', context)
 
@@ -154,17 +153,56 @@ def shippingAddr(request):
         lga = request.POST.get("lga")
         zip_code = request.POST.get("zip_code")
         
-        ShippingAddress.objects.create(
+        new_ship = ShippingAddress.objects.create(
             user=user,first_name=first_name, last_name=last_name,
             phone=phone, address=address,
             country=country, state=state,lga=lga, zip_code=zip_code
             )
+        new_ship.save()
         return JsonResponse({"added": "Added shipping address"})
 
     return JsonResponse({"err": "You need to login"}, status=st.HTTP_401_UNAUTHORIZED)
 
-def shop(request):
-    return render(request, 'core/box.html')
+##### design shop customisation etc #####
+@login_required(login_url='login_user')
+def dshop(request):
+    user = request.user
+    ds = Designer.verified.get(user=user)
+    styles = Style.published.filter(designer=ds)
+    context = {"ds":ds, "styles": styles}
+    return render(request, 'core/box.html', context)
+
+##### Create Design ####
+@login_required(login_url='login_user')
+def createDesign(request):
+    if request.method == 'POST':
+        if request.user.designer:
+            messages.info(request, "You can only create one design shop")
+            return redirect('profile')
+        
+        brand_name = request.POST.get("brand_name")
+        brand_email = request.POST.get("brand_email")
+        brand_logo = request.FILES.get("brand_logo")
+        brand_bio = request.POST.get("brand_bio")
+        brand_location = request.POST.get("brand_location")
+        brand_phone = request.POST.get("brand_phone")
+        google_map_url =request.POST.get("google_map_url")
+        website_url = request.POST.get("website_url")
+        instagram_link = request.POST.get("instagram_link")
+        twitter_link =request.POST.get("twitter_link")
+        facebook_link = request.POST.get("facebook_link")
+
+        new_designer = Designer.objects.create(
+            user=request.user, brand_name=brand_name, brand_email=brand_email,
+            brand_logo=brand_logo, brand_bio=brand_bio, brand_location=brand_location,
+            brand_pnone=brand_phone, google_map_url=google_map_url, website_url=website_url,
+            instagram_link=instagram_link, twitter_link=twitter_link, facebook_link=facebook_link
+        )
+        new_designer.save()
+        ##### send a mail to admins informig them to verify new designers #######
+        messages.info(request, "Created")
+        return redirect('profile')
+
 
 def status(request):
     return render(request, 'core/status.html')
