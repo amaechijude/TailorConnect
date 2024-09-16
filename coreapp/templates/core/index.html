@@ -2,9 +2,7 @@
 {% block content %}
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/index.css' %}">
-<style>
-    
-</style>
+
 <!-- Sidebar -->
 <div class="sidebar">
     <a href="{% url 'index' %}">Home</a>
@@ -36,8 +34,17 @@
                     <h3 class="product-title">{{ style.title }}</h3>
                     <p class="product-description">{{ style.description }} </p>
                     <div class="product-price">${{ style.asking_price }}</div>
-                    <button id="btn_{{ style.id }}" onclick="WishList('{{style.id}}')" class="btn btn-primary w-100">Add to WishList</button>
-                    <!-- <button onclick="RmWishList('{{style.id}}')" class="btn btn-danger w-100">Remove WishList</button> -->
+                    {% if sty and style in sty%}
+                    <button id="btn_{{ style.id }}_irm" onclick="irmWishlist('{{ style.id }}')" class="btn btn-danger w-100">Remove from wishlistt</button>
+                    <button id="btn_{{ style.id }}_iadd" onclick="iaddWishList('{{style.id}}')" class="btn btn-primary w-100" style="display: none;">
+                        Add to WishList
+                    </button>
+                    {% else %}
+                    <button id="btn_{{ style.id }}_nadd" onclick="naddWishlist('{{ style.id }}')" class="btn btn-primary w-100">Add to WishList</button>
+                    <button id="btn_{{ style.id }}_nrm" onclick="nrmWishlist('{{ style.id }}')" class="btn btn-danger w-100" style="display: none;">
+                        Remove from WishList
+                    </button>
+                    {% endif %}
                 </div>
             </div>
             {% endfor %}

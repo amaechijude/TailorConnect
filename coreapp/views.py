@@ -65,10 +65,11 @@ def index(request):
     page_number = request.GET.get('page', 1)
     st_paginator = Paginator(st, 20)
     styles = st_paginator.get_page(page_number)
-    category = Category.objects.all()
+    wishl = WishList.objects.filter(user=request.user).first() or None
+    sty = wishl.members.all() or None
     context = {
         "styles": styles,
-        'category': category,
+        "sty": sty
     }
     return render(request, 'core/index.html', context)
 
@@ -77,7 +78,7 @@ def index(request):
 @login_required(login_url='login_user')
 def wishlist(request):
     wishl = WishList.objects.filter(user=request.user).first()
-    styles = wishl.members.all()
+    styles = wishl.members.all() or None
     return render(request, 'core/wishlist.html', {"styles": styles})
 
 ####### add wishlist ######
@@ -131,10 +132,7 @@ def profile(request):
     user = request.user
     shipaddr = ShippingAddress.objects.filter(user=user).first()
     wishl = WishList.objects.filter(user=request.user).first()
-    if wishl is None:
-        styles = None
-    else:
-        styles = wishl.members.all().order_by("-created_at")[:2]
+    styles = wishl.members.all().order_by("-created_at")[:2] or None
     context = {"user": user, "shipaddr": shipaddr, "sty": styles}
     return render(request, 'account/profile.html', context)
 
