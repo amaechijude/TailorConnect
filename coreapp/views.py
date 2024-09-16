@@ -65,8 +65,11 @@ def index(request):
     page_number = request.GET.get('page', 1)
     st_paginator = Paginator(st, 20)
     styles = st_paginator.get_page(page_number)
-    wishl = WishList.objects.filter(user=request.user).first() or None
-    sty = wishl.members.all() or None
+    if request.user.is_authenticated:
+        wishl = WishList.objects.filter(user=request.user).first() or None
+        sty = wishl.members.all() or None
+    else:
+        sty = None
     context = {
         "styles": styles,
         "sty": sty
@@ -200,6 +203,22 @@ def createDesign(request):
         ##### send a mail to admins informig them to verify new designers #######
         messages.info(request, "Created")
         return redirect('profile')
+
+
+#### Product details ######
+def product(request, pk):
+    style = Style.objects.get(id=pk)
+    reviews = Review.objects.filter(style=style)
+    return render(request, 'core/product.html', {"style": style, "reviews": reviews})
+
+
+###### add review #############
+def addReview(request):
+    if request.method == 'POST':
+        if request.user.is_authenticated:
+            return JsonResponse({"rev": "Review added"}, status=st.HTTP_201_CREATED)
+        return JsonResponse({"err": "You need to login"}, status=st.HTTP_401_UNAUTHORIZED)
+    return JsonResponse({"bad": "Bad Request"}, status=st.HTTP_400_BAD_REQUEST)
 
 
 def status(request):

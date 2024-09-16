@@ -1,0 +1,19 @@
+{% load static %}
+
+<form id="rform" action="{% url 'addReview' %}" method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="text_conten" class="form-label">Add Review</label>
+        <textarea class="form-control" id="text_conten" name="text_conten" rows="3" required></textarea>
+   </div>
+    <div class="mb-3">
+        <label for="image" class="form-label">Add Image</label>
+        <!-- <input type="image" class="form-control" id="brand_logo" name="brand_logo" required> -->
+        <input type="file" class="form-control" id="image">
+    </div> 
+    <div class="mb-3">
+        <button type="submit" class="btn btn-primary w-100">Create</button>
+    </div>
+</form>
+
+<script src="{% static 'js/rform.js' %}"></script>

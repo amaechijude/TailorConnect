@@ -31,12 +31,18 @@ every flexbox {
 }
 
 next
+product details {
+    view
+    url
+    template
+}
 Order {
     Order models
     order from details page and or Wishlist
     attach measurement to the the order
     attach shipping address to the order
     create order mark not paid:
+    Use javascript to warn on trying to close tab closing
     Payment wall (paystack, or any free platform) save to payment models
     Confirm order and mark paid
     else {
