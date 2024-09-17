@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import *
 from django.core.mail import send_mail
@@ -67,7 +67,7 @@ def index(request):
     styles = st_paginator.get_page(page_number)
     if request.user.is_authenticated:
         wishl = WishList.objects.filter(user=request.user).first() or None
-        sty = wishl.members.all() or None
+        sty = wishl.members.all() if wishl else None
     else:
         sty = None
     context = {
@@ -81,7 +81,7 @@ def index(request):
 @login_required(login_url='login_user')
 def wishlist(request):
     wishl = WishList.objects.filter(user=request.user).first()
-    styles = wishl.members.all() or None
+    styles = wishl.members.all() if wishl else None
     return render(request, 'core/wishlist.html', {"styles": styles})
 
 ####### add wishlist ######
@@ -124,7 +124,7 @@ def RemoveWishlist(request, pk):
 
 ###### designers page ########
 def designers(request, pk):
-    ds = Designer.verified.get(id=pk)
+    ds = Designer.objects.get(id=pk)
     styles = Style.published.filter(designer=ds)
     if request.user.is_authenticated:
         wishl = WishList.objects.filter(user=request.user).first() or None
@@ -140,7 +140,7 @@ def profile(request):
     user = request.user
     shipaddr = ShippingAddress.objects.filter(user=user).first()
     wishl = WishList.objects.filter(user=request.user).first()
-    styles = wishl.members.all().order_by("-created_at")[:2] or None
+    styles = wishl.members.all().order_by("-created_at")[:2] if wishl else None
     context = {"user": user, "shipaddr": shipaddr, "sty": styles}
     return render(request, 'account/profile.html', context)
 
@@ -172,42 +172,46 @@ def shippingAddr(request):
 ##### design shop customisation etc #####
 @login_required(login_url='login_user')
 def dshop(request):
-    user = request.user
-    ds = Designer.verified.get(user=user)
-    styles = Style.published.filter(designer=ds)
-    context = {"ds":ds, "styles": styles}
-    return render(request, 'core/box.html', context)
+    try:
+        ds = Designer.objects.get(user=request.user)
+        styles = Style.published.filter(designer=ds)
+        context = {"ds":ds, "styles": styles}
+        return render(request, 'core/box.html', context)
+    except:
+        messages.info(request, "You don't have a vendor profile")
+        return redirect('profile')
 
 ##### Create Design ####
 @login_required(login_url='login_user')
 def createDesign(request):
     if request.method == 'POST':
-        if request.user.designer:
+        try:
+            ds = Designer.objects.get(user=request.user)
             messages.info(request, "You can only create one design shop")
             return redirect('profile')
-        
-        brand_name = request.POST.get("brand_name")
-        brand_email = request.POST.get("brand_email")
-        brand_logo = request.FILES.get("brand_logo")
-        brand_bio = request.POST.get("brand_bio")
-        brand_location = request.POST.get("brand_location")
-        brand_phone = request.POST.get("brand_phone")
-        google_map_url =request.POST.get("google_map_url")
-        website_url = request.POST.get("website_url")
-        instagram_link = request.POST.get("instagram_link")
-        twitter_link =request.POST.get("twitter_link")
-        facebook_link = request.POST.get("facebook_link")
+        except:
+            brand_name = request.POST.get("brand_name")
+            brand_email = request.POST.get("brand_email")
+            brand_logo = request.FILES.get("brand_logo")
+            brand_bio = request.POST.get("brand_bio")
+            brand_location = request.POST.get("brand_location")
+            brand_phone = request.POST.get("brand_phone")
+            google_map_url =request.POST.get("google_map_url")
+            website_url = request.POST.get("website_url")
+            instagram_link = request.POST.get("instagram_link")
+            twitter_link =request.POST.get("twitter_link")
+            facebook_link = request.POST.get("facebook_link")
 
-        new_designer = Designer.objects.create(
-            user=request.user, brand_name=brand_name, brand_email=brand_email,
-            brand_logo=brand_logo, brand_bio=brand_bio, brand_location=brand_location,
-            brand_pnone=brand_phone, google_map_url=google_map_url, website_url=website_url,
-            instagram_link=instagram_link, twitter_link=twitter_link, facebook_link=facebook_link
-        )
-        new_designer.save()
-        ##### send a mail to admins informig them to verify new designers #######
-        messages.info(request, "Created")
-        return redirect('profile')
+            new_designer = Designer.objects.create(
+                user=request.user, brand_name=brand_name, brand_email=brand_email,
+                brand_logo=brand_logo, brand_bio=brand_bio, brand_location=brand_location,
+                brand_phone=brand_phone, google_map_url=google_map_url, website_url=website_url,
+                instagram_link=instagram_link, twitter_link=twitter_link, facebook_link=facebook_link
+            )
+            new_designer.save()
+            ##### send a mail to admins informig them to verify new designers #######
+            messages.info(request, "Created")
+            return redirect('profile')
 
 
 #### Product details ######

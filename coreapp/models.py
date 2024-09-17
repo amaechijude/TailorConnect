@@ -88,7 +88,7 @@ class Designer(models.Model):
     brand_logo = ResizedImageField(quality=60, upload_to=f"Designers", blank=True, null=True)
     brand_bio = models.TextField(default="description")
     brand_location = models.CharField(max_length=150, default="here")
-    brand_phone = models.CharField(max_length=14, blank=True, unique=True)
+    brand_phone = models.CharField(max_length=14)
     google_map_url = models.URLField(blank=True)
     website_url = models.URLField(blank=True)
     instagram_link = models.URLField(blank=True)
@@ -146,6 +146,7 @@ class Style(models.Model):
         return f"{self.title} --- created_by  {self.designer.brand_name}"
     
     class Meta:
+
         verbose_name = "Style"
         verbose_name_plural = "Styles"
 
@@ -164,28 +165,52 @@ class Review(models.Model):
         verbose_name = "Review"
         verbose_name_plural = "Reviews"
 
-    
-####### order items ###################
-class Order(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    styles = models.ManyToManyField(Style)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __strr__(self) -> str:
-        return f"Ordered by {self.user.email} -- on {self.created_at}"
-    class Meta:
-        verbose_name = "Order"
-        verbose_name_plural = "Orders"
-
 
 ####### order items ###################
 class WishList(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     members = models.ManyToManyField(Style)
 
-    def __strr__(self) -> str:
+    def __str__(self) -> str:
         return f"Wishlist of {self.user.email}"
     class Meta:
         verbose_name = "Wishlist"
         verbose_name_plural = "Wishlists"
+
+    
+####### order items ###################
+class Order(models.Model):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    style = models.ForeignKey(Style, on_delete=models.SET_NULL, null=True)
+    shippingaddress = models.ForeignKey(ShippingAddress, on_delete=models.SET_NULL, null=True)
+    amount = models.DecimalField(max_digits=9999999999, decimal_places=2)
+    measurement = ResizedImageField(quality=60, upload_to=f"Measurement")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) -> str:
+        return f"Ordered by {self.user.email} -- on {self.created_at}"
+    class Meta:
+        verbose_name = "Order"
+        verbose_name_plural = "Orders"
+
+
+###### Payment #######
+class Payment(models.Model):
+    class Status(models.TextChoices):
+        Processing = 'Processing', 'Processing'
+        Successful = 'Successful', 'Successful'
+        Cancelled = 'Cancelled', 'Cancelled'
+
+    order = models.OneToOneField(Order, on_delete=models.SET_NULL, null=True)
+    amount = models.DecimalField(max_digits=99999999999, decimal_places=2)
+    status = models.CharField(max_length=12, choices=Status, default=Status.Processing)
+    date_initiated = models.DateTimeField(auto_now_add=True)
+    date_updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Payment for order {self.order}"
+    
+    class Meta:
+        verbose_name = "Payment"
+        verbose_name_plural = "Payments"
 

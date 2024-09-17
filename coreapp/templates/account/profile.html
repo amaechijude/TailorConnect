@@ -2,40 +2,7 @@
 {% block title %}Profile Settings{% endblock %}
 {% block content %}
 {% load static %}
-<style>
-    .sidebar {
-        background-color: #333;
-        color: white;
-        height: 100%;
-        padding-top: 20px;
-        position: fixed;
-        top: 120px;
-        left: 0;
-        width: 200px;
-        overflow-x: hidden;
-        overflow-y: auto;
-        z-index: 1020;
-    }
 
-    .sidebar a {
-        color: white;
-        padding: 15px;
-        text-decoration: none;
-        display: block;
-    }
-
-    .sidebar a:hover {
-        background-color: #575757;
-    }
-
-    .main-content {
-        margin-left: 220px;
-        margin-top: -5%;
-        padding: 20px;
-        min-height: 100vh;
-    }
-</style>
-<!-- Sidebar -->
 <div class="sidebar">
     <a href="{% url 'index' %}">Home</a>
     {% if request.user.is_authenticated %}
