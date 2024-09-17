@@ -9,6 +9,7 @@
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/ds.css' %}">
+    <link rel="shortcut icon" href="{% static 'img/icon.png' %}" type="image/x-icon">
 
 </head>
 
@@ -64,17 +65,30 @@
                     </div>
                     <hr style="border: 1px solid #333; width: 100%; margin-top: -0.5%;">
                     <img src="{{ style.images.url }}" alt="Product 1" class="product-image">
-                    <h3 class="product-title">{{ style.title }}</h3>
-                    <p class="product-description">{{ style.description }} </p>
+                    <a href="{% url 'product' style.id %}"><h3 class="product-title">{{ style.title }}</h3>
+                    <p class="product-description">{{ style.description }} </p></a>
                     <div class="product-price">${{ style.asking_price }}</div>
-                    <button onclick="WishList('{{style.id}}')" class="btn btn-primary w-100">Add to WishList</button>
-                    <!-- <button onclick="RmWishList('{{style.id}}')" class="btn btn-danger w-100">Remove WishList</button> -->
+                    {% if sty and style in sty%}
+                        <button id="btn_{{ style.id }}_irm" onclick="irmWishlist('{{ style.id }}')"
+                            class="btn btn-danger w-100">Remove from wishlistt</button>
+                        <button id="btn_{{ style.id }}_iadd" onclick="iaddWishList('{{style.id}}')"
+                            class="btn btn-primary w-100" style="display: none;">
+                            Add to WishList
+                        </button>
+                        {% else %}
+                        <button id="btn_{{ style.id }}_nadd" onclick="naddWishlist('{{ style.id }}')"
+                            class="btn btn-primary w-100">Add to WishList</button>
+                        <button id="btn_{{ style.id }}_nrm" onclick="nrmWishlist('{{ style.id }}')"
+                            class="btn btn-danger w-100" style="display: none;">
+                            Remove from WishList
+                        </button>
+                        {% endif %}
                 </div>
             </div>
             {% endfor %}
             {% endif %}
             <!-- Product Item 2 -->
-            <div class="col-md-4 d-flex">
+            <!-- <div class="col-md-4 d-flex">
                 <div class="product-item">
                     <img src="https://via.placeholder.com/300x200" alt="Product 2" class="product-image">
                     <h3 class="product-title">Product 2</h3>
@@ -82,47 +96,8 @@
                     <div class="product-price">$59.99</div>
                     <button class="btn btn-primary w-100">Add to Cart</button>
                 </div>
-            </div>
-            <!-- Product Item 3 -->
-            <div class="col-md-4 d-flex">
-                <div class="product-item">
-                    <img src="https://via.placeholder.com/300x200" alt="Product 3" class="product-image">
-                    <h3 class="product-title">Product 3</h3>
-                    <p class="product-description">This is a short description of Product 3.</p>
-                    <div class="product-price">$39.99</div>
-                    <button class="btn btn-primary w-100">Add to Cart</button>
-                </div>
-            </div>
-            <!-- Product Item 4 -->
-            <div class="col-md-4 d-flex">
-                <div class="product-item">
-                    <img src="https://via.placeholder.com/300x200" alt="Product 4" class="product-image">
-                    <h3 class="product-title">Product 4</h3>
-                    <p class="product-description">This is a short description of Product 4.</p>
-                    <div class="product-price">$79.99</div>
-                    <button class="btn btn-primary w-100">Add to Cart</button>
-                </div>
-            </div>
-            <!-- Product Item 5 -->
-            <div class="col-md-4 d-flex">
-                <div class="product-item">
-                    <img src="https://via.placeholder.com/300x200" alt="Product 5" class="product-image">
-                    <h3 class="product-title">Product 5</h3>
-                    <p class="product-description">This is a short description of Product 5.</p>
-                    <div class="product-price">$99.99</div>
-                    <button class="btn btn-primary w-100">Add to Cart</button>
-                </div>
-            </div>
-            <!-- Product Item 6 -->
-            <div class="col-md-4 d-flex">
-                <div class="product-item">
-                    <img src="https://via.placeholder.com/300x200" alt="Product 6" class="product-image">
-                    <h3 class="product-title">Product 6</h3>
-                    <p class="product-description">This is a short description of Product 6.</p>
-                    <div class="product-price">$29.99</div>
-                    <button class="btn btn-primary w-100">Add to Cart</button>
-                </div>
-            </div>
+            </div> -->
+           
         </div>
     </div>
 
@@ -133,6 +108,7 @@
 
     <!-- Bootstrap 5 JS and dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/base.js' %}"></script>
 </body>
 
 </html>

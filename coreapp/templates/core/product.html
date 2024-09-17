@@ -40,7 +40,7 @@
                         <div class="col-md-6 product-detailss">
                             <h2 class="product-title">{{ style.title }} </h2>
                             <p class="text-muted">Brand: <a href="{% url 'designer' style.designer.id %}">
-                                {{ style.designer.brand_name}}</a>
+                                    {{ style.designer.brand_name}}</a>
                             </p>
                             <h3 class="fw-bold">${{ style.asking_price }} </h3>
                             <p class="text-success"> Can Request: {{ style.can_request }} </p>
@@ -48,7 +48,21 @@
 
                             <!-- Add to Cart and Buy Now Buttons -->
                             <div class="d-flex flex-column flex-md-row gap-2">
-                                <button class="btn btn-primary">Add to Cart</button>
+                                {% if sty and style in sty%}
+                                <button id="btn_{{ style.id }}_irm" onclick="irmWishlist('{{ style.id }}')"
+                                    class="btn btn-danger">Remove from wishlistt</button>
+                                <button id="btn_{{ style.id }}_iadd" onclick="iaddWishList('{{style.id}}')"
+                                    class="btn btn-primary" style="display: none;">
+                                    Add to WishList
+                                </button>
+                                {% else %}
+                                <button id="btn_{{ style.id }}_nadd" onclick="naddWishlist('{{ style.id }}')"
+                                    class="btn btn-primary">Add to WishList</button>
+                                <button id="btn_{{ style.id }}_nrm" onclick="nrmWishlist('{{ style.id }}')"
+                                    class="btn btn-danger" style="display: none;">
+                                    Remove from WishList
+                                </button>
+                                {% endif %}
                                 <button class="btn btn-success">Buy Now</button>
                             </div>
 
@@ -83,7 +97,7 @@
                                 </p>
                             </div> <br>
                             <button class="btn btn-outline-primary" data-bs-toggle="modal"
-                            data-bs-target="#reviewform">Add Review</button>
+                                data-bs-target="#reviewform">Add Review</button>
                         </div>
                     </div>
                 </div>

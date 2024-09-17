@@ -126,7 +126,12 @@ def RemoveWishlist(request, pk):
 def designers(request, pk):
     ds = Designer.verified.get(id=pk)
     styles = Style.published.filter(designer=ds)
-    context = {"ds":ds, "styles": styles}
+    if request.user.is_authenticated:
+        wishl = WishList.objects.filter(user=request.user).first() or None
+        sty = wishl.members.all() or None
+    else:
+        sty = None
+    context = {"ds":ds, "styles": styles, "sty":sty}
     return render(request, 'core/designer.html', context)
 
 ###### profile page ########
@@ -209,7 +214,12 @@ def createDesign(request):
 def product(request, pk):
     style = Style.objects.get(id=pk)
     reviews = Review.objects.filter(style=style)
-    return render(request, 'core/product.html', {"style": style, "reviews": reviews})
+    if request.user.is_authenticated:
+        wishl = WishList.objects.filter(user=request.user).first() or None
+        sty = wishl.members.all() or None
+    else:
+        sty = None
+    return render(request, 'core/product.html', {"style": style, "reviews": reviews, "sty":sty})
 
 
 ###### add review #############

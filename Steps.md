@@ -32,10 +32,11 @@ every flexbox {
 
 next
 product details {
-    view
-    url
-    template
+    view ***Done***
+    url ***Done***
+    template **Done**
 }
+
 Order {
     Order models
     order from details page and or Wishlist
