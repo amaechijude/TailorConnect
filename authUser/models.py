@@ -1,8 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django_resized import ResizedImageField
-
-
+from designs.models import Style
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extrafields):
@@ -57,3 +56,14 @@ class ShippingAddress(models.Model):
     lga = models.CharField(max_length=150)
     zip_code = models.CharField(max_length=10)
 
+
+####### order items ###################
+class WishList(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    members = models.ManyToManyField(Style)
+
+    def __str__(self) -> str:
+        return f"Wishlist of {self.user.email}"
+    class Meta:
+        verbose_name = "Wishlist"
+        verbose_name_plural = "Wishlists"

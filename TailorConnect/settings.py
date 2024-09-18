@@ -41,15 +41,20 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     #custom app
+    'authUser',
     'coreapp',
+    'creators',
+    'designs',
+
     #rest framework
     'rest_framework',
     'rest_framework_simplejwt',
+
     #akkauth
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.github', #github
+    # 'allauth',
+    # 'allauth.account',
+    # 'allauth.socialaccount',
+    # 'allauth.socialaccount.providers.github', #github
 
 
 ]
@@ -64,7 +69,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     # Add the account middleware:
-    "allauth.account.middleware.AccountMiddleware"
+    # "allauth.account.middleware.AccountMiddleware"
 ]
 
 ROOT_URLCONF = 'TailorConnect.urls'
@@ -162,59 +167,58 @@ SIMPLE_JWT = {
     'USER_ID_FIELD': 'userId'
 }
 
-AUTHENTICATION_BACKENDS = [
+# AUTHENTICATION_BACKENDS = [
 
-    # Needed to login by username in Django admin, regardless of `allauth`
-    'django.contrib.auth.backends.ModelBackend',
+#     # Needed to login by username in Django admin, regardless of `allauth`
+#     'django.contrib.auth.backends.ModelBackend',
 
-    # `allauth` specific authentication methods, such as login by email
-    'allauth.account.auth_backends.AuthenticationBackend',
+#     # `allauth` specific authentication methods, such as login by email
+#     'allauth.account.auth_backends.AuthenticationBackend',
 
-]
-"""
+# ]
+
 # Email config
-EMAIL_BACKEND = config('EMAIL_BACKEND')
-EMAIL_HOST = config('EMAIL_HOST')
-EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
-EMAIL_PORT = config('EMAIL_PORT', cast=int)
-EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
-"""
+# EMAIL_BACKEND = config('EMAIL_BACKEND')
+# EMAIL_HOST = config('EMAIL_HOST')
+# EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+# EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+# EMAIL_PORT = config('EMAIL_PORT', cast=int)
+# EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
+
 # Allauth config
-SITE_ID = 1
-ACCOUNT_LOGOUT_ON_GET = True
-LOGIN_REDIRECT_URL = "/"
+# SITE_ID = 1
+# ACCOUNT_LOGOUT_ON_GET = True
+# LOGIN_REDIRECT_URL = "/"
 # LOGIN_TEMPLATE = "/login"
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = True
-ACCOUNT_LOGOUT_REDIRECT_URL = "/login"
+# ACCOUNT_AUTHENTICATION_METHOD = 'email'
+# ACCOUNT_EMAIL_REQUIRED = True
+# ACCOUNT_USERNAME_REQUIRED = False
+# ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = True
+# ACCOUNT_LOGOUT_REDIRECT_URL = "/login"
 
-ACCOUNT_FORMS = {
-    'signup': 'authUserApp.forms.RegisterForm',
-}
+# ACCOUNT_FORMS = {
+#     'signup': 'authUserApp.forms.RegisterForm',
+# }
 
+# SOCIALACCOUNT_PROVIDERS = {
+#     'google': {
+#         'FETCH_USERINFO' : True,
+#         'SCOPE': [
+#             'profile',
+#             'email',
+#         ],
+#         'AUTH_PARAMS': {
+#             'access_type': 'online',
+#         },
+#         'OAUTH_PKCE_ENABLED': True,
+#     },
 
+#     'github': {
+#         'SCOPE': [
+#             'user',
+#             'repo',
+#             'read:org',
+#         ],
+#     }
+# }
 
-SOCIALACCOUNT_PROVIDERS = {
-    # 'google': {
-    #     'FETCH_USERINFO' : True,
-    #     'SCOPE': [
-    #         'profile',
-    #         'email',
-    #     ],
-    #     'AUTH_PARAMS': {
-    #         'access_type': 'online',
-    #     },
-    #     'OAUTH_PKCE_ENABLED': True,
-    # },
-
-    'github': {
-        'SCOPE': [
-            'user',
-            # 'repo',
-            # 'read:org',
-        ],
-    }
-}

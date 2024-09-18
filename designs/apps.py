@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class StylesConfig(AppConfig):
+class DesignsConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'styles'
+    name = 'designs'

@@ -2,49 +2,8 @@ from django.db import models
 from django_resized import ResizedImageField
 from django.conf import settings
 from authUser.models import ShippingAddress
-from creators.models import Style, Designer, Category
+from designs.models import Style
 User = settings.AUTH_USER_MODEL
-
-SHIPPING_STATUS = (
-    ("packaging", "packaging"),
-    ("Shipped", "Shipped"),
-    ("Delivered", "Delivered")
-)
-
-STAR_RATINGS = (
-    (1, "☆☆☆☆★"),
-    (2, "☆☆☆★★"),
-    (3, "☆☆★★★"),
-    (4, "☆★★★★"),
-    (5, "★★★★★"),
-)
-
-
-###### Reviews for styles#####
-class Review(models.Model):
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    style = models.ForeignKey(Style, on_delete=models.CASCADE)
-    text_content = models.TextField()
-    image = models.ImageField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self) -> str:
-        return f"Review on {self.style.title}"
-    class Meta:
-        verbose_name = "Review"
-        verbose_name_plural = "Reviews"
-
-
-####### order items ###################
-class WishList(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    members = models.ManyToManyField(Style)
-
-    def __str__(self) -> str:
-        return f"Wishlist of {self.user.email}"
-    class Meta:
-        verbose_name = "Wishlist"
-        verbose_name_plural = "Wishlists"
 
     
 ####### order items ###################

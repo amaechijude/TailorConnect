@@ -1,18 +1,24 @@
 from django.urls import path
 from . import views
+from authUser import views as aviews
+from creators import views as cviews
+from designs import views as dviews
 
 urlpatterns = [
-    path('', views.index, name='index'),
-    path('wishlist', views.wishlist, name="wishlist"),
-    path('add_wishlist/<int:pk>', views.AddWishlist, name="add_wishlist"),
-    path('rm_wishlist/<int:pk>', views.RemoveWishlist, name='rm_wishlist'),
-    path('shop', views.dshop, name='dshop'),
-    path('designer/<int:pk>', views.designers, name='designer'),
-    path('createDesign', views.createDesign, name='createDesign'),
-    path('profile', views.profile, name='profile'),
-    path('profile/address', views.shippingAddr, name='shipping'),
-    path('product/<int:pk>', views.product, name='product'),
-    path('addReview', views.addReview, name='addReview'),
+    path('', views.index, name='index'), # index
+    path('login', aviews.login_user, name='login_user'), #login
+    path('logout', aviews.logout_user, name='logout_user'), #logo out
+    path('signup', aviews.register, name='register'), # Register /Signup
+    path('profile', aviews.profile, name='profile'),
+    path('profile/address', aviews.shippingAddr, name='shipping'),
+    path('wishlist', aviews.wishlist, name="wishlist"), #Wishlist
+    path('add_wishlist/<int:pk>', aviews.AddWishlist, name="add_wishlist"), # Add wishlist
+    path('rm_wishlist/<int:pk>', aviews.RemoveWishlist, name='rm_wishlist'), # Remove Wishlist
+    path('shop', views.dshop, name='dshop'), 
+    path('designer/<int:pk>', cviews.designers, name='designer'),
+    path('createDesign', cviews.createDesign, name='createDesign'),
+    path('product/<int:pk>', dviews.product, name='product'),
+    path('addReview', dviews.addReview, name='addReview'),
     # path('cart', views.cartView, name='cart'),
     # path('contact', views.contact, name='contact'),
 ]

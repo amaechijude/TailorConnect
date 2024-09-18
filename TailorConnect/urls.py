@@ -18,13 +18,12 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from coreapp import views
 
+# All custom app urls path are resolved in the coreapp.urls urlpatterns
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('coreapp.urls')),
-    path('account', include('authUser.urls')),
-    path('accounts/', include('allauth.urls')),#allauth 
+    # path('accounts/', include('allauth.urls')),#allauth 
 
 ]
 
