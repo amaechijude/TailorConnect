@@ -17,6 +17,7 @@ urlpatterns = [
     path('shop', cviews.dshop, name='dshop'), 
     path('designer/<int:pk>', cviews.designers, name='designer'),
     path('createDesigner', cviews.createDesigner, name='createDesigner'),
+    path('updateBrand', cviews.updateBrand, name='updateBrand'),
     path('product/<int:pk>', dviews.product, name='product'),
     path('addReview', dviews.addReview, name='addReview'),
     path('createStyle', dviews.createStyle, name="createStyle"),

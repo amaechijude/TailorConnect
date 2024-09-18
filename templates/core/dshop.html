@@ -56,21 +56,11 @@
                         <p class="product-description">{{ style.description }} </p>
                     </a>
                     <div class="product-price">${{ style.asking_price }}</div>
-                    {% if sty and style in sty%}
-                    <button id="btn_{{ style.id }}_irm" onclick="irmWishlist('{{ style.id }}')"
-                        class="btn btn-danger w-100">Remove from wishlistt</button>
-                    <button id="btn_{{ style.id }}_iadd" onclick="iaddWishList('{{style.id}}')"
-                        class="btn btn-primary w-100" style="display: none;">
-                        Add to WishList
-                    </button>
-                    {% else %}
-                    <button id="btn_{{ style.id }}_nadd" onclick="naddWishlist('{{ style.id }}')"
-                        class="btn btn-primary w-100">Add to WishList</button>
-                    <button id="btn_{{ style.id }}_nrm" onclick="nrmWishlist('{{ style.id }}')"
-                        class="btn btn-danger w-100" style="display: none;">
-                        Remove from WishList
-                    </button>
-                    {% endif %}
+                    <div style="display: inline;">
+                        <button class="btn btn-outline-primary w-100">Edit product</button> <br><br>
+                    <button class="btn btn-outline-danger w-100">Delete</button>
+                    </div>
+                    
                 </div>
             </div>
             {% endfor %}
@@ -106,7 +96,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                {% include 'forms/shopform.html' %}
+                {% include 'forms/editbrand.html' %}
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>

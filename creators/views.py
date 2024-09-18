@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from authUser.forms import CreateDesignerForm
 from designs.forms import StyleForm
+from .forms import UpdateBrandForm
 # Create your views here.
 ###### designers page ########
 def designers(request, pk):
@@ -26,7 +27,8 @@ def dshop(request):
         ds = Designer.objects.get(user=request.user)
         styles = Style.objects.filter(designer=ds)
         form = StyleForm()
-        context = {"ds":ds, "styles": styles, "form": form}
+        uform = UpdateBrandForm(instance=ds)
+        context = {"ds":ds, "styles": styles, "form": form, "uform": uform}
         return render(request, 'core/dshop.html', context)
     except:
         messages.info(request, "You don't have a vendor profile")
@@ -55,4 +57,22 @@ def createDesigner(request):
             messages.info(request, f"{form.errors}")
             return redirect('profile')
 
-
+####### Update Brand Details #############
+@login_required(login_url="login_user")
+def updateBrand(request):
+    if request.method == 'POST':
+        try:
+            ds = Designer.objects.get(user=request.user)
+            uform = UpdateBrandForm(request.POST, request.FILES or None, instance=ds)
+            if uform.is_valid():
+                update = uform.save(commit=False)
+                update.user = request.user
+                update.brand_phone = request.POST.get("brand_phone")
+                update.save()
+                messages.info(request, "Brand details Updated")
+                return redirect('dshop')
+            messages.error(request, f"{uform.errors}")
+            return redirect('dshop')
+        except:
+            messages.error(request, "You don't have a vendor profile")
+            return redirect('index')

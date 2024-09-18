@@ -35,15 +35,15 @@ product details {
     url ***Done***
     template **Done**
 
-***Next {
-    Edit style/products from shops and or everywhere
-    edit brand details from shops page
+Next {
+    edit brand details from shops page **Done**
+    Edit style/products from shops
     add reviews forms urls etc 
     
     Paginate styles{
         everywhere: index, wishlist, shop, etc
     }
-}***
+}
 
 
 
