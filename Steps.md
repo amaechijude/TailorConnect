@@ -30,12 +30,23 @@ every flexbox {
     **like** with async fetch api
 }
 
-next
 product details {
     view ***Done***
     url ***Done***
     template **Done**
-}
+
+***Next {
+    Edit style/products from shops and or everywhere
+    edit brand details from shops page
+    add reviews forms urls etc 
+    
+    Paginate styles{
+        everywhere: index, wishlist, shop, etc
+    }
+}***
+
+
+
 
 Order {
     Order models

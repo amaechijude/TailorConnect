@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/ds.css' %}">
+
+<!-- Sidebar -->
+<div class="sidebar">
+    <a href="{% url 'index' %}">Home</a>
+    {% if request.user.is_authenticated %}
+    <!-- <a href="{% url 'wishlist' %}">WishList<span id="wishcount" class="count"> {{ request.user.wishlist_count }}</span></a> -->
+    <a href="{% url 'profile' %}">Profile</a>
+    <a href="{% url 'logout_user' %}">Logout</a>
+    {% else %}
+    <a href="{% url 'login_user' %}">Login</a>
+    <a href="{% url 'register' %}">Register</a>
+    {% endif %}
+</div>
+
+<div class="main-content" style="margin-top: -15px;">
+    <!-- Shop Details Section -->
+    <div class="shop-details container" style="margin-top: -1%;">
+        {% if ds.brand_logo %}
+        <img src="{{ ds.brand_logo.url }}" alt="Shop Logo" class="shop-logo">
+        {% else %}
+        <img src="{% static 'img/tuxedo.jpeg' %}" alt="Shop Logo" class="shop-logo">
+        {% endif %}
+        <div class="shop-info">
+            <div class="shop-name">{{ ds.brand_email }}</div>
+            <div class="shop-description">{{ ds.description }} </div>
+            <div class="shop-location">{{ ds.location }} </div>
+        </div>
+        <div>
+            <button class="btn btn-danger" data-bs-toggle="modal"data-bs-target="#editShop">Edit Brand Details</button> <br>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newStyle" style="margin-top: 7px;">Add New Style</button>
+        </div>
+    </div>
+    
+    <!-- Products Section -->
+    <div class="container">
+        <h2 class="mb-4">Shop Products</h2>
+        <div class="row g-3">
+            {% if styles %}
+            {% for style in styles %}
+            <div class="col-md-4 d-flex">
+                <div class="product-item">
+                    <div class="shop-name-inside">
+                        Made By <br>
+                        <a target="_blank" href="{% url 'designer' style.designer.id %}" style="text-decoration: none;">
+                            {{ style.designer.brand_name }}
+                        </a>
+                    </div>
+                    <hr style="border: 1px solid #333; width: 100%; margin-top: -0.5%;">
+                    <img src="{{ style.images.url }}" alt="Product 1" class="product-image">
+                    <a href="{% url 'product' style.id %}">
+                        <h3 class="product-title">{{ style.title }}</h3>
+                        <p class="product-description">{{ style.description }} </p>
+                    </a>
+                    <div class="product-price">${{ style.asking_price }}</div>
+                    {% if sty and style in sty%}
+                    <button id="btn_{{ style.id }}_irm" onclick="irmWishlist('{{ style.id }}')"
+                        class="btn btn-danger w-100">Remove from wishlistt</button>
+                    <button id="btn_{{ style.id }}_iadd" onclick="iaddWishList('{{style.id}}')"
+                        class="btn btn-primary w-100" style="display: none;">
+                        Add to WishList
+                    </button>
+                    {% else %}
+                    <button id="btn_{{ style.id }}_nadd" onclick="naddWishlist('{{ style.id }}')"
+                        class="btn btn-primary w-100">Add to WishList</button>
+                    <button id="btn_{{ style.id }}_nrm" onclick="nrmWishlist('{{ style.id }}')"
+                        class="btn btn-danger w-100" style="display: none;">
+                        Remove from WishList
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Create new style forms -->
+<div class="modal fade" id="newStyle" tabindex="-1" aria-labelledby="editInfoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editInfoModalLabel">Add New Style</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {% include 'forms/styleform.html' %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit shop detail and or Info -->
+<div class="modal fade" id="editShop" tabindex="-1" aria-labelledby="editInfoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editInfoModalLabel">Edit Brand Info</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {% include 'forms/shopform.html' %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{% static 'js/style.js' %}"></script>
+<!-- Footer -->
+{% endblock %}

@@ -13,6 +13,10 @@ class Style(models.Model):
         DRAFT = 'DF', 'Draft'
         PUBLISHED = 'PB', 'Published'
 
+    class rStatus(models.TextChoices):
+        No = "NO", "NO"
+        YES = "YES", "YES"
+
     designer = models.ForeignKey(Designer, on_delete=models.SET_NULL, null=True)
     title = models.CharField(max_length=150)
     description = models.TextField(blank=True)
@@ -20,7 +24,7 @@ class Style(models.Model):
     likes = models.PositiveIntegerField(default=0)
     num_of_reviews = models.PositiveIntegerField(default=0)
 
-    can_request = models.BooleanField(default=False)
+    can_request = models.CharField(max_length=4, choices=rStatus, default=rStatus.No)
     asking_price = models.DecimalField(max_digits=9999999999, decimal_places=2, default=0.99)
     created_at = models.DateTimeField(auto_now_add=True)
 
