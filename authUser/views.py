@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
-from .forms import RegisterForm, LoginForm, CreateDesignerForm
+from .forms import RegisterForm, LoginForm, CreateDesignerForm, ShippingAddressForm
 from django.contrib import messages
 from .models import WishList, ShippingAddress
 from designs.models import Style
@@ -112,6 +112,7 @@ def profile(request):
     wishl = WishList.objects.filter(user=request.user).first()
     styles = wishl.members.all().order_by("-created_at")[:2] if wishl else None
     form = CreateDesignerForm()
+    sform = ShippingAddressForm()
     context = {"user": user, "shipaddr": shipaddr, "sty": styles, "form": form}
     return render(request, 'account/profile.html', context)
 
@@ -119,18 +120,18 @@ def profile(request):
 def shippingAddr(request):
     if request.method == 'POST':
         if request.user.is_authenticated:
-            if form.is_valid():
-                user = request.user
-            first_name = request.POST.get("first_name")
-            last_name = request.POST.get("last_name")
-            phone = request.POST.get("phone")
-            address = request.POST.get("address")
-            country = request.POST.get("country")
-            state = request.POST.get("state")
-            lga = request.POST.get("lga")
-            zip_code = request.POST.get("zip_code")
-        
-            new_ship.save()
-            return JsonResponse({"added": "Added shipping address"})
+            sform = ShippingAddressForm(request.POST)
+            if sform.is_valid():
+                new_addr = sform.save(commit=False)
 
-    return JsonResponse({"err": "You need to login"}, status=st.HTTP_401_UNAUTHORIZED)
+                new_addr.user = request.user
+                new_addr.phone = request.POST.get("phone")
+                new_addr.counttry = request.POST.get("country")
+                new_addr.state = request.POST.get("state")
+                new_addr.lga = request.POST.get("lga")
+
+                new_addr.save()
+                return JsonResponse({"added": "Added shipping address"})
+
+        return JsonResponse({"err": "You need to login"}, status=st.HTTP_401_UNAUTHORIZED)
+    return JsonResponse({"err": "Bad request"}, status=st.HTTP_400_BAD_)

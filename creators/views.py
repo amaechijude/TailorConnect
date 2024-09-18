@@ -22,7 +22,7 @@ def designers(request, pk):
 
 ##### Create Design ####
 @login_required(login_url='login_user')
-def createDesign(request):
+def createDesigner(request):
     if request.method == 'POST':
         try:
             ds = Designer.objects.get(user=request.user)
@@ -32,10 +32,8 @@ def createDesign(request):
             form = CreateDesignerForm(request.POST, request.FILES)
             if form.is_valid():
                 new_designer = form.save(commit=False)
-                brand_phone = request.POST.get("brand_phone")
                 new_designer.user = request.user
-                new_designer.brand_phone=brand_phone
-                new_designer.is_verified = "No"
+                new_designer.brand_phone = request.POST.get("brand_phone")
                 new_designer.save()
                 ##### send a mail to admins informig them to verify new designers #######
                 messages.info(request, "Created")

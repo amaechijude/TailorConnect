@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import User
+from .models import User, ShippingAddress
 from creators.models import Designer
 
 class RegisterForm(UserCreationForm):
@@ -71,9 +71,15 @@ class ShippingAddressForm(forms.ModelForm):
     last_name = forms.CharField(required=True, widget=forms.TextInput(attrs={
         "id": "last_name", "class": fclass
         }))
+    address = forms.CharField(required=True, widget=forms.TextInput(attrs={
+        "id":"address", "class":fclass
+        }))
     zip_code = forms.CharField(required=True, widget=forms.TextInput(attrs={
         "id": "zip_code", "class": fclass
         }))
 
-        model = ShippingAdress
-        fields = ['first_name', 'last_name', 'street_address', 'zip_code']
+    class Meta:
+        model = ShippingAddress
+        fields = ['first_name', 'last_name', 'address', 'zip_code']
+
+
