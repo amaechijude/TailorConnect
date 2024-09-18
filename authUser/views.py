@@ -8,7 +8,7 @@ from designs.models import Style
 from django.http.response import JsonResponse
 from rest_framework import status as st
 
-
+####### register ######
 def register(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
@@ -17,10 +17,13 @@ def register(request):
             email = form.cleaned_data['email']
             messages.info(request, f"Your account is created with eamil {str(email)} You can now login")
             return redirect('login_user')
-        return redirect('login_user')
+
+        messages.error(request, f"{form.errors}")
+        return redirect('register')
     form = RegisterForm()
     return render(request, 'account/signup.html', {'form': form})
 
+##### Login view ###s
 def login_user(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
@@ -47,10 +50,11 @@ def login_user(request):
     return render(request, 'account/login.html', {'form': form})
 
 
+##### Logout view #####
 @login_required(login_url='login_user')
 def logout_user(request):
     logout(request)
-    messages.error(request, f"You are logged out")
+    messages.info(request, f"You are logged out")
     return redirect('login_user')
 
 
@@ -113,25 +117,20 @@ def profile(request):
 
 ###### add shipping address ########
 def shippingAddr(request):
-    if request.user.is_authenticated:
-        # body = request.body.decode("utf-8")
-        # data = json.loads(data)
-        user = request.user
-        first_name = request.POST.get("first_name")
-        last_name = request.POST.get("last_name")
-        phone = request.POST.get("phone")
-        address = request.POST.get("address")
-        country = request.POST.get("country")
-        state = request.POST.get("state")
-        lga = request.POST.get("lga")
-        zip_code = request.POST.get("zip_code")
+    if request.method == 'POST':
+        if request.user.is_authenticated:
+            if form.is_valid():
+                user = request.user
+            first_name = request.POST.get("first_name")
+            last_name = request.POST.get("last_name")
+            phone = request.POST.get("phone")
+            address = request.POST.get("address")
+            country = request.POST.get("country")
+            state = request.POST.get("state")
+            lga = request.POST.get("lga")
+            zip_code = request.POST.get("zip_code")
         
-        new_ship = ShippingAddress.objects.create(
-            user=user,first_name=first_name, last_name=last_name,
-            phone=phone, address=address,
-            country=country, state=state,lga=lga, zip_code=zip_code
-            )
-        new_ship.save()
-        return JsonResponse({"added": "Added shipping address"})
+            new_ship.save()
+            return JsonResponse({"added": "Added shipping address"})
 
     return JsonResponse({"err": "You need to login"}, status=st.HTTP_401_UNAUTHORIZED)

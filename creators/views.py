@@ -29,18 +29,18 @@ def createDesign(request):
             messages.info(request, "You can only create one design shop")
             return redirect('profile')
         except:
-            form = CreateDesignerForm(request.POST, request.FILES or None)
+            form = CreateDesignerForm(request.POST, request.FILES)
             if form.is_valid():
                 new_designer = form.save(commit=False)
                 brand_phone = request.POST.get("brand_phone")
                 new_designer.user = request.user
                 new_designer.brand_phone=brand_phone
                 new_designer.is_verified = "No"
-                new_designer.save(commit=True)
+                new_designer.save()
                 ##### send a mail to admins informig them to verify new designers #######
                 messages.info(request, "Created")
                 return redirect('profile')
             
-            messages.info(request, f"Your d")
+            messages.info(request, f"{form.errors}")
             return redirect('profile')
 

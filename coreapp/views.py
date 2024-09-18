@@ -32,7 +32,7 @@ def dshop(request):
         ds = Designer.objects.get(user=request.user)
         styles = Style.published.filter(designer=ds)
         context = {"ds":ds, "styles": styles}
-        return render(request, 'core/box.html', context)
+        return render(request, 'core/designer.html', context)
     except:
         messages.info(request, "You don't have a vendor profile")
         return redirect('profile')

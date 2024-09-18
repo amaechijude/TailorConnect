@@ -17,6 +17,17 @@ def product(request, pk):
     return render(request, 'core/product.html', {"style": style, "reviews": reviews, "sty":sty})
 
 
+###### create styles #############
+def createStyle(request):
+    if request.method == 'POST':
+        if request.user.is_authenticated:
+            #process form logic
+
+            return JsonResponse({"add": "style created"}, status=st.HTTP_201_CREATED)
+        return JsonResponse({"err": "You need to login"}, statu=st.HTTP_401_UNAUTHORIZED)
+    return JsonResponse({"bad": "Bad Request"}, status=st.HTTP_400_BAD_REQUEST)
+
+
 ###### add review #############
 def addReview(request):
     if request.method == 'POST':
@@ -24,3 +35,4 @@ def addReview(request):
             return JsonResponse({"rev": "Review added"}, status=st.HTTP_201_CREATED)
         return JsonResponse({"err": "You need to login"}, status=st.HTTP_401_UNAUTHORIZED)
     return JsonResponse({"bad": "Bad Request"}, status=st.HTTP_400_BAD_REQUEST)
+
