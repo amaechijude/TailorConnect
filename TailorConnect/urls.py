@@ -23,6 +23,7 @@ from coreapp import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('coreapp.urls')),
+    path('account', include('authUser.urls')),
     path('accounts/', include('allauth.urls')),#allauth 
 
 ]
