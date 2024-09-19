@@ -27,13 +27,34 @@ def createStyle(request):
             if form.is_valid():
                 new_style = form.save(commit=False)
                 new_style.designer = request.user.designer
-                form.save()
-                return JsonResponse({"add": "style created"}, status=st.HTTP_201_CREATED)
+                new_style.save()
+                context = {
+                        'designer': new_style.designer.brand_name,
+                        'title': new_style.title,
+                        'description': new_style.description,
+                        'images': new_style.images.url,
+                        'price': new_style.asking_price
+                        }
+                return JsonResponse(context, status=st.HTTP_201_CREATED)
             
             return JsonResponse({"error": f"{form.errors}"}, statu=st.HTTP_400_BAD_REQUEST)
         return JsonResponse({"method": "Method not allowed"}, status=st.HTTP_405_METHOD_NOT_ALLOWED)
     return JsonResponse({"err": "You need to login"}, statu=st.HTTP_401_UNAUTHORIZED)
 
+def updateStyle(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            #process form logic
+            usform = StyleForm(request.POST, request.FILES or None)
+            if usform.is_valid():
+                styleUpdate = usform.save(commit=False)
+                styleUpdate.designer = request.user.designer
+                styleUpdate.save()
+   31                 return JsonResponse({"add": "style created"}, status=st.HTTP_201_CREATED)
+   32
+   33             return JsonResponse({"error": f"{form.errors}"}, statu=st.HTTP_400_BAD_REQUEST)
+   34         return JsonResponse({"method": "Method not allowed"}, status=st.HTTP_405_METHOD_NOT_ALLOWED)
+   35     return JsonResponse({"err": "You need to login"}, statu=st.HTTP_401_UNAUTHORIZED)
 
 ###### add review #############
 def addReview(request):
