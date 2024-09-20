@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from designs.models import Designer, Style
 from authUser.models import WishList
 from django.contrib.auth.decorators import login_required
@@ -7,6 +7,7 @@ from authUser.forms import CreateDesignerForm
 from designs.forms import StyleForm
 from .forms import UpdateBrandForm
 # Create your views here.
+
 ###### designers page ########
 def designers(request, pk):
     ds = Designer.objects.get(id=pk)
@@ -24,17 +25,19 @@ def designers(request, pk):
 @login_required(login_url='login_user')
 def dshop(request):
     try:
-        ds = Designer.objects.get(user=request.user)
-        styles = Style.objects.filter(designer=ds)
-        form = StyleForm()
-        uform = UpdateBrandForm(instance=ds)
-        context = {"ds":ds, "styles": styles, "form": form, "uform": uform}
-        return render(request, 'core/dshop.html', context)
+        ds = get_object_or_404(Designer, user=request.user)# Designer.objects.get(user=request.user)
     except:
         messages.info(request, "You don't have a vendor profile")
         return redirect('profile')
-
-
+    
+    styles = Style.objects.filter(designer=ds)
+    form = StyleForm()
+    uform = UpdateBrandForm(instance=ds)
+    context = {"ds":ds, "styles": styles, "form": form, "uform": uform}
+    
+    return render(request, 'core/dshop.html', context)
+   
+   
 ##### Create Design ####
 @login_required(login_url='login_user')
 def createDesigner(request):

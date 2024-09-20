@@ -3,19 +3,20 @@ from .models import Style, Review
 from authUser.models import WishList
 from django.http.response import JsonResponse
 from rest_framework import status as st
-from .forms import StyleForm
+from .forms import StyleForm, updateStyleForm
 # Create your views here.
 
 #### Product details ######
 def product(request, pk):
     style = Style.objects.get(id=pk)
     reviews = Review.objects.filter(style=style)
+    usform = updateStyleForm(instance=style)
     if request.user.is_authenticated:
         wishl = WishList.objects.filter(user=request.user).first() or None
         sty = wishl.members.all() if wishl else None
     else:
         sty = None
-    return render(request, 'core/product.html', {"style": style, "reviews": reviews, "sty":sty})
+    return render(request, 'core/product.html', {"style": style, "reviews": reviews, "sty":sty, "usform":usform})
 
 
 ###### create styles #############
@@ -50,11 +51,10 @@ def updateStyle(request):
                 styleUpdate = usform.save(commit=False)
                 styleUpdate.designer = request.user.designer
                 styleUpdate.save()
-   31                 return JsonResponse({"add": "style created"}, status=st.HTTP_201_CREATED)
-   32
-   33             return JsonResponse({"error": f"{form.errors}"}, statu=st.HTTP_400_BAD_REQUEST)
-   34         return JsonResponse({"method": "Method not allowed"}, status=st.HTTP_405_METHOD_NOT_ALLOWED)
-   35     return JsonResponse({"err": "You need to login"}, statu=st.HTTP_401_UNAUTHORIZED)
+                return JsonResponse({"add": "style created"}, status=st.HTTP_201_CREATED)
+            return JsonResponse({"error": f"{usform.errors}"}, statu=st.HTTP_400_BAD_REQUEST)
+        return JsonResponse({"method": "Method not allowed"}, status=st.HTTP_405_METHOD_NOT_ALLOWED)
+    return JsonResponse({"err": "You need to login"}, statu=st.HTTP_401_UNAUTHORIZED)
 
 ###### add review #############
 def addReview(request):

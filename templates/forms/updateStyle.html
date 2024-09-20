@@ -1,0 +1,4 @@
+<form action='{% url 'updateStyle' %}' method="post">
+    {% csrf_token %}
+    {{ usform.as_p}}
+</form>

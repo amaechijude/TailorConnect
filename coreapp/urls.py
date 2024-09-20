@@ -21,6 +21,7 @@ urlpatterns = [
     path('product/<int:pk>', dviews.product, name='product'),
     path('addReview', dviews.addReview, name='addReview'),
     path('createStyle', dviews.createStyle, name="createStyle"),
+    path('updateStyle', dviews.updateStyle, name='updateStyle'),
     # path('cart', views.cartView, name='cart'),
     # path('contact', views.contact, name='contact'),
 ]

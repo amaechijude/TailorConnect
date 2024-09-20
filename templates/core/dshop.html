@@ -30,11 +30,13 @@
             <div class="shop-location">{{ ds.location }} </div>
         </div>
         <div>
-            <button class="btn btn-danger" data-bs-toggle="modal"data-bs-target="#editShop">Edit Brand Details</button> <br>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newStyle" style="margin-top: 7px;">Add New Style</button>
+            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#editShop">Edit Brand Details</button>
+            <br>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newStyle"
+                style="margin-top: 7px;">Add New Style</button>
         </div>
     </div>
-    
+
     <!-- Products Section -->
     <div class="container">
         <h2 class="mb-4">Shop Products</h2>
@@ -57,10 +59,13 @@
                     </a>
                     <div class="product-price">${{ style.asking_price }}</div>
                     <div style="display: inline;">
-                        <button class="btn btn-outline-primary w-100">Edit product</button> <br><br>
-                    <button class="btn btn-outline-danger w-100">Delete</button>
+                        <a href="{% url 'product' style.id %}">
+                            <button class="btn btn-outline-primary w-100">Edit product</button>
+                        </a><br><br>
+                        <button class="btn btn-outline-danger w-100"
+                            onclick="deleteProduct('{{ style.id }}')">Delete</button>
                     </div>
-                    
+
                 </div>
             </div>
             {% endfor %}
@@ -86,6 +91,7 @@
         </div>
     </div>
 </div>
+
 
 <!-- Edit shop detail and or Info -->
 <div class="modal fade" id="editShop" tabindex="-1" aria-labelledby="editInfoModalLabel" aria-hidden="true">

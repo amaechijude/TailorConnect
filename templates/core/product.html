@@ -50,20 +50,24 @@
                             <div class="d-flex flex-column flex-md-row gap-2">
                                 {% if sty and style in sty%}
                                 <button id="btn_{{ style.id }}_irm" onclick="irmWishlist('{{ style.id }}')"
-                                    class="btn btn-danger">Remove from wishlistt</button>
+                                    class="btn btn-outline-danger">Remove from wishlistt</button>
                                 <button id="btn_{{ style.id }}_iadd" onclick="iaddWishList('{{style.id}}')"
-                                    class="btn btn-primary" style="display: none;">
+                                    class="btn btn-outline-primary" style="display: none;">
                                     Add to WishList
                                 </button>
                                 {% else %}
                                 <button id="btn_{{ style.id }}_nadd" onclick="naddWishlist('{{ style.id }}')"
-                                    class="btn btn-primary">Add to WishList</button>
+                                    class="btn btn-outline-primary">Add to WishList</button>
                                 <button id="btn_{{ style.id }}_nrm" onclick="nrmWishlist('{{ style.id }}')"
-                                    class="btn btn-danger" style="display: none;">
+                                    class="btn btn-outline-danger" style="display: none;">
                                     Remove from WishList
                                 </button>
                                 {% endif %}
-                                <button class="btn btn-success">Buy Now</button>
+                                <button class="btn btn-outline-success">Buy Now</button>
+                                {% if style.designer.user == request.user %}
+                                <button class="btn btn-outline-danger" data-bs-toggle="modal"
+                                data-bs-target="#editProduct">Edit product</button>
+                                {% endif %}
                             </div>
 
                             <!-- Product Specifications -->
@@ -116,6 +120,24 @@
             </div>
             <div class="modal-body">
                 {% include 'forms/reviewform.html' %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- updateStyle -->
+<div class="modal fade" id="editProduct" tabindex="-1" aria-labelledby="editInfoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editInfoModalLabel">Update Style</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {% include 'forms/updateStyle.html' %}
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
