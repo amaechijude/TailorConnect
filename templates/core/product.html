@@ -85,23 +85,22 @@
 
                     <!-- Reviews Section -->
                     <div class="row mt-5">
-                        <div class="col-12">
-                            <h4>Customer Reviews</h4>
+                        <h4 class="w-100 text-success">Customer Reviews</h4> <br>
+                        <button class="btn btn-outline-primary" data-bs-toggle="modal"
+                        data-bs-target="#reviewform">Add Review</button>
+                        <div id="reviewDiv" class="col-12">
                             <!-- Review 1 -->
+                             {% if reviews %}
+                             {% for rev in reviews %}
                             <div class="mb-3">
-                                <h6>John Doe <span class="text-warning">&#9733;&#9733;&#9733;&#9733;&#9734;</span></h6>
-                                <p>"This product is amazing! I have been using it for a month, and it performs
-                                    flawlessly. Highly recommended!"</p>
+                                <h4><strong> {{ rev.user.name }} </strong>
+                                    <!-- <span class="text-warning">&#9733;&#9733;&#9733;&#9733;&#9734;</span> -->
+                                </h4>
+                                <p>{{ rev.text_content }}</p>
                             </div>
-                            <!-- Review 2 -->
-                            <div class="mb-3">
-                                <h6>Jane Smith <span class="text-warning">&#9733;&#9733;&#9733;&#9734;&#9734;</span>
-                                </h6>
-                                <p>"Good product, but the delivery was a bit slow. Overall, I'm happy with my purchase."
-                                </p>
-                            </div> <br>
-                            <button class="btn btn-outline-primary" data-bs-toggle="modal"
-                                data-bs-target="#reviewform">Add Review</button>
+                            <hr>
+                            {% endfor %}
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -146,4 +145,6 @@
     </div>
 </div>
 
+
+<script src="{% static 'js/rform.js' %}"></script>
 {% endblock %}

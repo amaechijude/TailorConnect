@@ -37,8 +37,8 @@ product details {
 
 Next {
     edit brand details from shops page **Done**
-    Edit style/products from shops
-    add reviews forms urls etc 
+    Edit style/products from shops **done**
+    add reviews forms urls etc **done**
     
     Paginate styles{
         everywhere: index, wishlist, shop, etc
@@ -46,19 +46,22 @@ Next {
 }
 
 
-
-
-Order {
-    Order models
-    order from details page and or Wishlist
-    attach measurement to the the order
-    attach shipping address to the order
+**Buy button** {
+    trigger
+    form to add measurement and/or size in shipping address;
+    ask for confirmation
     create order mark not paid:
+
     Use javascript to warn on trying to close tab closing
-    Payment wall (paystack, or any free platform) save to payment models
-    Confirm order and mark paid
-    else {
-        handle errors
-    }
-    
+
+    grab the price and redirect to paystack
+    confirm, paid, cancelled, declined etc
+
+    record order status
+
+    send email to respected parties
+
+    handle errors
+
 }
+
