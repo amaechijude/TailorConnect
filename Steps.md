@@ -55,6 +55,8 @@ Next {
     Use javascript to warn on trying to close tab closing
 
     grab the price and redirect to paystack
+
+    paystack
     confirm, paid, cancelled, declined etc
 
     record order status

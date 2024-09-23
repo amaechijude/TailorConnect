@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'coreapp',
     'creators',
     'designs',
+    'payment',
 
     #rest framework
     'rest_framework',
@@ -55,7 +56,6 @@ INSTALLED_APPS = [
     # 'allauth.account',
     # 'allauth.socialaccount',
     # 'allauth.socialaccount.providers.github', #github
-
 
 ]
 
@@ -166,6 +166,11 @@ SIMPLE_JWT = {
 
     'USER_ID_FIELD': 'userId'
 }
+
+# Paystack Configurations
+PAYSTACK_SECRET_KEY = config('PAYSTACK_SECRET_KEY')
+PAYSTACK_PUBLIC_KEY = config('PAYSTACK_PUBLIC_KEY')
+
 
 # AUTHENTICATION_BACKENDS = [
 

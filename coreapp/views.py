@@ -19,10 +19,3 @@ def index(request):
         "sty": sty
     }
     return render(request, 'core/index.html', context)
-
-
-
-
-
-
-
