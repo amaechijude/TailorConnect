@@ -1,0 +1,13 @@
+
+    <div>
+        <button onclick="Continue('{{ access_code }}')">Continue</button>
+    </div>
+
+
+<script src="https://js.paystack.co/v2/inline.js">
+    function Continue(access_code) {
+        const popup = new Paystack()
+
+        popup.resumeTransaction(access_code)
+    }
+</script>

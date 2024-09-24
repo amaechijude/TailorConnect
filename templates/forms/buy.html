@@ -1,34 +1,33 @@
 {% load static %}
 
-<form id="rform" action="{% url 'initiate_order' %}" method="post">
+<form id="rform" action="{% url 'initiate_order' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    <!-- <div class="mb-3">
-        <label for="name" class="form-label">First Name</label>
-        <input type="text" class="form-control" id="name" name="name" required minlength="3">
-    </div> -->
+    <input type="hidden" name="styleId" value="{{ style.id }}">
     <div class="mb-3">
-        <label for="image" class="form-label">Measurement</label>
-        <input type="image" class="form-control" id="image" name="measurement">
+        <label for="measurement" class="form-label">Measurement</label>
+        {{ mform.measurement }}
     </div> <br>
     <div class="mb-3">
         <label for="shippadr" class="form-label">Shipping Address</label>
-        {% if request.user.is_authenticated and shipaddr %}
-        <select name="shipId" id="shipaddr">
+        {% if request.user.is_authenticated %}
+        {% if shipaddr %}
+        <select name="shipId" id="shipaddr" required>
             <option value=""></option>
             {% for sp in shipaddr %}
             <option value="{{ sp.id }}">
                 <div row="3">
-                    <p>{{ sp.first_name }}</p>
-                    <p>{{ sp.address }}</p>
+                    <p>{{ sp.first_name }}</p><br>
+                    <p>{{ sp.address }}</p><br>
                     <p>{{ sp.phone }}</p>
                 </div>
             </option>
             {% endfor %}
         </select>
         {% endif %}
+        {% endif %}
     </div>
     <input type="hidden" name="styleid" value="{{ style.id }}">
     <div class="mb-3">
-        <button type="submit" class="btn btn-primary w-100" data-bs-dismiss="modal">Add Review</button>
+        <button type="submit" class="btn btn-primary w-100" data-bs-dismiss="modal">place Order</button>
     </div>
 </form>

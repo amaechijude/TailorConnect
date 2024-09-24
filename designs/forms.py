@@ -25,4 +25,4 @@ class ReviewForm(forms.ModelForm):
 
 
 class mForm(forms.Form):
-    measurement = forms.ImageField(required=True, widget=forms.FileInput(attrs={"id": "brand_logo", "class": fclass,}))
+    measurement = forms.ImageField(required=True, widget=forms.FileInput(attrs={"id": "measurement", "class": fclass,}))

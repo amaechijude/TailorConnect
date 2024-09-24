@@ -108,6 +108,11 @@ form.addEventListener("submit", async (event) => {
     body: formdata,
   });
   const data = await response.json();
-  alert(data);
+  console.log(data);
+  const key = Object.keys(data)[0];
+  if (data.hasOwnProperty('added')) {
+    alert(data.added);
+  }
+  
   form.reset();
 });

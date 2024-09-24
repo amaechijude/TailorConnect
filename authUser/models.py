@@ -47,7 +47,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class ShippingAddress(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     first_name = models.CharField(max_length=150, blank=False)
     last_name = models.CharField(max_length=150, blank=False)
     phone = models.CharField(max_length=13, help_text="+234")
