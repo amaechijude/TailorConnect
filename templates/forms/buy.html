@@ -1,0 +1,34 @@
+{% load static %}
+
+<form id="rform" action="{% url 'initiate_order' %}" method="post">
+    {% csrf_token %}
+    <!-- <div class="mb-3">
+        <label for="name" class="form-label">First Name</label>
+        <input type="text" class="form-control" id="name" name="name" required minlength="3">
+    </div> -->
+    <div class="mb-3">
+        <label for="image" class="form-label">Measurement</label>
+        <input type="image" class="form-control" id="image" name="measurement">
+    </div> <br>
+    <div class="mb-3">
+        <label for="shippadr" class="form-label">Shipping Address</label>
+        {% if request.user.is_authenticated and shipaddr %}
+        <select name="shipId" id="shipaddr">
+            <option value=""></option>
+            {% for sp in shipaddr %}
+            <option value="{{ sp.id }}">
+                <div row="3">
+                    <p>{{ sp.first_name }}</p>
+                    <p>{{ sp.address }}</p>
+                    <p>{{ sp.phone }}</p>
+                </div>
+            </option>
+            {% endfor %}
+        </select>
+        {% endif %}
+    </div>
+    <input type="hidden" name="styleid" value="{{ style.id }}">
+    <div class="mb-3">
+        <button type="submit" class="btn btn-primary w-100" data-bs-dismiss="modal">Add Review</button>
+    </div>
+</form>

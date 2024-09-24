@@ -54,16 +54,20 @@ Next {
 
     Use javascript to warn on trying to close tab closing
 
-    grab the price and redirect to paystack
+    grab the price and redirect to confirm html template {
+        display the product and the price for confirmation
+        send a post request to the backend {
+            grab the Paystack secret key, user_email and amount
+            parse it into the request made by the request library
+            grab the access code from the response
+            redirect to the frontend with the access code
 
-    paystack
-    confirm, paid, cancelled, declined etc
+            resume transaction from the frontend {
+                const popup = new Paystack()
+                popup.resumeTransaction(access_code)
+                // handle response
+            }
+            
+        }
 
-    record order status
-
-    send email to respected parties
-
-    handle errors
-
-}
-
+    }

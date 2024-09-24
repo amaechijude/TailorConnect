@@ -51,7 +51,10 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
 
-    #akkauth
+    # third party
+    'widget_tweaks',
+
+    #allauth
     # 'allauth',
     # 'allauth.account',
     # 'allauth.socialaccount',

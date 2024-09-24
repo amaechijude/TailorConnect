@@ -1,4 +1,6 @@
 {% extends 'base.html' %}
+<link rel="shortcut icon" href="{{ style.images.url }}" type="image/x-icon">
+{% block title %} {{ style.title }} {% endblock %}
 {% block content %}
 {% load static %}
 
@@ -63,6 +65,8 @@
                                     Remove from WishList
                                 </button>
                                 {% endif %}
+                                <button class="btn btn-outline-danger" data-bs-toggle="modal"
+                                data-bs-target="#buyForm">Buy Now</button>
                                 <a href="{% url 'initiate_order' %}">
                                     <button class="btn btn-outline-success">Buy Now</button>
                                 </a>
@@ -147,6 +151,23 @@
     </div>
 </div>
 
+<!-- Buy forms -->
+<div class="modal fade" id="buyForm" tabindex="-1" aria-labelledby="editInfoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editInfoModalLabel">Buyer details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {% include 'forms/buy.html' %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script src="{% static 'js/rform.js' %}"></script>
 {% endblock %}

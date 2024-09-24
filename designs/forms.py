@@ -22,3 +22,7 @@ class ReviewForm(forms.ModelForm):
     class Meta:
         model = Review
         fields = ['text_content', 'image']
+
+
+class mForm(forms.Form):
+    measurement = forms.ImageField(required=True, widget=forms.FileInput(attrs={"id": "brand_logo", "class": fclass,}))

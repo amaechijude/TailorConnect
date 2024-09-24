@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% block title %}Login{% endblock %}
 {% block content %}
 {% load static %}
 
@@ -37,6 +38,7 @@
             <!-- <a href=""">
                 <button class="btn btn-dark"><i class="bi bi-github"></i> GitHub</button>
             </a> -->
+            <p><a href="{% url 'password_reset' %}">Forgot Password?</a></p>
             <p> </p>
             <p style="margin-bottom: 0%;">Or</p>
             <a href="{% url 'register' %}"><button class="btn btn-danger w-100">Register</button></a>

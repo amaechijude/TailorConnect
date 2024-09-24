@@ -4,13 +4,16 @@ from designs.models import Style
 from authUser.models import ShippingAddress
 from django.contrib import messages
 from .models import Order, Payment
+from designs.forms import mForm
 # Create your views here.
 
 def initiate_order(request):
     if request.method == 'POST':
-        styleId = request.POST.get('styleId')
-        shipId = request.POST.get('shipId')
-        measurement = request.FILES.get('measurement')
+        form = mForm(request.POST, request.FILES)
+        if form.is_valid():
+            styleId = request.POST.get('styleId')
+            shipId = request.POST.get('shipId')
+            measurement = form.cleaned_data['measurement']
         # try:
         
         style = get_object_or_404(Style, id=styleId)
