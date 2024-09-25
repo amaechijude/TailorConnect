@@ -6,7 +6,7 @@ from authUser.models import ShippingAddress
 # from django.contrib import messages
 from .models import Order, Payment
 from designs.forms import mForm
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 import requests as req
 from pprint import pprint
 # Create your views here.
@@ -67,11 +67,11 @@ def pay(request):
 
         response = req.post(url, headers=headers, json=data)
         response_data = response.json()
-        
+        pprint(response_data)
         access_code = response_data["data"]["access_code"]
         pprint(access_code)
 
-        return render(request, 'payment/continue.html', {"access_code": access_code})
+        return JsonResponse({"access_code": access_code})
     return HttpResponse("Get method not supported")
 
       

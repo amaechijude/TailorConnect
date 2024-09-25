@@ -33,7 +33,7 @@
 			</div>
 			<div>
 				You are about to pay #<strong>{{ style.asking_price }}</strong> for the above item. <br><br>
-				<form action="{% url 'pay' %}" method="post">
+				<form action="{% url 'pay' %}" method="post" id="payForm">
 					{% csrf_token %}
 					<input type="hidden" name="styleId" value="{{ style.id }}">
 					<button type="submit" class=" btn btn-outline-success">Pay</button>
@@ -42,4 +42,23 @@
 		</div>
 	</div>
 </div>
+<script>
+	const form = document.getElementById("payForm");
+	form.addEventListener("submit", async (event) => {
+		event.preventDefault();
+		const formData = new FormData(form);
+
+		const response = await fetch('/payment/pay', {
+			method: 'POST',
+			body: formData
+		});
+		const data = await response.json();
+		const access_code = data.access_code; //get access code
+
+		// Paystack opup
+		const popup = new PaystackPop();
+		popup.resumeTransaction(access_code);
+	})
+
+</script>
 {% endblock %}

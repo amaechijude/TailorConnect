@@ -71,3 +71,9 @@ Next {
         }
 
     }
+}
+
+PayStack{
+    initiate payment
+    verify payment
+}
