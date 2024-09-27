@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from .models import Style, Review
-from authUser.models import WishList,ShippingAddress
+from authUser.models import WishList,ShippingAddress, Measurement
 from django.http.response import JsonResponse
 from rest_framework import status as st
-from .forms import StyleForm, updateStyleForm, ReviewForm, mForm
+from .forms import StyleForm, updateStyleForm, ReviewForm
+from authUser.forms import mForm
 # Create your views here.
 
 #### Product details ######
@@ -12,17 +13,18 @@ def product(request, pk):
     reviews = Review.objects.filter(style=style).order_by("-created_at")
     usform = updateStyleForm(instance=style)
     rform = ReviewForm()
-    mform = mForm()
     if request.user.is_authenticated:
         wishl = WishList.objects.filter(user=request.user).first()
         sty = wishl.members.all() if wishl else None
         shipaddr = ShippingAddress.objects.filter(user=request.user)
+        measure = Measurement.objects.filter(user=request.user)
     else:
         sty = None
         shipaddr = None
+        measure = None
     
     context =  {
-        "style": style, "reviews": reviews, "sty":sty, "mform": mform,
+        "style": style, "reviews": reviews, "sty":sty, "measure": measure,
         "usform":usform, "rform":rform, "shipaddr": shipaddr,
         }
     return render(request, 'core/product.html', context)

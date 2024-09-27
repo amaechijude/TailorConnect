@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import User, ShippingAddress
+from .models import User, ShippingAddress, Measurement
 from creators.models import Designer
 
 class RegisterForm(UserCreationForm):
@@ -83,3 +83,7 @@ class ShippingAddressForm(forms.ModelForm):
         fields = ['first_name', 'last_name', 'address', 'zip_code']
 
 
+class mForm(forms.ModelForm):
+    class Meta:
+        model = Measurement
+        exclude = ('user',)

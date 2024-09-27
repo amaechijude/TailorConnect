@@ -26,16 +26,16 @@
 			<div class="col-md-4 d-flex">
 				<div class="product-item">
 					<img src="{{ style.images.url }}" class="product-image">
-					<h3 class="product-title">{{ style.title }}</h3>
-					<p class="product-description">{{ style.description }} </p>
+					<h3 class="product-title">{{ order.title }}</h3>
+					<p class="product-description">{{ order.description }} </p>
 
 				</div>
 			</div>
 			<div>
-				You are about to pay #<strong>{{ style.asking_price }}</strong> for the above item. <br><br>
+				You are about to pay #<strong>{{ order.asking_price }}</strong> for the above item. <br><br>
 				<form action="{% url 'pay' %}" method="post" id="payForm">
 					{% csrf_token %}
-					<input type="hidden" name="styleId" value="{{ style.id }}">
+					<input type="hidden" name="orderId" value="{{ order.id }}">
 					<button type="submit" class=" btn btn-outline-success">Pay</button>
 				</form>
 			</div>
@@ -54,11 +54,12 @@
 		});
 		const data = await response.json();
 		const access_code = data.access_code; //get access code
+		const ref = data.ref;
 
 		// Paystack opup
 		const popup = new PaystackPop();
 		popup.resumeTransaction(access_code);
-	})
 
+	});
 </script>
 {% endblock %}

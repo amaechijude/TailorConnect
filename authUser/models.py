@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django_resized import ResizedImageField
 from designs.models import Style
+from ckeditor.fields import RichTextField
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extrafields):
@@ -58,7 +59,7 @@ class ShippingAddress(models.Model):
     zip_code = models.CharField(max_length=10)
 
 
-####### order items ###################
+####### Wishlist items ###################
 class WishList(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     members = models.ManyToManyField(Style)
@@ -68,3 +69,16 @@ class WishList(models.Model):
     class Meta:
         verbose_name = "Wishlist"
         verbose_name_plural = "Wishlists"
+
+
+####### User Measurements ###################
+class Measurement(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    title = models.CharField(max_length=150, blank=False)
+    body = RichTextField()
+
+    def __str__(self) -> str:
+        return f"Measurement of {self.user.email}"
+    class Meta:
+        verbose_name = "Measurement"
+        verbose_name_plural = "Measurements"

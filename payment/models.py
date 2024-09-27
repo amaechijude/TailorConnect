@@ -1,9 +1,8 @@
 from django.db import models
 from django_resized import ResizedImageField
 from django.conf import settings
-from authUser.models import ShippingAddress
+from authUser.models import ShippingAddress, Measurement
 from designs.models import Style
-from .paystack import Paystack
 import secrets
 
 User = settings.AUTH_USER_MODEL
@@ -21,7 +20,7 @@ class Order(models.Model):
     shipp_addr = models.ForeignKey(ShippingAddress, on_delete=models.SET_NULL, null=True)
     status = models.CharField(max_length=12, choices=Status, default=Status.Processing)
     amount = models.DecimalField(max_digits=9999999999, decimal_places=2)
-    measurement = ResizedImageField(quality=60, upload_to=f"Measurement")
+    measurement = models.ForeignKey(Measurement, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
@@ -55,16 +54,6 @@ class Payment(models.Model):
 		super().save(*args, **kwargs)
 	
 	def amount_value(self):
-		return int(self.amount) * 100
+		return float(self.amount) * 100
 
-	def verify_payment(self):
-		paystack = Paystack()
-		status, result = paystack.verify_payment(self.ref, self.amount)
-		if status:
-			if result['amount'] / 100 == self.amount:
-				self.verified = True
-			self.save()
-		if self.verified:
-			return True
-		return False
 	

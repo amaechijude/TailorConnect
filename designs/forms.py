@@ -23,6 +23,3 @@ class ReviewForm(forms.ModelForm):
         model = Review
         fields = ['text_content', 'image']
 
-
-class mForm(forms.Form):
-    measurement = forms.ImageField(required=True, widget=forms.FileInput(attrs={"id": "measurement", "class": fclass,}))

@@ -5,7 +5,21 @@
     <input type="hidden" name="styleId" value="{{ style.id }}">
     <div class="mb-3">
         <label for="measurement" class="form-label">Measurement</label>
-        {{ mform.measurement }}
+        {% if request.user.is_authenticated %}
+        {% if measure %}
+        <select name="m_id" id="m_id" required>
+            <option value=""></option>
+            {% for ms in measure %}
+            <option value="{{ ms.id }}">
+                <div row="3">
+                    <p>{{ ms.title }}</p><br>
+                    <p>{{ ms.body|safe }}</p><br>
+                </div>
+            </option>
+            {% endfor %}
+        </select>
+        {% endif %}
+        {% endif %}
     </div> <br>
     <div class="mb-3">
         <label for="shippadr" class="form-label">Shipping Address</label>

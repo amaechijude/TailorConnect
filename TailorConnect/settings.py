@@ -52,7 +52,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
 
     # third party
-    'widget_tweaks',
+    'ckeditor',
 
     #allauth
     # 'allauth',
