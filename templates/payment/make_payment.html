@@ -25,14 +25,14 @@
 		<div class="row g-3">
 			<div class="col-md-4 d-flex">
 				<div class="product-item">
-					<img src="{{ style.images.url }}" class="product-image">
-					<h3 class="product-title">{{ order.title }}</h3>
-					<p class="product-description">{{ order.description }} </p>
+					<img src="{{ order.style.images.url }}" class="product-image" alt="{{ order.title }}">
+					<h3 class="product-title">{{ order.style.title }}</h3>
+					<p class="product-description">{{ order.style.description }} </p>
 
 				</div>
 			</div>
 			<div>
-				You are about to pay #<strong>{{ order.asking_price }}</strong> for the above item. <br><br>
+				You are about to pay #<strong>{{ order.style.asking_price }}</strong> for the above item. <br><br>
 				<form action="{% url 'pay' %}" method="post" id="payForm">
 					{% csrf_token %}
 					<input type="hidden" name="orderId" value="{{ order.id }}">
@@ -43,18 +43,18 @@
 	</div>
 </div>
 <script>
+	// function VerifyPayment(r_code) {
+	// 	window.location.href = `/payment/verify/${r_code}`;
+	// }
+
 	function ResumeTransaction(a_code) {
 		const popup = new PaystackPop();
-		popup.resumeTransaction(access_code);
+		popup.resumeTransaction(a_code);
+		// VerifyPayment(r_code);
 	}
-
-	function VerifyPayment(r_code) {
-		windows.location.href = `/payment/verify/${r_code}`;
-	}
-
 
 	const form = document.getElementById("payForm");
-	form.addEventListener("submit", async (event) => {
+	form.addEventListener('submit', async (event) => {
 		event.preventDefault();
 		const formData = new FormData(form);
 
@@ -62,13 +62,14 @@
 			method: 'POST',
 			body: formData
 		});
-		//const data = await response.json();
-		//const access_code = data.access_code; //get access code
-		//const ref = data.ref;
+		if (!response.ok) {
+			const data = await response.json();
+			alert(`${data.error}`)
+		}
+		const data = await response.json();
 
-		// Paystack opup
-		const popup = new PaystackPop();
-		popup.resumeTransaction(access_code);
+		//Resume Transaction
+		ResumeTransaction(data.access_code);
 
 	});
 </script>

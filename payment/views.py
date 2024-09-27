@@ -22,7 +22,7 @@ def initiate_order(request):
         measurement = get_object_or_404(Measurement, id=m_id)
         style = get_object_or_404(Style, id=styleId)
         shipp = ShippingAddress.objects.get(id=shipId, user=request.user) if request.user.is_authenticated else None
-        amount = style.asking_price
+        amount = round(float(style.asking_price), 2)
     
         new_order = Order.objects.create(
             user=request.user,style=style,
@@ -32,7 +32,7 @@ def initiate_order(request):
         new_order.save()
 
         context = {
-            "order": new_order.style
+            "order": new_order
             }
         return render(request, 'payment/make_payment.html', context)
     return HttpResponse("Get method not supported")
@@ -46,7 +46,7 @@ def pay(request):
             pk = request.POST.get("orderId")
             try:
                 order = get_object_or_404(Order, id=pk)
-                amount = float(order.style.asking_price) * 100
+                amount = float(order.style.asking_price)
             except:
                 return HttpResponse("Order no longer exist")
             
@@ -59,33 +59,37 @@ def pay(request):
                 }
             data = {
                 "email": f"{request.user.email}",
-                "amount": f"{amount}"
+                "amount": f"{round(amount * 100, 2)}",
+                "currency": "NGN",
+                # "callback_url": "http://127.0.0.1:8000/payment/verify"
                 }
 
             response = requests.post(url, headers=headers, json=data)
-            response_data = response.json()
+            if response.status_code == 200:
+                response_data = response.json()
 
-            pprint(response_data)
-            
-            access_code = response_data["data"]["access_code"]
-            ref = response_data["data"]["reference"]
-            
-            new_payment = Payment.objects.create(order=order,ref=ref, amount=order.style.asking_price)
-            new_payment.save()
+                pprint(response_data)
+                
+                access_code = response_data["data"]["access_code"]
+                ref = response_data["data"]["reference"]
+                
+                new_payment = Payment.objects.create(order=order,ref=ref, amount=order.style.asking_price)
+                new_payment.save()
 
-            return JsonResponse({"access_code": access_code,"ref":ref},status=status.HTTP_200_OK)
-        return HttpResponse("Get method not supported")
-    return HttpResponse("You need to login")
+                return JsonResponse({"access_code": access_code,"ref":ref},status=status.HTTP_200_OK)
+            return JsonResponse({"error": "Request not succesful"}, status=status.HTTP_400_BAD_REQUEST)
+        return JsonResponse({"error": "Get method not supported"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    return JsonResponse({"error": "You need to login"}, status=status.HTTP_401_UNAUTHORIZED)
 
       
 
-def verify_payment(request, ref):
-    verify_status = verifyFunction(ref=ref)
-    if verify_status:
-        payment = Payment.objects.get(ref=ref)
-        payment.verified = True
-        payment.save()
-        return render(request, "payment/success.html")
+def verify_payment(request):
+    # verify_status = verifyFunction(ref=ref)
+    # if verify_status:
+    #     payment = Payment.objects.get(ref=ref)
+    #     payment.verified = True
+    #     payment.save()
+    #     return render(request, "payment/success.html")
     return render(request, "payment/success.html")
 
 
