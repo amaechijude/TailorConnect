@@ -43,6 +43,16 @@
 	</div>
 </div>
 <script>
+	function ResumeTransaction(a_code) {
+		const popup = new PaystackPop();
+		popup.resumeTransaction(access_code);
+	}
+
+	function VerifyPayment(r_code) {
+		windows.location.href = `/payment/verify/${r_code}`;
+	}
+
+
 	const form = document.getElementById("payForm");
 	form.addEventListener("submit", async (event) => {
 		event.preventDefault();
@@ -52,9 +62,9 @@
 			method: 'POST',
 			body: formData
 		});
-		const data = await response.json();
-		const access_code = data.access_code; //get access code
-		const ref = data.ref;
+		//const data = await response.json();
+		//const access_code = data.access_code; //get access code
+		//const ref = data.ref;
 
 		// Paystack opup
 		const popup = new PaystackPop();

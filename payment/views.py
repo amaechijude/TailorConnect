@@ -7,6 +7,7 @@ from authUser.models import ShippingAddress, Measurement
 from .models import Order, Payment
 from authUser.forms import mForm
 from django.http import HttpResponse, JsonResponse
+from rest_framework import status
 import requests
 from pprint import pprint
 # Create your views here.
@@ -72,7 +73,7 @@ def pay(request):
             new_payment = Payment.objects.create(order=order,ref=ref, amount=order.style.asking_price)
             new_payment.save()
 
-            return JsonResponse({"access_code": access_code,"ref":ref})
+            return JsonResponse({"access_code": access_code,"ref":ref},status=status.HTTP_200_OK)
         return HttpResponse("Get method not supported")
     return HttpResponse("You need to login")
 
