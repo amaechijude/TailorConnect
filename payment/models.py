@@ -44,16 +44,4 @@ class Payment(models.Model):
 	def __str__(self):
 		return f"Payment: {self.amount}"
 
-	def save(self, *args, **kwargs):
-		while not self.ref:
-			ref = secrets.token_urlsafe(50)
-			object_with_similar_ref = Payment.objects.filter(ref=ref)
-			if not object_with_similar_ref:
-				self.ref = ref
-
-		super().save(*args, **kwargs)
-	
-	def amount_value(self):
-		return float(self.amount) * 100
-
 	

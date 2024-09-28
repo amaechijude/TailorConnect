@@ -1,12 +1,12 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from designs.models import Style
-from .paystack import PaystackVerify
+# from .paystack import PaystackVerify
 from authUser.models import ShippingAddress, Measurement
-# from django.contrib import messages
+from django.contrib import messages
 from .models import Order, Payment
-from authUser.forms import mForm
+# from authUser.forms import mForm
 from django.http import HttpResponse, JsonResponse
 from rest_framework import status
 import requests
@@ -15,101 +15,97 @@ from pprint import pprint
 
 @login_required(login_url="login_user")
 def initiate_order(request):
-    if request.method == 'POST':
-        styleId = request.POST.get('styleId')
-        shipId = request.POST.get('shipId')
-        m_id = request.POST.get("m_id")
-    
-        measurement = get_object_or_404(Measurement, id=m_id)
-        style = get_object_or_404(Style, id=styleId)
-        shipp = ShippingAddress.objects.get(id=shipId, user=request.user) if request.user.is_authenticated else None
-        amount = round(float(style.asking_price), 2)
-    
-        new_order = Order.objects.create(
-            user=request.user,style=style,
-            shipp_addr=shipp, amount=amount,
-            measurement=measurement
-            )
-        new_order.save()
+    if request.method != 'POST':
+        return HttpResponse("Method not supported")
+    styleId = request.POST.get('styleId')
+    shipId = request.POST.get('shipId')
+    m_id = request.POST.get("m_id")
 
-        context = {
-            "order": new_order
-            }
-        return render(request, 'payment/make_payment.html', context)
-    return HttpResponse("Get method not supported")
-    # return render(request, 'payment/initiate.html')
+    measurement = get_object_or_404(Measurement, id=m_id)
+    style = get_object_or_404(Style, id=styleId)
+    shipp = ShippingAddress.objects.get(id=shipId, user=request.user) if request.user.is_authenticated else None
+    amount = round(float(style.asking_price), 2)
+
+    new_order = Order.objects.create(
+        user=request.user,style=style,shipp_addr=shipp,
+        amount=amount, measurement=measurement
+        )
+    new_order.save()
+
+    return render(request, 'payment/make_payment.html', {"order": new_order})
 
 
 ##### pay ####
 def pay(request):
-    if request.user.is_authenticated:
-        if request.method == 'POST':
-            pk = request.POST.get("orderId")
-            try:
-                order = get_object_or_404(Order, id=pk)
-                amount = float(order.style.asking_price)
-            except:
-                return HttpResponse("Order no longer exist")
-            
-            sk = settings.PAYSTACK_SECRET_KEY
-            url = "https://api.paystack.co/transaction/initialize"
+    if not request.user.is_authenticated:
+        return JsonResponse({"error": "You need to login"}, status=status.HTTP_401_UNAUTHORIZED)
+    
+    if request.method != 'POST':
+        return JsonResponse({"error": "Method not supported"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    pk = request.POST.get("orderId")
+    try:
+        order = get_object_or_404(Order, id=pk)
+        amount = float(order.style.asking_price)
+    except:
+        return HttpResponse("Order no longer exist")
+    
+    sk = settings.PAYSTACK_SECRET_KEY
+    url = "https://api.paystack.co/transaction/initialize"
 
-            headers = {
-                "Authorization": f"Bearer {sk}",
-                "Content-Type": "application/json"
-                }
-            data = {
-                "email": f"{request.user.email}",
-                "amount": f"{round(amount * 100, 2)}",
-                "currency": "NGN",
-                # "callback": "http://127.0.0.1:8000/payment/verify"
-                }
+    headers = {
+        "Authorization": f"Bearer {sk}",
+        "Content-Type": "application/json"
+        }
+    data = {
+        "email": f"{request.user.email}",
+        "amount": f"{round(amount * 100, 2)}",
+        "currency": "NGN"
+        }
 
-            response = requests.post(url, headers=headers, json=data)
-            if response.status_code == 200:
-                response_data = response.json()
+    response = requests.post(url, headers=headers, json=data)
+    if response.status_code != 200:
+        return JsonResponse({"error": "Request not succesful"}, status=status.HTTP_400_BAD_REQUEST)
+    
+    response_data = response.json()
+    pprint(response_data)
+    access_code = response_data["data"]["access_code"]
+    ref = response_data["data"]["reference"]
+    
+    get_payment,new_payment = Payment.objects.get_or_create(order=order,ref=ref, amount=order.style.asking_price)
 
-                pprint(response_data)
-                
-                access_code = response_data["data"]["access_code"]
-                ref = response_data["data"]["reference"]
-                
-                new_payment = Payment.objects.create(order=order,ref=ref, amount=order.style.asking_price)
-                new_payment.save()
+    return JsonResponse({"access_code": access_code,"ref":ref},status=status.HTTP_200_OK)
+    
 
-                return JsonResponse({"access_code": access_code,"ref":ref},status=status.HTTP_200_OK)
-            return JsonResponse({"error": "Request not succesful"}, status=status.HTTP_400_BAD_REQUEST)
-        return JsonResponse({"error": "Get method not supported"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
-    return JsonResponse({"error": "You need to login"}, status=status.HTTP_401_UNAUTHORIZED)
-
-
-
+####### Verify Payment
 def verify_payment(request, ref=None):
-    if not ref:
-        return HttpResponse("Payment Incomplete")
+    if ref is None:
+        return HttpResponse("Payment  verification Incomplete")
     
-    v_class = PaystackVerify()
-    verify_status = v_class.verifyFunction(ref)
-
-    if not verify_status:
-        return HttpResponse("Payment Request Failed")
-    
-    if verify_status["status"]:
+    verify = verifyFunction(ref)
+    if verify["status"] == True:
+        va = float(verify["data"]["amount"])
         payment = Payment.objects.get(ref=ref)
-        payment.verified = True
-        payment.save()
-        return render(request, "payment/success.html")
+        if (va / 100) == float(payment.amount):
+            payment.verified = True
+            payment.save()
+            messages.info(request, "Payment Verification Successful")
+            return render(request, "payment/success.html")
+        return HttpResponse("Amount Mismatch")
+    return HttpResponse(f"{verify["message"]}")
     
-    return HttpResponse(f"{verify_status["type"]}")
 
-
-def payment_verification(request, ref=None):
-    if not ref:
-        return HttpResponse("Payment Incomplete")
+##### Paystack Verification Api #######
+def verifyFunction(ref_code):
+    sk = settings.PAYSTACK_SECRET_KEY
+    url = f"https://api.paystack.co/transaction/verify/{ref_code}"
     
-    paystack_sk = settings.PAYSTACK_SECRET_KEY
-    url = f"https://api.paystack.co/transaction/verify/{ref}"
-    headers = {"Authorisation": f"Bearer {paystack_sk}" }
+    headers = {
+        "Authorization": f"Bearer {sk}",
+        "Content-Type": "application/json"
+        }
     response = requests.get(url=url, headers=headers)
+    
     if response.status_code == 200:
         response_data = response.json()
+        return response_data
+    return response.json()

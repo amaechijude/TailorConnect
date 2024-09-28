@@ -65,11 +65,9 @@
                                     Remove from WishList
                                 </button>
                                 {% endif %}
-                                <button class="btn btn-outline-danger" data-bs-toggle="modal"
+                                <button class="btn btn-success" data-bs-toggle="modal"
                                 data-bs-target="#buyForm">Buy Now</button>
-                                <a href="{% url 'initiate_order' %}">
-                                    <button class="btn btn-outline-success">Buy Now</button>
-                                </a>
+                                
                                 {% if style.designer.user == request.user %}
                                 <button class="btn btn-outline-danger" data-bs-toggle="modal"
                                 data-bs-target="#editProduct">Edit product</button>

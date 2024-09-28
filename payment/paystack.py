@@ -12,12 +12,13 @@ class PaystackVerify:
 		headers = {"Authorisation": f"Bearer {paystack_sk}" }
 		response = requests.get(url=url, headers=headers)
 		
-		if response.status_code == 200:
-			response_data = response.json()
+		if response.status_code != 200:
+			return False
+		
+		response_data = response.json()
 
 			# status = response_data["status"]
-			return response_data
-		return False
+		return response_data
 
 
 # {
