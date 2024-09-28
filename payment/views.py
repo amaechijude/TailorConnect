@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from designs.models import Style
+from .paystack import PaystackVerify
 from authUser.models import ShippingAddress, Measurement
 # from django.contrib import messages
 from .models import Order, Payment
@@ -61,7 +62,7 @@ def pay(request):
                 "email": f"{request.user.email}",
                 "amount": f"{round(amount * 100, 2)}",
                 "currency": "NGN",
-                # "callback_url": "http://127.0.0.1:8000/payment/verify"
+                # "callback": "http://127.0.0.1:8000/payment/verify"
                 }
 
             response = requests.post(url, headers=headers, json=data)
@@ -81,36 +82,34 @@ def pay(request):
         return JsonResponse({"error": "Get method not supported"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
     return JsonResponse({"error": "You need to login"}, status=status.HTTP_401_UNAUTHORIZED)
 
-      
-
-def verify_payment(request):
-    # verify_status = verifyFunction(ref=ref)
-    # if verify_status:
-    #     payment = Payment.objects.get(ref=ref)
-    #     payment.verified = True
-    #     payment.save()
-    #     return render(request, "payment/success.html")
-    return render(request, "payment/success.html")
 
 
-def verifyFunction(ref):
-	paystack_sk = settings.PAYSTACK_SECRET_KEY
-	url = f"https://api.paystack.co/transaction/verify/{ref}"
-	headers = {
-		"Authorisation": f"Bearer {paystack_sk}"
-	}
-	response = requests.get(url=url, headers=headers)
-	response_data = response.json()
-	status = response_data["status"]
-	# amount = response_data["data"]
-	return status
+def verify_payment(request, ref=None):
+    if not ref:
+        return HttpResponse("Payment Incomplete")
+    
+    v_class = PaystackVerify()
+    verify_status = v_class.verifyFunction(ref)
 
-# {
-#   "status": true,
-#   "message": "Authorization URL created",
-#   "data": {
-#     "authorization_url": "https://checkout.paystack.com/nkdks46nymizns7",
-#     "access_code": "nkdks46nymizns7",
-#     "reference": "nms6uvr1pl"
-#   }
-# }
+    if not verify_status:
+        return HttpResponse("Payment Request Failed")
+    
+    if verify_status["status"]:
+        payment = Payment.objects.get(ref=ref)
+        payment.verified = True
+        payment.save()
+        return render(request, "payment/success.html")
+    
+    return HttpResponse(f"{verify_status["type"]}")
+
+
+def payment_verification(request, ref=None):
+    if not ref:
+        return HttpResponse("Payment Incomplete")
+    
+    paystack_sk = settings.PAYSTACK_SECRET_KEY
+    url = f"https://api.paystack.co/transaction/verify/{ref}"
+    headers = {"Authorisation": f"Bearer {paystack_sk}" }
+    response = requests.get(url=url, headers=headers)
+    if response.status_code == 200:
+        response_data = response.json()

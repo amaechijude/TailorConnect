@@ -32,7 +32,7 @@ class Order(models.Model):
 
 ###### Payment #######
 class Payment(models.Model):
-	order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True, blank=True)
+	order = models.OneToOneField(Order, on_delete=models.SET_NULL, null=True, blank=True)
 	amount = models.DecimalField(max_digits=999999999999, decimal_places=2)
 	ref = models.CharField(max_length=300)
 	verified = models.BooleanField(default=False)

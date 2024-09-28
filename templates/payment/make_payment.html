@@ -31,21 +31,28 @@
 
 				</div>
 			</div>
-			<div>
-				You are about to pay #<strong>{{ order.style.asking_price }}</strong> for the above item. <br><br>
+			<div style="display: inline;">
+				You are about to pay #<strong>{{ order.style.asking_price }}</strong> for the above item.
+
 				<form action="{% url 'pay' %}" method="post" id="payForm">
 					{% csrf_token %}
 					<input type="hidden" name="orderId" value="{{ order.id }}">
-					<button type="submit" class=" btn btn-outline-success">Pay</button>
-				</form>
+					<button type="submit" class="btn btn-outline-success" onclick="ShowVButton()">Pay</button>
+				</form> <br> <br>
+				<button id="verify-btn" class="btn btn-outline-danger" onclick="VerifyPayment()"
+					style="display: block;">VerifyPayment</button>
+
 			</div>
 		</div>
 	</div>
 </div>
 <script>
-	// function VerifyPayment(r_code) {
-	// 	window.location.href = `/payment/verify/${r_code}`;
-	// }
+	function ShowVButton() {
+		const btn = document.getElementById("verify-btn");
+		btn.style.display = "block";
+	}
+	// ref code
+	let ref_code;
 
 	function ResumeTransaction(a_code) {
 		const popup = new PaystackPop();
@@ -67,10 +74,18 @@
 			alert(`${data.error}`)
 		}
 		const data = await response.json();
+		ref_code = data.ref;
 
 		//Resume Transaction
 		ResumeTransaction(data.access_code);
 
+
 	});
+
+	// Verify payment
+	function VerifyPayment() {
+		const ref = `${ref_code}`;
+		window.location.href = `/payment/verify/${ref}`;
+	}
 </script>
 {% endblock %}

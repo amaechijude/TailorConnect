@@ -1,18 +1,23 @@
 from django.conf import settings
 import requests
 
+class PaystackVerify:
+	def __init__(self) -> None:
+		return
+	
+	def verifyFunction(self, ref_code):
+		paystack_sk = settings.PAYSTACK_SECRET_KEY
+		url = f"https://api.paystack.co/transaction/verify/{ref_code}"
+		
+		headers = {"Authorisation": f"Bearer {paystack_sk}" }
+		response = requests.get(url=url, headers=headers)
+		
+		if response.status_code == 200:
+			response_data = response.json()
 
-def verifyFunction(ref):
-	paystack_sk = settings.PAYSTACK_SECRET_KEY
-	url = f"https://api.paystack.co/transaction/verify/{ref}"
-	headers = {
-		"Authorisation": f"Bearer {paystack_sk}"
-	}
-	response = requests.get(url=url, headers=headers)
-	response_data = response.json()
-	status = response_data["status"]
-	amount = response_data["data"]["amount"]
-	return (status, amount)
+			# status = response_data["status"]
+			return response_data
+		return False
 
 
 # {
