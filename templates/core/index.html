@@ -24,7 +24,7 @@
             {% if styles %}
             {% for style in styles %}
             <div class="col-md-4 d-flex">
-                <div class="product-item">
+                <div class="product-item" style="text-align: center;">
                     <div class="shop-name-inside">
                         Made By <br>
                         <a target="_blank" href="{% url 'designer' style.designer.id %}"
@@ -35,8 +35,9 @@
                             class="product-image">
                         <a href="{% url 'product' style.id %}">
                             <h3 class="product-title">{{ style.title }}</h3>
-                            <p class="product-description">{{ style.description }} </p>
                         </a>
+                        <p class="product-description">{{ style.description }} </p>
+
                         <div class="product-price">${{ style.asking_price }}</div>
                         {% if sty and style in sty%}
                         <button id="btn_{{ style.id }}_irm" onclick="irmWishlist('{{ style.id }}')"

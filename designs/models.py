@@ -1,5 +1,6 @@
 from django.db import models
 from creators.models import Designer, ResizedImageField, User
+from PIL import Image
 # Create your models here.
 
 
@@ -32,11 +33,19 @@ class Style(models.Model):
     objects = models.Manager()
     published = StyleManager()
 
+    def save(self, *args, **kwargs):
+        img = Image.open(self.images.path)
+        # Resize the width and height
+        if img.height > 800 or img.width > 800:
+            dimension = (800,800)
+            img.thumbnail(dimension)
+            img.save(self.image.path)
+        super().save(*args, **kwargs)
+
     def __str__(self) -> str:
         return f"{self.title} --- created_by  {self.designer.brand_name}"
     
     class Meta:
-
         verbose_name = "Style"
         verbose_name_plural = "Styles"
 

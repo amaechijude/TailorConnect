@@ -51,12 +51,12 @@ async function iaddWishList(styleid) {
 
             add_btn.style.display = 'none';
             rm_btn.style.display = 'block';
-	}  
-	    if (keys[0] == "err"){
-		alert(data.err);
-	}
+        }
+        if (keys[0] == "err") {
+            alert(data.err);
+        }
     } catch (error) {
-    alert("Sever error");
+        alert("Sever error");
     }
 }
 
@@ -93,7 +93,7 @@ async function naddWishlist(styleid) {
         const data = await response.json();
         console.log(data);
         const keys = Object.keys(data);
-        if (keys[1] == "wcount") {
+        if (keys[1] === "wcount") {
             const count = data.wcount;
             const wishcount = document.getElementById("wishcount");
             wishcount.textContent = count;
@@ -105,14 +105,15 @@ async function naddWishlist(styleid) {
             add_btn.style.display = 'none';
             rm_btn.style.display = 'block';
         }
-	if (key[0] == "err") {
-	alert(data.err);
-	}
-
-	catch (error) {
-
+        if (keys[0] === "err") {
+            alert(data.err);
+        }
+    }
+    catch (error) {
+        alert("Server Error");
     }
 }
+
 
 async function nrmWishlist(styleid) {
     try {
@@ -120,22 +121,22 @@ async function nrmWishlist(styleid) {
         const data = await response.json();
         console.log(data);
         const key = Object.keys(data);
-        if (key[1] == "wcount") {
+        if (key[1] === "wcount") {
             const count = data.wcount;
             const wishcount = document.getElementById("wishcount");
             wishcount.textContent = count;
         }
-        if (key[0] == "removed") {
+        if (key[0] === "removed") {
             const rm_btn = document.getElementById(`btn_${styleid}_nrm`);
             const add_btn = document.getElementById(`btn_${styleid}_nadd`);
 
             rm_btn.style.display = 'none';
             add_btn.style.display = 'block';
         }
-        if (key[0] == "err") {
+        if (key[0] === "err") {
             alert(data.err);
         }
     } catch (error) {
-
+        alert
     }
 }

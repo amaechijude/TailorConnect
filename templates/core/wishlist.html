@@ -46,14 +46,34 @@
                     <img src="{{ style.images.url }}" alt="Product 1" class="product-image">
                     <a href="{% url 'product' style.id %}">
                         <h3 class="product-title">{{ style.title }}</h3>
-                        <p class="product-description">{{ style.description }} </p>
                     </a>
+                        <p class="product-description">{{ style.description }} </p>
+                    
                     <div class="product-price">${{ style.asking_price }}</div>
+                    <button class="btn btn-success" data-bs-toggle="modal"
+                    data-bs-target="#buyForm">Buy Now</button>
                     <button onclick="RmWishList('{{style.id}}')" class="btn btn-danger w-100">Remove WishList</button>
                 </div>
             </div>
             {% endfor %}
             {% endif %}
+        </div>
+    </div>
+</div>
+<!-- Buy forms -->
+<div class="modal fade" id="buyForm" tabindex="-1" aria-labelledby="editInfoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editInfoModalLabel">Buyer details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {% include 'forms/buy.html' %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
         </div>
     </div>
 </div>

@@ -45,7 +45,7 @@
             {% for style in styles %}
             <div class="col-md-4 d-flex">
                 <div class="product-item">
-                    <div class="shop-name-inside">
+                    <div class="shop-name-inside" style="text-align: center;">
                         Made By <br>
                         <a target="_blank" href="{% url 'designer' style.designer.id %}" style="text-decoration: none;">
                             {{ style.designer.brand_name }}
@@ -54,14 +54,15 @@
                     <hr style="border: 1px solid #333; width: 100%; margin-top: -0.5%;">
                     <img src="{{ style.images.url }}" alt="Product 1" class="product-image">
                     <a href="{% url 'product' style.id %}">
-                        <h3 class="product-title">{{ style.title }}</h3>
-                        <p class="product-description">{{ style.description }} </p>
+                        <h3 class="product-title" style="text-align: center;">{{ style.title }}</h3>
                     </a>
+                        <p class="product-description" style="text-align: center;">{{ style.description }}</p>
+                    
                     <div class="product-price">${{ style.asking_price }}</div>
                     <div style="display: inline;">
                         <a href="{% url 'product' style.id %}">
-                            <button class="btn btn-outline-primary w-100">Edit product</button>
-                        </a><br><br>
+                            <button class="btn btn-outline-primary w-100">Product Details</button>
+                        </a><br>
                         <button class="btn btn-outline-danger w-100"
                             onclick="deleteProduct('{{ style.id }}')">Delete</button>
                     </div>

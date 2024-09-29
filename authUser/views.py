@@ -63,6 +63,7 @@ def logout_user(request):
 def wishlist(request):
     wishl = WishList.objects.filter(user=request.user).first()
     styles = wishl.members.all() if wishl else None
+    
     return render(request, 'core/wishlist.html', {"styles": styles})
 
 ####### add wishlist ######

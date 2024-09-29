@@ -76,7 +76,4 @@ Next {
 
 Clean Up {
     Buy from wishlist
-        edit and delete products from shops {
-        before delete
-        }
 }
