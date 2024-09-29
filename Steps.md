@@ -66,6 +66,7 @@ Next {
                 const popup = new Paystack()
                 popup.resumeTransaction(access_code)
                 // handle response
+                verify  *done*
             }
             
         }
@@ -73,7 +74,9 @@ Next {
     }
 }
 
-PayStack{
-    initiate payment
-    verify payment
+Clean Up {
+    Buy from wishlist
+        edit and delete products from shops {
+        before delete
+        }
 }
