@@ -51,9 +51,12 @@ async function iaddWishList(styleid) {
 
             add_btn.style.display = 'none';
             rm_btn.style.display = 'block';
-        }
+	}  
+	    if (keys[0] == "err"){
+		alert(data.err);
+	}
     } catch (error) {
-
+    alert("Sever error");
     }
 }
 
@@ -102,7 +105,11 @@ async function naddWishlist(styleid) {
             add_btn.style.display = 'none';
             rm_btn.style.display = 'block';
         }
-    } catch (error) {
+	if (key[0] == "err") {
+	alert(data.err);
+	}
+
+	catch (error) {
 
     }
 }

@@ -91,7 +91,7 @@ def verify_payment(request, ref=None):
             messages.info(request, "Payment Verification Successful")
             return render(request, "payment/success.html")
         return HttpResponse("Amount Mismatch")
-    return HttpResponse(f"{verify["message"]}")
+    return HttpResponse(f"{verify['message']}")
     
 
 ##### Paystack Verification Api #######
