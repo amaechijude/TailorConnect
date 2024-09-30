@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
-from .forms import RegisterForm, LoginForm, CreateDesignerForm, ShippingAddressForm
+from .forms import RegisterForm, LoginForm, ShippingAddressForm, MeasurementForm
 from django.contrib import messages
 from .models import WishList, ShippingAddress
 from designs.models import Style
-from django.http.response import JsonResponse
+from creators.forms import CreateDesignerForm
+from django.http import JsonResponse, HttpResponse
 from rest_framework import status as st
 
 ####### register ######
@@ -98,9 +99,7 @@ def RemoveWishlist(request, pk):
                user.wishlist_count -= 1
                user.save()
            return JsonResponse({"removed": "Removed from your wishlist", "wcount": request.user.wishlist_count}, status=st.HTTP_200_OK)
-       
        return JsonResponse({"not": "item not in your wishlist"}, status=st.HTTP_200_OK)
-    
     return JsonResponse({"err": "You need to login"}, status=st.HTTP_401_UNAUTHORIZED)
 
 
@@ -114,13 +113,14 @@ def profile(request):
     styles = wishl.members.all().order_by("-created_at")[:2] if wishl else None
     form = CreateDesignerForm()
     sform = ShippingAddressForm()
-    context = {"user": user, "shipaddr": shipaddr, "sty": styles, "form": form}
+    mform = MeasurementForm
+    context = {"user":user, "shipaddr":shipaddr, "sty":styles, "form":form, "mform":mform, "sform":sform}
     return render(request, 'account/profile.html', context)
 
 ###### add shipping address ########
 def shippingAddr(request):
-    if request.method == 'POST':
-        if request.user.is_authenticated:
+    if request.user.is_authenticated:
+        if request.method == 'POST':
             sform = ShippingAddressForm(request.POST)
             if sform.is_valid():
                 new_addr = sform.save(commit=False)
@@ -133,6 +133,21 @@ def shippingAddr(request):
 
                 new_addr.save()
                 return JsonResponse({"added": "Added shipping address"})
+        return JsonResponse({"err": "Bad request"}, status=st.HTTP_405_METHOD_NOT_ALLOWED)
+    return JsonResponse({"err": "You need to login"}, status=st.HTTP_401_UNAUTHORIZED)
 
-        return JsonResponse({"err": "You need to login"}, status=st.HTTP_401_UNAUTHORIZED)
-    return JsonResponse({"err": "Bad request"}, status=st.HTTP_400_BAD_)
+
+def addMeasurement(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            mform = MeasurementForm(request.POST, request.FILES or None)
+            if mform.is_valid():
+                ms = mform.save(commit=False)
+                ms.user = request.user
+                ms.save()
+                return JsonResponse({"message":"Measurement Added"}, status=st.HTTP_200_OK)
+            return HttpResponse(f"{mform.errors}")
+        return JsonResponse({"error":"Invalid Method"}, status=st.HTTP_405_METHOD_NOT_ALLOWED)
+    return JsonResponse({"error":"You need to login"}, status=st.HTTP_401_UNAUTHORIZED)
+
+    

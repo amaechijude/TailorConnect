@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django_resized import ResizedImageField
 from designs.models import Style
-from ckeditor.fields import RichTextField
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extrafields):
@@ -75,7 +74,7 @@ class WishList(models.Model):
 class Measurement(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=150, blank=False)
-    body = RichTextField()
+    body = models.TextField(blank=False)
 
     def __str__(self) -> str:
         return f"Measurement of {self.user.email}"

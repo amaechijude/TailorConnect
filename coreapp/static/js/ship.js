@@ -1,15 +1,4 @@
-function validateDigit(event) {
-    const key = event.key;
-    const allowedKeys = [
-      '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+',
-      'Backspace', 'Tab', 'Delete', 'Enter', 'ArrowLeft', 'ArrowRight', 'Home', 'End'
-    ];
-  
-    // Allow only digits and specified control keys
-    return allowedKeys.includes(key);
-  }
-
-
+// Location Selection
 const stateData = {
     NG: ['Abia', 'Adamawa', 'AkwaIbom', 'Anambra', 'Bauchi', 'Bayelsa', 'Benue', 'Borno',
         'CrossRiver', 'Delta', 'Ebonyi', 'Edo','Ekiti', 'Enugu', 'Gombe', 'Imo', 'Jigawa',

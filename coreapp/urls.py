@@ -11,6 +11,7 @@ urlpatterns = [
     path('signup', aviews.register, name='register'), # Register /Signup
     path('profile', aviews.profile, name='profile'),
     path('profile/address', aviews.shippingAddr, name='shipping'),
+    path('profile/measurement', aviews.addMeasurement, name='measurement'),
     path('wishlist', aviews.wishlist, name="wishlist"), #Wishlist
     path('add_wishlist/<int:pk>', aviews.AddWishlist, name="add_wishlist"), # Add wishlist
     path('rm_wishlist/<int:pk>', aviews.RemoveWishlist, name='rm_wishlist'), # Remove Wishlist
@@ -22,6 +23,5 @@ urlpatterns = [
     path('addReview', dviews.addReview, name='addReview'),
     path('createStyle', dviews.createStyle, name="createStyle"),
     path('updateStyle', dviews.updateStyle, name='updateStyle'),
-    # path('cart', views.cartView, name='cart'),
-    # path('contact', views.contact, name='contact'),
+    
 ]

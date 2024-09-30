@@ -21,7 +21,7 @@ class Style(models.Model):
     designer = models.ForeignKey(Designer, on_delete=models.SET_NULL, null=True)
     title = models.CharField(max_length=150)
     description = models.TextField(blank=True)
-    images = ResizedImageField(quality=60, size=[1000, 1080], crop=['middle', 'center'], upload_to="Styles")
+    images = ResizedImageField(quality=60, size=[1080, 1920], crop=['middle', 'center'], upload_to="Styles")
     likes = models.PositiveIntegerField(default=0)
     num_of_reviews = models.PositiveIntegerField(default=0)
 

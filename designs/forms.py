@@ -13,13 +13,13 @@ class StyleForm(forms.ModelForm):
     images = forms.ImageField(required=False, widget=forms.FileInput(attrs={
         "id": "images", "class": fclass,
     }))
-    can_request = forms.ChoiceField(choices=Style.rStatus, initial="NO", widget=forms.Select(attrs={
+    can_request = forms.ChoiceField(choices=Style.rStatus, widget=forms.Select(attrs={
         "id": "can_request", "class": fclass,
     }))
     asking_price = forms.DecimalField(required=True, max_digits=9999999999, decimal_places=2, widget=forms.NumberInput(
         attrs={"id":"asking_price"}
     ))
-    status = forms.ChoiceField(choices=Style.Status, initial="DRAFT", widget=forms.Select(attrs={
+    status = forms.ChoiceField(choices=Style.Status, widget=forms.Select(attrs={
         "id": "status", "class": fclass,
     }))
     class Meta:
@@ -37,13 +37,13 @@ class updateStyleForm(forms.ModelForm):
     images = forms.ImageField(required=False, widget=forms.FileInput(attrs={
         "id": "images", "class": fclass,
     }))
-    can_request = forms.ChoiceField(choices=Style.rStatus, initial="NO", widget=forms.Select(attrs={
+    can_request = forms.ChoiceField(choices=Style.rStatus, widget=forms.Select(attrs={
         "id": "can_request", "class": fclass,
     }))
     asking_price = forms.DecimalField(required=True, max_digits=9999999999, decimal_places=2, widget=forms.NumberInput(
         attrs={"id":"asking_price"}
     ))
-    status = forms.ChoiceField(choices=Style.Status, initial="DRAFT", widget=forms.Select(attrs={
+    status = forms.ChoiceField(choices=Style.Status, widget=forms.Select(attrs={
         "id": "status", "class": fclass,
     }))
     class Meta:

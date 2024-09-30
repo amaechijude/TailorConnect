@@ -5,56 +5,27 @@
         <label for="title" class="form-label">Title</label>
         {{ form.title }}
     </div>
-    {{ form.as_p }}
+    <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+         {{ form.description }}
+    </div>
+    <div class="mb-3" style="border: 1px solid black;">
+        <label for="images" class="form-label">Image</label>
+         {{ form.images }}
+    </div>
+    <div class="mb-3">
+        <label for="can_request" class="form-label">Can User Request</label>
+         {{ form.can_request }}
+    </div>
+    <div class="mb-3">
+        <label for="asking_price" class="form-label">Asking Price</label>
+         {{ form.asking_price }}
+    </div>
+    <div class="mb-3">
+        <label for="status" class="form-label">Status</label>
+         {{ form.status }}
+    </div>
     <div class="mb-3">
         <button type="submit" class="btn btn-primary w-100" data-bs-dismiss="modal">Save</button>
     </div>
 </form>
-
-
-<div class="mb-3">
-    <label for="brand_email" class="form-label">Brand Email</label>
-    {{ form.brand_email }}
-</div>
-<div class="mb-3">
-    <label for="brand_phone" class="form-label"> Brand Phone Number</label>
-    <input type="text" onkeypress="return validateDigit(event)" oninput="validateDigit(event)" class="form-control"
-        id="brand_phone" name="brand_phone" required minlength="11" maxlength="14">
-</div>
-<div class="mb-3" style="border: 1px solid black;">
-    <label for="brand_logo" class="form-label">Brand Logo</label>
-    <!-- <input type="file" class="form-control" id="brand_logo"> -->
-     {{ form.brand_logo }}
-</div>
-
-<div class="mb-3">
-    <label for="brand_bio" class="form-label">Brand Bio</label>
-     {{ form.brand_bio }}
-</div>
-<div class="mb-3">
-    <label for="brand_location" class="form-label">Brand Location</label>
-    {{ form.brand_location }}
-</div>
-<div class="mb-3">
-    <label for="google_map_url" class="form-label">Google Map Url</label>
-    {{ form.google_map_url }}
-</div>
-<div class="mb-3">
-    <label for="website_url" class="form-label">Website</label>
-    {{ form.website_url }}
-</div>
-<div class="mb-3">
-    <label for="instagram_link" class="form-label">Instagram Link</label>
-    {{ form.instagram_link }}
-</div>
-<div class="mb-3">
-    <label for="twitter_link" class="form-label">Twitter(X) Link</label>
-    {{ form.twitter_link }}
-</div>
-<div class="mb-3">
-    <label for="facebook_link" class="form-label">Facebook Link</label>
-    {{ form.facebook_link }}
-</div> 
-<div class="mb-3">
-    <button type="submit" class="btn btn-primary w-100">Create</button>
-</div>

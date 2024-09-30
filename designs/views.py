@@ -4,7 +4,7 @@ from authUser.models import WishList,ShippingAddress, Measurement
 from django.http.response import JsonResponse
 from rest_framework import status as st
 from .forms import StyleForm, updateStyleForm, ReviewForm
-from authUser.forms import mForm
+from authUser.forms import MeasurementForm
 # Create your views here.
 
 #### Product details ######
@@ -32,19 +32,18 @@ def product(request, pk):
 
 ###### create styles #############
 def createStyle(request):
-    if not request.user.is_authenticated:
-        return JsonResponse({"err": "You need to login"}, statu=st.HTTP_401_UNAUTHORIZED)
-    if request.method == 'POST':
-        #process form logic
-        form = StyleForm(request.POST, request.FILES or None)
-        if form.is_valid():
-            new_style = form.save(commit=False)
-            new_style.designer = request.user.designer
-            new_style.save()
-            return JsonResponse({"message": "Successfully created"}, status=200)
-        
-        return JsonResponse({"error": f"{form.errors}"}, statu=st.HTTP_400_BAD_REQUEST)
-    return JsonResponse({"error": "Method not allowed"}, status=st.HTTP_405_METHOD_NOT_ALLOWED)
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            #process form logic
+            form = StyleForm(request.POST, request.FILES or None)
+            if form.is_valid():
+                new_style = form.save(commit=False)
+                new_style.designer = request.user.designer
+                new_style.save()
+                return JsonResponse({"message": "Successfully created"}, status=st.HTTP_200_OK)
+            return JsonResponse({"error": f"{form.errors}"}, statu=st.HTTP_400_BAD_REQUEST)
+        return JsonResponse({"error": "Method not allowed"}, status=st.HTTP_405_METHOD_NOT_ALLOWED)
+    return JsonResponse({"error": "You need to login"}, statu=st.HTTP_401_UNAUTHORIZED)
     
 
 def updateStyle(request):

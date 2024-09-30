@@ -3,9 +3,8 @@ from designs.models import Designer, Style
 from authUser.models import WishList
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from authUser.forms import CreateDesignerForm
 from designs.forms import StyleForm
-from .forms import UpdateBrandForm
+from .forms import UpdateBrandForm, CreateDesignerForm
 # Create your views here.
 
 ###### designers page ########
