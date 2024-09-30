@@ -3,6 +3,7 @@ from designs.models import Designer, Style
 from authUser.models import WishList
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.http import HttpResponse
 from designs.forms import StyleForm
 from .forms import UpdateBrandForm, CreateDesignerForm
 # Create your views here.
@@ -44,7 +45,7 @@ def createDesigner(request):
         try:
             ds = Designer.objects.get(user=request.user)
             messages.info(request, "You can only create one design shop")
-            return redirect('profile')
+            return redirect('dshop')
         except:
             form = CreateDesignerForm(request.POST, request.FILES)
             if form.is_valid():
@@ -54,10 +55,9 @@ def createDesigner(request):
                 new_designer.save()
                 ##### send a mail to admins informing them to verify new designers #######
                 messages.info(request, "Created")
-                return redirect('profile')
+                return redirect('dshop')
             
-            messages.info(request, f"{form.errors}")
-            return redirect('profile')
+            return HttpResponse(f"{form.errors}")
 
 ####### Update Brand Details #############
 @login_required(login_url="login_user")
@@ -73,8 +73,9 @@ def updateBrand(request):
                 update.save()
                 messages.info(request, "Brand details Updated")
                 return redirect('dshop')
-            messages.error(request, f"{uform.errors}")
-            return redirect('dshop')
+            
+            return HttpResponse(f"{uform.errors}")
         except:
             messages.error(request, "You don't have a vendor profile")
             return redirect('index')
+        

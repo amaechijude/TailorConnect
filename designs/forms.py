@@ -10,7 +10,7 @@ class StyleForm(forms.ModelForm):
     description = forms.CharField(required=False, widget=forms.Textarea(attrs={
         "id": "description", "class":fclass, "rows":3
     }))
-    images = forms.ImageField(required=False, widget=forms.FileInput(attrs={
+    thumbnail = forms.ImageField(required=False, widget=forms.FileInput(attrs={
         "id": "images", "class": fclass,
     }))
     can_request = forms.ChoiceField(choices=Style.rStatus, widget=forms.Select(attrs={
@@ -24,7 +24,7 @@ class StyleForm(forms.ModelForm):
     }))
     class Meta:
         model = Style
-        fields = ['title', 'description', 'images', 'can_request', 'asking_price', 'status']
+        fields = ['title', 'description', 'thumbnail', 'can_request', 'asking_price', 'status']
 
 
 class updateStyleForm(forms.ModelForm):
@@ -34,7 +34,7 @@ class updateStyleForm(forms.ModelForm):
     description = forms.CharField(required=False, widget=forms.Textarea(attrs={
         "id": "description", "class":fclass, "rows":3
     }))
-    images = forms.ImageField(required=False, widget=forms.FileInput(attrs={
+    thumbnail = forms.ImageField(required=False, widget=forms.FileInput(attrs={
         "id": "images", "class": fclass,
     }))
     can_request = forms.ChoiceField(choices=Style.rStatus, widget=forms.Select(attrs={
@@ -48,7 +48,7 @@ class updateStyleForm(forms.ModelForm):
     }))
     class Meta:
         model = Style
-        fields = ['title', 'description', 'images', 'can_request', 'asking_price', 'status']
+        fields = ['title', 'description', 'thumbnail', 'can_request', 'asking_price', 'status']
 
 
 ######## Review form ######

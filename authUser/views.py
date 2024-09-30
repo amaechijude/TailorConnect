@@ -19,8 +19,8 @@ def register(request):
             messages.info(request, f"Your account is created with eamil {str(email)} You can now login")
             return redirect('login_user')
 
-        messages.error(request, f"{form.errors}")
-        return redirect('register')
+        return HttpResponse(f"{form.errors}")
+
     form = RegisterForm()
     return render(request, 'account/signup.html', {'form': form})
 
@@ -40,8 +40,7 @@ def login_user(request):
             messages.error(request, f"Account not found")
             return redirect('login_user')
         
-        messages.error(request, f"{form.errors}")
-        return redirect('login_user')
+        return HttpResponse(f"{form.errors}")
     
     if request.user.is_authenticated:
         messages.info(request, f"You are logged in already")
@@ -98,7 +97,7 @@ def RemoveWishlist(request, pk):
            else:
                user.wishlist_count -= 1
                user.save()
-           return JsonResponse({"removed": "Removed from your wishlist", "wcount": request.user.wishlist_count}, status=st.HTTP_200_OK)
+           return JsonResponse({"removed": "Removed from your wishlist", "wcount": user.wishlist_count}, status=st.HTTP_200_OK)
        return JsonResponse({"not": "item not in your wishlist"}, status=st.HTTP_200_OK)
     return JsonResponse({"err": "You need to login"}, status=st.HTTP_401_UNAUTHORIZED)
 
@@ -146,7 +145,7 @@ def addMeasurement(request):
                 ms.user = request.user
                 ms.save()
                 return JsonResponse({"message":"Measurement Added"}, status=st.HTTP_200_OK)
-            return HttpResponse(f"{mform.errors}")
+            return JsonResponse({"error": f"{mform.errors}"})
         return JsonResponse({"error":"Invalid Method"}, status=st.HTTP_405_METHOD_NOT_ALLOWED)
     return JsonResponse({"error":"You need to login"}, status=st.HTTP_401_UNAUTHORIZED)
 
