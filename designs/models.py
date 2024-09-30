@@ -21,7 +21,7 @@ class Style(models.Model):
     designer = models.ForeignKey(Designer, on_delete=models.SET_NULL, null=True)
     title = models.CharField(max_length=150)
     description = models.TextField(blank=True)
-    images = ResizedImageField(quality=60, upload_to=f"Styles")
+    images = ResizedImageField(quality=60, size=[1000, 1080], crop=['middle', 'center'], upload_to="Styles")
     likes = models.PositiveIntegerField(default=0)
     num_of_reviews = models.PositiveIntegerField(default=0)
 
@@ -32,15 +32,6 @@ class Style(models.Model):
     status = models.CharField(max_length=5, choices=Status, default=Status.DRAFT)
     objects = models.Manager()
     published = StyleManager()
-
-    def save(self, *args, **kwargs):
-        img = Image.open(self.images.path)
-        # Resize the width and height
-        if img.height > 800 or img.width > 800:
-            dimension = (800,800)
-            img.thumbnail(dimension)
-            img.save(self.image.path)
-        super().save(*args, **kwargs)
 
     def __str__(self) -> str:
         return f"{self.title} --- created_by  {self.designer.brand_name}"
@@ -55,7 +46,7 @@ class Review(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     style = models.ForeignKey(Style, on_delete=models.CASCADE)
     text_content = models.TextField()
-    image = models.ImageField(blank=True, null=True)
+    image = ResizedImageField(quality=60, size=[1000, 1080], crop=['middle', 'center'], upload_to="Reviews")
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:

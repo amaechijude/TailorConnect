@@ -18,7 +18,7 @@ class Designer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     brand_name= models.CharField(max_length=150, blank=False, unique=True)
     brand_email = models.EmailField(unique=True)
-    brand_logo = ResizedImageField(quality=60, upload_to=f"Designers", blank=True, null=True)
+    brand_logo = ResizedImageField(quality=60, size=[100, 150], crop=['middle', 'center'], upload_to=f"Designers", blank=True, null=True)
     brand_bio = models.TextField(default="description")
     brand_location = models.CharField(max_length=150, default="here")
     brand_phone = models.CharField(max_length=14)

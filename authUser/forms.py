@@ -31,9 +31,9 @@ class CreateDesignerForm(forms.ModelForm):
     brand_email = forms.EmailField(required=True, widget=forms.EmailInput(attrs={
         "id":"brand_email", "class":fclass
     }))
-    # brand_phone = forms.CharField(required=True, max_length=14, widget=forms.TextInput(attrs={
-    #     "id": "brand_phone", "class": fclass,
-    #     }))
+    brand_phone = forms.CharField(required=True, max_length=14, widget=forms.NumberInput(attrs={
+        "id": "brand_phone", "class": fclass,
+        }))
     brand_logo = forms.ImageField(required=False, widget=forms.FileInput(attrs={
         "id": "brand_logo", "class": fclass,
     }))
@@ -74,7 +74,7 @@ class ShippingAddressForm(forms.ModelForm):
     address = forms.CharField(required=True, widget=forms.TextInput(attrs={
         "id":"address", "class":fclass
         }))
-    zip_code = forms.CharField(required=True, widget=forms.TextInput(attrs={
+    zip_code = forms.CharField(required=True, max_length=7, widget=forms.NumberInput(attrs={
         "id": "zip_code", "class": fclass
         }))
 
