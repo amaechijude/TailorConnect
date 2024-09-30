@@ -10,9 +10,9 @@ class CreateDesignerForm(forms.ModelForm):
     brand_email = forms.EmailField(required=True, widget=forms.EmailInput(attrs={
         "id":"brand_email", "class":fclass
     }))
-    brand_phone = forms.CharField(required=True, max_length=14, widget=forms.NumberInput(attrs={
-        "id": "brand_phone", "class": fclass,
-        }))
+    # brand_phone = forms.CharField(required=True, max_length=14, widget=forms.NumberInput(attrs={
+    #     "id": "brand_phone", "class": fclass,
+    #     }))
     brand_logo = forms.ImageField(required=False, widget=forms.FileInput(attrs={
         "id": "brand_logo", "class": fclass,
     }))
@@ -40,7 +40,7 @@ class CreateDesignerForm(forms.ModelForm):
 
     class Meta:
         model = Designer
-        exclude = ('user', 'is_verified', 'joined_on')
+        exclude = ('user', 'is_verified', 'joined_on', 'brand_phone')
 
 
 class UpdateBrandForm(forms.ModelForm):
@@ -50,9 +50,9 @@ class UpdateBrandForm(forms.ModelForm):
     brand_email = forms.EmailField(required=True, widget=forms.EmailInput(attrs={
         "id":"brand_email", "class":fclass
     }))
-    brand_phone = forms.CharField(required=True, max_length=14, widget=forms.NumberInput(attrs={
-        "id": "brand_phone", "class": fclass,
-        }))
+    # brand_phone = forms.CharField(required=True, max_length=14, widget=forms.NumberInput(attrs={
+    #     "id": "brand_phone", "class": fclass,
+    #     }))
     brand_logo = forms.ImageField(required=False, widget=forms.FileInput(attrs={
         "id": "brand_logo", "class": fclass,
     }))
@@ -80,4 +80,4 @@ class UpdateBrandForm(forms.ModelForm):
 
     class Meta:
         model = Designer
-        exclude = ('user', 'is_verified', 'joined_on')
+        exclude = ('user', 'is_verified', 'joined_on', 'brand_phone')

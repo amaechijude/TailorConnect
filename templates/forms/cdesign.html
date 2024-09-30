@@ -1,4 +1,4 @@
-<form id="dform" action="{% url 'createDesigner' %}" method="post">
+<form id="dform" action="{% url 'createDesigner' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="mb-3">
         <label for="brand_name" class="form-label">Brand Name</label>
@@ -12,10 +12,10 @@
         <label for="brand_phone" class="form-label"> Brand Phone Number</label>
         <input type="text" onkeypress="return validateDigit(event)" oninput="validateDigit(event)" class="form-control"
             id="brand_phone" name="brand_phone" required minlength="11" maxlength="14">
+            
     </div>
     <div class="mb-3" style="border: 1px solid black;">
         <label for="brand_logo" class="form-label">Brand Logo</label>
-        <!-- <input type="file" class="form-control" id="brand_logo"> -->
          {{ form.brand_logo }}
     </div>
     

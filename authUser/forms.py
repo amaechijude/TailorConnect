@@ -44,11 +44,11 @@ class ShippingAddressForm(forms.ModelForm):
 
 class MeasurementForm(forms.ModelForm):
     title = forms.CharField(required=True, widget=forms.TextInput(attrs={
-        "id": "title", "class": fclass
-        }))
-    body = forms.CharField(required=False, widget=forms.Textarea(attrs={
-        "id": "body", "class":fclass, "rows":3
+        "id":"title", "class":fclass, "placeholder":"Title"
+    }))
+    body = forms.CharField(required=True, widget=forms.Textarea(attrs={
+        "id": "body", "class":fclass, "rows":3, "placeholder":"Measurement"
     }))
     class Meta:
         model = Measurement
-        exclude = ('user',)
+        fields = ['title', 'body']

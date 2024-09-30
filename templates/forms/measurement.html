@@ -1,0 +1,16 @@
+{% load static %}
+
+<form method="post" action="{% url 'measurement' %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="title" class="form-label">Title</label>
+        {{ mssform.title }}
+    </div>
+    <div class="mb-3">
+        <label for="body" class="form-label">Measurement</label>
+        {{ mssform.body }}
+    </div>
+    <div class="mb-3">
+        <button type="submit" class="btn btn-primary w-100" data-bs-dismiss="modal">Save Measurement</button>
+    </div>
+</form>

@@ -1,5 +1,5 @@
 {% load static %}
-<form id="shipform" method="post">
+<form action="{% url 'shipping' %}" method="post">
     {% csrf_token %}
     <div class="mb-3">
         <label for="first_name" class="form-label">First Name</label>

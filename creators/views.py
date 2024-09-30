@@ -58,6 +58,7 @@ def createDesigner(request):
                 return redirect('dshop')
             
             return HttpResponse(f"{form.errors}")
+    return HttpResponse("Invalid Method")
 
 ####### Update Brand Details #############
 @login_required(login_url="login_user")

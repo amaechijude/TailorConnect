@@ -112,41 +112,40 @@ def profile(request):
     styles = wishl.members.all().order_by("-created_at")[:2] if wishl else None
     form = CreateDesignerForm()
     sform = ShippingAddressForm()
-    mform = MeasurementForm
-    context = {"user":user, "shipaddr":shipaddr, "sty":styles, "form":form, "mform":mform, "sform":sform}
+    mssform = MeasurementForm()
+    context = {"user":user, "shipaddr":shipaddr, "sty":styles, "form":form, "mssform":mssform, "sform":sform}
     return render(request, 'account/profile.html', context)
 
 ###### add shipping address ########
+@login_required(login_url='login_user')
 def shippingAddr(request):
-    if request.user.is_authenticated:
-        if request.method == 'POST':
-            sform = ShippingAddressForm(request.POST)
-            if sform.is_valid():
-                new_addr = sform.save(commit=False)
+    if request.method == 'POST':
+        sform = ShippingAddressForm(request.POST)
+        if sform.is_valid():
+            new_addr = sform.save(commit=False)
 
-                new_addr.user = request.user
-                new_addr.phone = request.POST.get("phone")
-                new_addr.counttry = request.POST.get("country")
-                new_addr.state = request.POST.get("state")
-                new_addr.lga = request.POST.get("lga")
+            new_addr.user = request.user
+            new_addr.phone = request.POST.get("phone")
+            new_addr.counttry = request.POST.get("country")
+            new_addr.state = request.POST.get("state")
+            new_addr.lga = request.POST.get("lga")
 
-                new_addr.save()
-                return JsonResponse({"added": "Added shipping address"})
-        return JsonResponse({"err": "Bad request"}, status=st.HTTP_405_METHOD_NOT_ALLOWED)
-    return JsonResponse({"err": "You need to login"}, status=st.HTTP_401_UNAUTHORIZED)
+            new_addr.save()
+            messages.success(request,"Shipping Added")
+            return redirect('profile')
+    return HttpResponse({"error": "Bad request"})
 
 
+@login_required(login_url='login_user')
 def addMeasurement(request):
-    if request.user.is_authenticated:
-        if request.method == 'POST':
-            mform = MeasurementForm(request.POST, request.FILES or None)
-            if mform.is_valid():
-                ms = mform.save(commit=False)
-                ms.user = request.user
-                ms.save()
-                return JsonResponse({"message":"Measurement Added"}, status=st.HTTP_200_OK)
-            return JsonResponse({"error": f"{mform.errors}"})
-        return JsonResponse({"error":"Invalid Method"}, status=st.HTTP_405_METHOD_NOT_ALLOWED)
-    return JsonResponse({"error":"You need to login"}, status=st.HTTP_401_UNAUTHORIZED)
+    if request.method == 'POST':
+        mssform = MeasurementForm(request.POST)
+        if mssform.is_valid():
+            ms = mssform.save(commit=False)
+            ms.user = request.user
+            ms.save()
+            messages.success(request,"Measurement Added")
+            return redirect('profile')
+        return HttpResponse({"error": f"{mssform.errors}"})
+    return HttpResponse({"error":"Invalid Method"})
 
-    

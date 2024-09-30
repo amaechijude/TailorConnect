@@ -85,23 +85,45 @@ const stateData = {
     }
   }
 
-const form = document.getElementById("shipform");
+// const form = document.getElementById("shipform");
 
-form.addEventListener("submit", async (event) => {
-  event.preventDefault(); // prevents the default submission
+// form.addEventListener("submit", async (event) => {
+//   event.preventDefault(); // prevents the default submission
 
-  const formdata = new FormData(form);
+//   const formdata = new FormData(form);
 
-  const response = await fetch("/profile/address", {
-    method: "POST",
-    body: formdata,
-  });
-  const data = await response.json();
-  console.log(data);
-  const key = Object.keys(data)[0];
-  if (data.hasOwnProperty('added')) {
-    alert(data.added);
-  }
+//   const response = await fetch("/profile/address", {
+//     method: "POST",
+//     body: formdata,
+//   });
+//   const data = await response.json();
+//   console.log(data);
+//   const key = Object.keys(data)[0];
+//   if (data.hasOwnProperty('added')) {
+//     alert(data.added);
+//   }
   
-  form.reset();
-});
+//   form.reset();
+// });
+
+// const mssform = document.getElementById("mssform");
+// mssform.addEventListener("submit", async (event) => {
+//     event.preventDefault();
+
+//     const mssformData = new FormData(mssform);
+
+//     const response = await fetch('profile/measurement', {
+//         method: 'POST',
+//         body: mssformData
+//     });
+//     const data = await response.json();
+//     console.log(data);
+//     if (data.hasOwnProperty("message")) {
+//       alert(data.message);
+//     }
+//     if(data.hasOwnProperty("error")) {
+//       alert(data.error);
+//     }
+
+//     form.reset();
+// });
