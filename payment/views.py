@@ -78,7 +78,7 @@ def pay(request):
 
 ####### Verify Payment
 def verify_payment(request):
-    ref = request.GET.get("response")
+    ref = request.GET.get("reference")
     if ref is None:
         return HttpResponse("Payment  verification Incomplete")
     

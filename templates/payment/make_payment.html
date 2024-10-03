@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base/base.html' %}
 {% block title %} Make Payment {% endblock %}
 {% block content %}
 {% load static %}
@@ -25,7 +25,7 @@
 		<div class="row g-3">
 			<div class="col-md-4 d-flex">
 				<div class="product-item">
-					<img src="{{ order.style.images.url }}" class="product-image" alt="{{ order.title }}">
+					<img src="{{ order.style.thumbnail.url }}" class="product-image" alt="{{ order.title }}">
 					<h3 class="product-title">{{ order.style.title }}</h3>
 					<p class="product-description">{{ order.style.description }} </p>
 
@@ -37,7 +37,7 @@
 				<form action="{% url 'pay' %}" method="post" id="payForm">
 					{% csrf_token %}
 					<input type="hidden" name="orderId" value="{{ order.id }}">
-					<button type="submit" class="btn btn-outline-success" onclick="ShowVButton()">Pay</button>
+					<button onclick="ShowVButton()" type="submit" class="btn btn-outline-success">Pay</button>
 				</form> <br> <br>
 				<button id="verify-btn" class="btn btn-outline-danger" onclick="VerifyPayment()"
 					style="display: none;">VerifyPayment</button>
@@ -52,7 +52,7 @@
 		btn.style.display = "block";
 	}
 	// ref code
-	let ref_code;
+	let ref_c;
 
 	function ResumeTransaction(a_code) {
 		const popup = new PaystackPop();
@@ -70,22 +70,22 @@
 			body: formData
 		});
 		if (!response.ok) {
-			const data = await response.json();
+			const data = response.json();
 			alert(`${data.error}`)
 		}
 		const data = await response.json();
-		ref_code = data.ref;
 
 		//Resume Transaction
-		ResumeTransaction(data.access_code);
+		const popup = new PaystackPop();
+		popup.resumeTransaction(data.access_code);
 
-
+		ref_c = data.ref;
 	});
 
 	// Verify payment
 	function VerifyPayment() {
-		const ref = `${ref_code}`;
-		window.location.href = `/payment/verify?refrence=${ref}`;
+		const ref = `${ref_c}`;
+		window.location.href = `/payment/verify?reference=${ref}`;
 	}
 </script>
 {% endblock %}

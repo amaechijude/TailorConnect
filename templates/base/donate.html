@@ -56,27 +56,28 @@
         window.crypto.getRandomValues(array);
         return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
     }
-
     function InitiatePaystack(em, am) {
-        const ref = generateHexToken(16);
-        const popup = new Paystack();
-
-        popup.checkout({
-            key: "{{ pub_key}}",
+        const currency = "NGN";
+        const ref = generateHexToken(16)
+        let plan = "";
+        let obj = {
+            key: "{{ pub_key }}",
             email: `${em}`,
             amount: `${parseInt(am) * 100}`,
-            ref: `${ref}`,
-            onSuccess: (transaction) => {
-                console.log(transaction);
-                window.location.href = `/payment/verify?refrence=${ref}`;
+            reference: `${ref}`,
+            callback: function (response) {
+                window.location.href = `/payment/verify?reference=${ref}`;
             },
-            onCancel: () => {
-                console.log("onCancel");
-            },
-            onError: (error) => {
-                console.log("Error: ", error.message);
-            }
-        });
+        };
+        if (Boolean(currency)) {
+            obj.currency = currency.toUpperCase();
+        }
+        if (Boolean(plan)) {
+            obj.plan - plan;
+        }
+
+        var handler = PaystackPop.setup(obj);
+        handler.openIframe();
     }
 
     const donateform = document.getElementById("donateform");
