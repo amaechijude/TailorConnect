@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from .forms import RegisterForm, LoginForm, ShippingAddressForm, MeasurementForm
 from django.contrib import messages
 from .models import WishList, ShippingAddress
-from designs.models import Style
+from creators.models import Style
 from creators.forms import CreateDesignerForm
 from django.http import JsonResponse, HttpResponse
 from rest_framework import status as st
@@ -133,7 +133,8 @@ def shippingAddr(request):
             new_addr.save()
             messages.success(request,"Shipping Added")
             return redirect('profile')
-    return HttpResponse({"error": "Bad request"})
+        return HttpResponse(f"{sform.errors}")
+    return HttpResponse("Bad request")
 
 
 @login_required(login_url='login_user')
@@ -146,6 +147,5 @@ def addMeasurement(request):
             ms.save()
             messages.success(request,"Measurement Added")
             return redirect('profile')
-        return HttpResponse({"error": f"{mssform.errors}"})
-    return HttpResponse({"error":"Invalid Method"})
-
+        return HttpResponse(f"{mssform.errors}")
+    return HttpResponse("Invalid Method")

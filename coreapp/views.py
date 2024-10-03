@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.core.paginator import Paginator
 from authUser.models import WishList
-from designs.models import Style
+from creators.models import Style
 
 ####### index ##########
 def index(request):

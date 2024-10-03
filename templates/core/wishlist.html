@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base/base.html' %}
 {% block content %}
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/index.css' %}">
@@ -61,6 +61,8 @@
     </div>
 </div>
 <!-- Buy forms -->
+{% include 'forms/buy.html' %}
+<!-- 
 <div class="modal fade" id="buyForm" tabindex="-1" aria-labelledby="editInfoModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -69,12 +71,12 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                {% include 'forms/buy.html' %}
+                
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
             </div>
         </div>
     </div>
-</div>
+</div> -->
 {% endblock %}

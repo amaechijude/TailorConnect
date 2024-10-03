@@ -1,31 +1,46 @@
+<div class="modal fade" id="newStyle" tabindex="-1" aria-labelledby="editInfoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editInfoModalLabel">Add New Style</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'createStyle' %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Title</label>
+                        {{ form.title }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        {{ form.description }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="images" class="form-label">Image</label>
+                        {{ form.thumbnail }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="can_request" class="form-label">Can User Request</label>
+                        {{ form.can_request }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="asking_price" class="form-label">Asking Price</label>
+                        {{ form.asking_price }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="status" class="form-label">Status</label>
+                        {{ form.status }}
+                    </div>
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-primary w-100">Save</button>
+                    </div>
+                </form>
 
-<form id="styleForm" method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <div class="mb-3">
-        <label for="title" class="form-label">Title</label>
-        {{ form.title }}
+            </div>
+            <div class="modal-footer">
+                <button id="dismiss-btn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
     </div>
-    <div class="mb-3">
-        <label for="description" class="form-label">Description</label>
-         {{ form.description }}
-    </div>
-    <div class="mb-3" style="border: 1px solid black;">
-        <label for="images" class="form-label">Image</label>
-         {{ form.images }}
-    </div>
-    <div class="mb-3">
-        <label for="can_request" class="form-label">Can User Request</label>
-         {{ form.can_request }}
-    </div>
-    <div class="mb-3">
-        <label for="asking_price" class="form-label">Asking Price</label>
-         {{ form.asking_price }}
-    </div>
-    <div class="mb-3">
-        <label for="status" class="form-label">Status</label>
-         {{ form.status }}
-    </div>
-    <div class="mb-3">
-        <button type="submit" class="btn btn-primary w-100" data-bs-dismiss="modal">Save</button>
-    </div>
-</form>
+</div>

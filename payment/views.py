@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from designs.models import Style
+from creators.models import Style
 # from .paystack import PaystackVerify
 from authUser.models import ShippingAddress, Measurement
 from django.contrib import messages

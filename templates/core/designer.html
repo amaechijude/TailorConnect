@@ -16,7 +16,7 @@
 <body>
     <!-- Banner Section -->
     <!-- <div class="shop-banner"></div> -->
-     {% include 'navbar.html' %}
+     {% include 'base/navbar.html' %}
      {% for m in messages %}
 <div class="alert alert-warning alert-dismissible fade show topbar" role="alert">
     <strong>{{ m }} !</strong>
@@ -102,9 +102,10 @@
     </div>
 
     <!-- Footer -->
-    <div class="footer">
+    {% include 'base/footer.html' %}
+    <!-- <div class="footer">
         Footer Content Here. © 2024 Platform Name
-    </div>
+    </div> -->
 
     <!-- Bootstrap 5 JS and dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

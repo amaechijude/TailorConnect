@@ -1,53 +1,70 @@
-<form action="{% url 'updateBrand' %}" method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <div class="mb-3">
-        <label for="brand_name" class="form-label">Brand Name</label>
-        {{ uform.brand_name }}
+<div class="modal fade" id="editShop" tabindex="-1" aria-labelledby="editInfoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editInfoModalLabel">Edit Brand Info</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'updateBrand' %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="brand_name" class="form-label">Brand Name</label>
+                        {{ uform.brand_name }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="brand_email" class="form-label">Brand Email</label>
+                        {{ uform.brand_email }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="brand_phone" class="form-label"> Brand Phone Number</label>
+                        <input type="text" onkeypress="return validateDigit(event)" oninput="validateDigit(event)"
+                            class="form-control" id="brand_phone" name="brand_phone" required minlength="11"
+                            maxlength="14">
+                    </div>
+                    <div class="mb-3" style="border: 1px solid black;">
+                        <label for="brand_logo" class="form-label">Brand Logo</label>
+                        <!-- <input type="file" class="form-control" id="brand_logo"> -->
+                        {{ uform.brand_logo }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="brand_bio" class="form-label">Brand Bio</label>
+                        {{ uform.brand_bio }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="brand_location" class="form-label">Brand Location</label>
+                        {{ uform.brand_location }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="google_map_url" class="form-label">Google Map Url</label>
+                        {{ uform.google_map_url }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="website_url" class="form-label">Website</label>
+                        {{ uform.website_url }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="instagram_link" class="form-label">Instagram Link</label>
+                        {{ uform.instagram_link }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="twitter_link" class="form-label">Twitter(X) Link</label>
+                        {{ uform.twitter_link }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="facebook_link" class="form-label">Facebook Link</label>
+                        {{ uform.facebook_link }}
+                    </div>
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-primary w-100">Save Edit</button>
+                    </div>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
     </div>
-    <div class="mb-3">
-        <label for="brand_email" class="form-label">Brand Email</label>
-        {{ uform.brand_email }}
-    </div>
-    <div class="mb-3">
-        <label for="brand_phone" class="form-label"> Brand Phone Number</label>
-        <input type="text" onkeypress="return validateDigit(event)" oninput="validateDigit(event)" class="form-control"
-            id="brand_phone" name="brand_phone" required minlength="11" maxlength="14">
-    </div>
-    <div class="mb-3" style="border: 1px solid black;">
-        <label for="brand_logo" class="form-label">Brand Logo</label>
-        <!-- <input type="file" class="form-control" id="brand_logo"> -->
-         {{ uform.brand_logo }}
-    </div>
-    
-    <div class="mb-3">
-        <label for="brand_bio" class="form-label">Brand Bio</label>
-         {{ uform.brand_bio }}
-   </div>
-    <div class="mb-3">
-        <label for="brand_location" class="form-label">Brand Location</label>
-        {{ uform.brand_location }}
-    </div>
-    <div class="mb-3">
-        <label for="google_map_url" class="form-label">Google Map Url</label>
-        {{ uform.google_map_url }}
-    </div>
-    <div class="mb-3">
-        <label for="website_url" class="form-label">Website</label>
-        {{ uform.website_url }}
-    </div>
-    <div class="mb-3">
-        <label for="instagram_link" class="form-label">Instagram Link</label>
-        {{ uform.instagram_link }}
-    </div>
-    <div class="mb-3">
-        <label for="twitter_link" class="form-label">Twitter(X) Link</label>
-        {{ uform.twitter_link }}
-    </div>
-    <div class="mb-3">
-        <label for="facebook_link" class="form-label">Facebook Link</label>
-        {{ uform.facebook_link }}
-    </div> 
-    <div class="mb-3">
-        <button type="submit" class="btn btn-primary w-100">Create</button>
-    </div>
-</form>
+</div>

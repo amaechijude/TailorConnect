@@ -2,7 +2,6 @@ from django.urls import path
 from . import views
 from authUser import views as aviews
 from creators import views as cviews
-from designs import views as dviews
 
 urlpatterns = [
     path('', views.index, name='index'), # index
@@ -19,9 +18,9 @@ urlpatterns = [
     path('designer/<int:pk>', cviews.designers, name='designer'),
     path('createDesigner', cviews.createDesigner, name='createDesigner'),
     path('updateBrand', cviews.updateBrand, name='updateBrand'),
-    path('product/<int:pk>', dviews.product, name='product'),
-    path('addReview', dviews.addReview, name='addReview'),
-    path('createStyle', dviews.createStyle, name="createStyle"),
-    path('updateStyle', dviews.updateStyle, name='updateStyle'),
+    path('product/<int:pk>', cviews.product, name='product'),
+    path('addReview', cviews.addReview, name='addReview'),
+    path('createStyle', cviews.createStyle, name="createStyle"),
+    path('updateStyle', cviews.updateStyle, name='updateStyle'),
     
 ]

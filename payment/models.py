@@ -2,7 +2,7 @@ from django.db import models
 from django_resized import ResizedImageField
 from django.conf import settings
 from authUser.models import ShippingAddress, Measurement
-from designs.models import Style
+from creators.models import Style
 import secrets
 
 User = settings.AUTH_USER_MODEL

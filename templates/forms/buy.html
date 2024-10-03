@@ -1,47 +1,63 @@
-{% load static %}
+<div class="modal fade" id="buyForm" tabindex="-1" aria-labelledby="editInfoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editInfoModalLabel">Buyer details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {% load static %}
 
-<form id="rform" action="{% url 'initiate_order' %}" method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <input type="hidden" name="styleId" value="{{ style.id }}">
-    <div class="mb-3">
-        <label for="measurement" class="form-label">Measurement</label>
-        {% if request.user.is_authenticated %}
-        {% if measure %}
-        <select name="m_id" id="m_id" required>
-            <option value=""></option>
-            {% for ms in measure %}
-            <option value="{{ ms.id }}">
-                <div row="3">
-                    <p>{{ ms.title }}</p><br>
-                    <p>{{ ms.body|safe }}</p><br>
-                </div>
-            </option>
-            {% endfor %}
-        </select>
-        {% endif %}
-        {% endif %}
-    </div> <br>
-    <div class="mb-3">
-        <label for="shippadr" class="form-label">Shipping Address</label>
-        {% if request.user.is_authenticated %}
-        {% if shipaddr %}
-        <select name="shipId" id="shipaddr" required>
-            <option value=""></option>
-            {% for sp in shipaddr %}
-            <option value="{{ sp.id }}">
-                <div row="3">
-                    <p>{{ sp.first_name }}</p><br>
-                    <p>{{ sp.address }}</p><br>
-                    <p>{{ sp.phone }}</p>
-                </div>
-            </option>
-            {% endfor %}
-        </select>
-        {% endif %}
-        {% endif %}
+                <form id="rform" action="{% url 'initiate_order' %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="hidden" name="styleId" value="{{ style.id }}">
+                    <div class="mb-3">
+                        <label for="measurement" class="form-label">Measurement</label>
+                        {% if request.user.is_authenticated %}
+                        {% if measure %}
+                        <select name="m_id" id="m_id" required>
+                            <option value=""></option>
+                            {% for ms in measure %}
+                            <option value="{{ ms.id }}">
+                                <div row="3">
+                                    <p>{{ ms.title }}</p><br>
+                                    <p>{{ ms.body|safe }}</p><br>
+                                </div>
+                            </option>
+                            {% endfor %}
+                        </select>
+                        {% endif %}
+                        {% endif %}
+                    </div> <br>
+                    <div class="mb-3">
+                        <label for="shippadr" class="form-label">Shipping Address</label>
+                        {% if request.user.is_authenticated %}
+                        {% if shipaddr %}
+                        <select name="shipId" id="shipaddr" required>
+                            <option value=""></option>
+                            {% for sp in shipaddr %}
+                            <option value="{{ sp.id }}">
+                                <div row="3">
+                                    <p>{{ sp.first_name }}</p><br>
+                                    <p>{{ sp.address }}</p><br>
+                                    <p>{{ sp.phone }}</p>
+                                </div>
+                            </option>
+                            {% endfor %}
+                        </select>
+                        {% endif %}
+                        {% endif %}
+                    </div>
+                    <input type="hidden" name="styleid" value="{{ style.id }}">
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-primary w-100" data-bs-dismiss="modal">place Order</button>
+                    </div>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
     </div>
-    <input type="hidden" name="styleid" value="{{ style.id }}">
-    <div class="mb-3">
-        <button type="submit" class="btn btn-primary w-100" data-bs-dismiss="modal">place Order</button>
-    </div>
-</form>
+</div>

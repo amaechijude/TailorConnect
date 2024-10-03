@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     'authUser',
     'coreapp',
     'creators',
-    'designs',
     'payment',
 
     #rest framework
@@ -143,7 +142,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static') #Change in production to more rob
 # STATICFILES_DIRS = [os.path.join(BASE_DIR, 'statics'),]
 
 MEDIA_URL = 'media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media') #Also change in production
+MEDIA_ROOT = os.path.join(BASE_DIR, 'tmedia') #Also change in production
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -152,12 +151,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'authUser.User'
 
-####### DJANGO RESIZED #########
-DJANGORESIZED_DEFAULT_SIZE = [1080, 1080]
-DJANGORESIZED_DEFAULT_SCALE = 0.5
-DJANGORESIZED_DEFAULT_QUALITY = 75
-DJANGORESIZED_DEFAULT_KEEP_META = True
-DJANGORESIZED_DEFAULT_FORCE_FORMAT = 'JPEG'
 
 ########### Rest Framework #########
 REST_FRAMEWORK = {
@@ -208,30 +201,3 @@ PAYSTACK_PUBLIC_KEY = config('PAYSTACK_PUBLIC_KEY')
 # ACCOUNT_USERNAME_REQUIRED = False
 # ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = True
 # ACCOUNT_LOGOUT_REDIRECT_URL = "/login"
-
-# ACCOUNT_FORMS = {
-#     'signup': 'authUserApp.forms.RegisterForm',
-# }
-
-# SOCIALACCOUNT_PROVIDERS = {
-#     'google': {
-#         'FETCH_USERINFO' : True,
-#         'SCOPE': [
-#             'profile',
-#             'email',
-#         ],
-#         'AUTH_PARAMS': {
-#             'access_type': 'online',
-#         },
-#         'OAUTH_PKCE_ENABLED': True,
-#     },
-
-#     'github': {
-#         'SCOPE': [
-#             'user',
-#             'repo',
-#             'read:org',
-#         ],
-#     }
-# }
-

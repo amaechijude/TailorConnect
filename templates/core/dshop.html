@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base/base.html' %}
 {% block content %}
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/ds.css' %}">
@@ -40,7 +40,7 @@
     <!-- Products Section -->
     <div class="container">
         <h2 class="mb-4">Shop Products</h2>
-        <div class="row g-3">
+        <div id="spdiv" class="row g-3">
             {% if styles %}
             {% for style in styles %}
             <div class="col-md-4 d-flex">
@@ -52,7 +52,9 @@
                         </a>
                     </div>
                     <hr style="border: 1px solid #333; width: 100%; margin-top: -0.5%;">
-                    <img src="{{ style.images.url }}" alt="Product 1" class="product-image">
+                    {% if style.thumbnail %}
+                    <img src="{{ style.thumbnail.url }}" alt="Product 1" class="product-image">
+                    {% endif %}
                     <a href="{% url 'product' style.id %}">
                         <h3 class="product-title" style="text-align: center;">{{ style.title }}</h3>
                     </a>
@@ -64,7 +66,7 @@
                             <button class="btn btn-outline-primary w-100">Product Details</button>
                         </a><br>
                         <button class="btn btn-outline-danger w-100"
-                            onclick="deleteProduct('{{ style.id }}')">Delete</button>
+                            onclick="archiveProduct('{{ style.id }}')">Archive</button>
                     </div>
 
                 </div>
@@ -76,41 +78,11 @@
 </div>
 
 <!-- Create new style forms -->
-<div class="modal fade" id="newStyle" tabindex="-1" aria-labelledby="editInfoModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editInfoModalLabel">Add New Style</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                {% include 'forms/styleform.html' %}
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            </div>
-        </div>
-    </div>
-</div>
+{% include 'forms/styleform.html' %}
 
 
 <!-- Edit shop detail and or Info -->
-<div class="modal fade" id="editShop" tabindex="-1" aria-labelledby="editInfoModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editInfoModalLabel">Edit Brand Info</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                {% include 'forms/editbrand.html' %}
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            </div>
-        </div>
-    </div>
-</div>
-<script src="{% static 'js/style.js' %}"></script>
+{% include 'forms/editbrand.html' %}
+
 <!-- Footer -->
 {% endblock %}
