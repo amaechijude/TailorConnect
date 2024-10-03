@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base/base.html' %}
 <link rel="shortcut icon" href="{{ style.images.url }}" type="image/x-icon">
 {% block title %} {{ style.title }} {% endblock %}
 {% block content %}
@@ -34,7 +34,7 @@
                     <div class="row">
                         <!-- Product Image -->
                         <div class="col-md-6">
-                            <img src="{{ style.images.url }}" alt="Product Image" class="product-images img-fluid">
+                            <img src="{{ style.thumbnail.url }}" alt="Product Image" class="product-images img-fluid">
                         </div>
 
                         <!-- Product Details -->

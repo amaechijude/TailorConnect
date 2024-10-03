@@ -75,6 +75,6 @@ Next {
 }
 
 Next {
-    fixed all the forms
-    
+    fixed all the forms **Done**
 }
+add shipping address and measurement from buy form
