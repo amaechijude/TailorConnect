@@ -70,14 +70,15 @@ def pay(request):
     pprint(response_data)
     access_code = response_data["data"]["access_code"]
     ref = response_data["data"]["reference"]
-    
+
     get_payment,new_payment = Payment.objects.get_or_create(order=order,ref=ref, amount=order.style.asking_price)
 
     return JsonResponse({"access_code": access_code,"ref":ref},status=status.HTTP_200_OK)
     
 
 ####### Verify Payment
-def verify_payment(request, ref=None):
+def verify_payment(request):
+    ref = request.GET.get("response")
     if ref is None:
         return HttpResponse("Payment  verification Incomplete")
     

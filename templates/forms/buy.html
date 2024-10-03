@@ -44,6 +44,7 @@
                                 </div>
                             </option>
                             {% endfor %}
+
                         </select>
                         {% endif %}
                         {% endif %}
@@ -53,7 +54,10 @@
                         <button type="submit" class="btn btn-primary w-100" data-bs-dismiss="modal">place Order</button>
                     </div>
                 </form>
-
+                <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editInfoModal">Add
+                    Shiping Address</button>
+                <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#measurement">Add
+                    another Measurement</button>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -61,3 +65,9 @@
         </div>
     </div>
 </div>
+
+<!-- Modal (Edit measurement Form) -->
+{% include 'forms/measurement.html' %}
+
+<!-- Modal Shipping Address -->
+{% include 'forms/shipaddr.html' %}

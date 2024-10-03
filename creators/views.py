@@ -14,7 +14,7 @@ def designers(request, pk):
     styles = Style.published.filter(designer=ds)
     if request.user.is_authenticated:
         wishl = WishList.objects.filter(user=request.user).first() or None
-        sty = wishl.members.all() or None
+        sty = wishl.members.all() if wishl else None
     else:
         sty = None
     context = {"ds":ds, "styles": styles, "sty":sty}

@@ -85,7 +85,7 @@
 	// Verify payment
 	function VerifyPayment() {
 		const ref = `${ref_code}`;
-		window.location.href = `/payment/verify/${ref}`;
+		window.location.href = `/payment/verify?refrence=${ref}`;
 	}
 </script>
 {% endblock %}

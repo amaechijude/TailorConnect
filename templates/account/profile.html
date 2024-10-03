@@ -125,59 +125,13 @@
 </div>
 </div>
 
-<!-- Modal (Edit Info Form) -->
-<div class="modal fade" id="editInfoModal" tabindex="-1" aria-labelledby="editInfoModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editInfoModalLabel">Add shipping Address</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                {% include 'forms/shipaddr.html' %}
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            </div>
-        </div>
-    </div>
-</div>
+<!-- Modal Shipping Address -->
+{% include 'forms/shipaddr.html' %}
 
 <!-- Modal (Edit measurement Form) -->
-<div class="modal fade" id="measurement" tabindex="-1" aria-labelledby="editInfoModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editInfoModalLabel">Add Measurement</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                {% include 'forms/measurement.html' %}
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            </div>
-        </div>
-    </div>
-</div>
+{% include 'forms/measurement.html' %}
 
 <!-- Create designer forms -->
-<div class="modal fade" id="createDesigner" tabindex="-1" aria-labelledby="editInfoModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editInfoModalLabel">Create Designer</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                {% include 'forms/cdesign.html' %}
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            </div>
-        </div>
-    </div>
-</div>
+{% include 'forms/cdesign.html' %}
 
-<script src="{% static 'js/ship.js' %}"></script>
 {% endblock %}

@@ -30,7 +30,7 @@
                             style="text-decoration: none;">{{ style.designer.brand_name }}</a>
                     </div>
                     <hr style="border: 1px solid #333; width: 100%; margin-top: -0.5%;">
-                    <a href="{% url 'product' style.id %}"><img src="{{ style.images.url }}" alt="Product 1"
+                    <a href="{% url 'product' style.id %}"><img src="{{ style.thumbnail.url }}" alt="Product 1"
                             class="product-image">
                         <a href="{% url 'product' style.id %}">
                             <h3 class="product-title">{{ style.title }}</h3>

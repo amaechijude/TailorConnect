@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
-from .forms import RegisterForm, LoginForm, ShippingAddressForm, MeasurementForm
+from .forms import RegisterForm, LoginForm, ShippingAddressForm
 from django.contrib import messages
-from .models import WishList, ShippingAddress
+from .models import WishList, ShippingAddress, Measurement
 from creators.models import Style
 from creators.forms import CreateDesignerForm
 from django.http import JsonResponse, HttpResponse
@@ -112,8 +112,8 @@ def profile(request):
     styles = wishl.members.all().order_by("-created_at")[:2] if wishl else None
     form = CreateDesignerForm()
     sform = ShippingAddressForm()
-    mssform = MeasurementForm()
-    context = {"user":user, "shipaddr":shipaddr, "sty":styles, "form":form, "mssform":mssform, "sform":sform}
+    # mssform = MeasurementForm()
+    context = {"user":user, "shipaddr":shipaddr, "sty":styles, "form":form, "sform":sform}
     return render(request, 'account/profile.html', context)
 
 ###### add shipping address ########
@@ -140,12 +140,11 @@ def shippingAddr(request):
 @login_required(login_url='login_user')
 def addMeasurement(request):
     if request.method == 'POST':
-        mssform = MeasurementForm(request.POST)
-        if mssform.is_valid():
-            ms = mssform.save(commit=False)
-            ms.user = request.user
-            ms.save()
-            messages.success(request,"Measurement Added")
-            return redirect('profile')
-        return HttpResponse(f"{mssform.errors}")
+        user = request.user
+        title = request.POST.get("title")
+        body = request.POST.get("body")
+        ms = Measurement.objects.create(user=user, title=title, body=body)
+        ms.save()
+        messages.success(request,"Measurement Added")
+        return redirect('profile')
     return HttpResponse("Invalid Method")
