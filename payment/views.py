@@ -59,7 +59,8 @@ def pay(request):
     data = {
         "email": f"{request.user.email}",
         "amount": f"{round(amount * 100, 2)}",
-        "currency": "NGN"
+        "currency": "NGN",
+        "callback_url": "http://127.0.0.1:8000/payment/verify",
         }
 
     response = requests.post(url, headers=headers, json=data)

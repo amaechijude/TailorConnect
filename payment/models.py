@@ -32,16 +32,15 @@ class Order(models.Model):
 
 ###### Payment #######
 class Payment(models.Model):
-	order = models.OneToOneField(Order, on_delete=models.SET_NULL, null=True, blank=True)
-	amount = models.DecimalField(max_digits=999999999999, decimal_places=2)
-	ref = models.CharField(max_length=300)
-	verified = models.BooleanField(default=False)
-	date_created = models.DateTimeField(auto_now_add=True)
+    order = models.OneToOneField(Order, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=999999999999, decimal_places=2)
+    ref = models.CharField(max_length=300)
+    verified = models.BooleanField(default=False)
+    date_created = models.DateTimeField(auto_now_add=True)
 
-	class Meta:
-		ordering = ('-date_created',)
+    class Meta:
+        ordering = ('-date_created',)
+        
+    def __str__(self):
+        return f"Payment: {self.amount}"
 
-	def __str__(self):
-		return f"Payment: {self.amount}"
-
-	
