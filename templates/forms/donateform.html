@@ -4,14 +4,14 @@
     {% csrf_token %}
     <div class="mb-3">
         <label for="email" class="form-label">Email</label>
-        <input type="email" class="form-control" id="dtemail" placeholder="Dummy Email is okay" required>
+        <input type="email" name="email" class="form-control" id="dtemail" placeholder="Dummy Email is okay" required>
     </div>
     <div class="mb-3">
         <label for="text_content" class="form-label">Amount</label>
-        <input type="number" class="form-control" id="dtamount" required min="1000" minlength="4" placeholder="Amount in NGN">
+        <input type="number" class="form-control" id="dtamount" name="amount" required min="200" minlength="3" placeholder="Amount in NGN">
    </div>
     <!-- <input type="hidden" name="styleid"> -->
     <div class="mb-3">
-        <button type="submit" class="btn btn-primary w-100">Donate</button>
+        <button type="submit" class="btn btn-primary w-100" onclick="ShowCButton()">Donate</button>
     </div>
 </form>

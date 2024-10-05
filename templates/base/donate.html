@@ -44,48 +44,55 @@
                 {% include 'forms/donateform.html' %}
             </div>
             <div class="modal-footer">
+                <button id="Confirm-btn" onclick="VerifyCPayment()" style="display: none;" class="btn btn-outline-success w-100">Confirm</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
             </div>
         </div>
     </div>
 </div>
 
-<script>
-    function generateHexToken(byteLength) {
-        const array = new Uint8Array(byteLength);
-        window.crypto.getRandomValues(array);
-        return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
-    }
-    function InitiatePaystack(em, am) {
-        const currency = "NGN";
-        const ref = generateHexToken(16)
-        let plan = "";
-        let obj = {
-            key: "{{ pub_key }}",
-            email: `${em}`,
-            amount: `${parseInt(am) * 100}`,
-            reference: `${ref}`,
-            callback: function (response) {
-                window.location.href = `/payment/verify?reference=${ref}`;
-            },
-        };
-        if (Boolean(currency)) {
-            obj.currency = currency.toUpperCase();
-        }
-        if (Boolean(plan)) {
-            obj.plan - plan;
-        }
 
-        var handler = PaystackPop.setup(obj);
-        handler.openIframe();
+<script>
+    function ShowCButton() {
+        const btn = document.getElementById("Confirm-btn");
+        // btn.classList = "btn btn-outline-success w-100";
+        btn.style.display = "block";
+    }
+    // ref code
+    let ref_c;
+
+    function ResumeTransaction(a_code) {
+        const popup = new PaystackPop();
+        popup.resumeTransaction(a_code);
+        // VerifyPayment(r_code);
     }
 
     const donateform = document.getElementById("donateform");
-    donateform.addEventListener("submit", async (event) => {
+    donateform.addEventListener('submit', async (event) => {
         event.preventDefault();
-        const email = document.getElementById("dtemail").value;
-        const amount = document.getElementById("dtamount").value;
+        const formData = new FormData(donateform);
 
-        InitiatePaystack(email, amount);
+        donateform.reset();
+        const response = await fetch('/payment/donate', {
+            method: 'POST',
+            body: formData
+        });
+        if (!response.ok) {
+            const data = response.json();
+            alert(`${data.error}`)
+        }
+        const data = await response.json();
+
+        //Resume Transaction
+        const popup = new PaystackPop();
+        popup.resumeTransaction(data.access_code);
+
+        ref_c = data.ref;
     });
+
+    // Verify payment
+    function VerifyCPayment() {
+        const ref = `${ref_c}`;
+        window.location.href = `/payment/donate/verify?reference=${ref}`;
+    }
 </script>

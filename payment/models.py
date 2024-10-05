@@ -44,3 +44,17 @@ class Payment(models.Model):
     def __str__(self):
         return f"Payment: {self.amount}"
 
+
+class Donations(models.Model):
+    email = models.EmailField()
+    amount = models.DecimalField(max_digits=9999999999, decimal_places=2)
+    ref = models.CharField(max_length=300)
+    verified = models.BooleanField(default=False)
+    date_created = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ('-date_created',)
+    
+    def __str__(self):
+        return f"{self.email}  donated {self.amount} on {self.date_created}"
+
