@@ -69,10 +69,18 @@
                         Recent Orders
                     </div>
                     <div class="card-body">
-                        <p><strong>Order #1234</strong> - $49.99 - <span class="text-success">Delivered</span></p>
-                        <p><strong>Order #1235</strong> - $19.99 - <span class="text-warning">Processing</span></p>
-                        <p><strong>Order #1236</strong> - $34.99 - <span class="text-danger">Canceled</span></p>
-                        <button class="btn btn-outline-primary">View All Orders</button>
+			    {% if orders %}
+			    {% for od in orders %}
+			    {% if od.status == od.Status.Delivered %}
+			    <p><strong>Order #{{ od.id }}</strong> - NGN {{ od.amount }} - <span class="text-success">{{ od.status }}</span></p>
+			    {% elif od.status == od.Status.Processing %}
+			    <p><strong>Order #{{ od.id  }}</strong> - NGN: {{ od.amount }} - <span class="text-warning">{{ od.status }}</span></p>
+			    {% else %}
+			    <p><strong>Order #{{ od.id  }}</strong> - NGN: {{ od.amount }} - <span class="text-danger">{{ od.status }}</span></p>
+			    {% endif %}
+			    {% endfor %}
+			    {% endif %}
+			    <a href="{% url 'list_orders' %}"> <button class="btn btn-outline-primary">View All Orders</button></a>
                     </div>
                 </div>
             </div>

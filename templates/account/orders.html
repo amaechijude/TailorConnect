@@ -1,0 +1,71 @@
+{% extends 'base/base.html' %}
+{% block title %}Profile Settings{% endblock %}
+{% block content %}
+{% load static %}
+
+<div class="sidebar">
+    <a href="{% url 'index' %}">Home</a>
+    {% if request.user.is_authenticated %}
+
+    <a href="{% url 'logout_user' %}">Logout</a>
+    {% else %}
+    <a href="{% url 'login_user' %}">Login</a>
+    <a href="{% url 'register' %}">Register</a>
+    {% endif %}
+</div>
+
+<!-- Main Content (Profile Info) -->
+<main class="col-md-9 col-lg-10 main-content">
+    <div class="container my-4">
+        <div class="row">
+            <!-- Profile Header -->
+            <div class="col-12 d-flex align-items-center mb-4">
+                <img src="https://via.placeholder.com/100" class="rounded-circle me-3" alt="Profile Image">
+                <div>
+                    {% if shipaddr %}
+                    <h2>{{ shipaddr.first_name }} {{ shipaddr.last_name }}</h2>
+                    {% endif %}
+                    <p class="text-muted">{{ user.email }}</p>
+                </div>
+            </div>
+            {% if request.user.designer %}
+            <a href="{% url 'dshop' %}">
+                <button style="margin-top: -1.5%; margin-bottom: 0.8%;" class="btn btn-outline-primary w-100">My
+                    Designer Shop</button>
+            </a>
+            {% else %}
+            <button style="margin-top: -1.5%; margin-bottom: 0.8%;" class="btn btn-outline-primary"
+                data-bs-toggle="modal" data-bs-target="#createDesigner">Create Designers Shop</button>
+            {% endif %}
+        </div>
+
+        <div class="row">
+            <!-- Order History Section -->
+            <div class="col-12 col-lg-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        Recent Orders
+                    </div>
+                    <div class="card-body">
+                        {% if orders %}
+                        {% for od in orders %}
+                        {% if od.status == od.Status.Delivered %}
+                        <p><strong>Order #{{ od.id }}</strong> - NGN {{ od.amount }} - <span class="text-success">{{ od.status }}</span></p>
+                        {% elif od.status == od.Status.Processing %}
+                        <p><strong>Order #{{ od.id }}</strong> - NGN: {{ od.amount }} - <span class="text-warning">{{ od.status }}</span></p>
+                        {% else %}
+                        <p><strong>Order #{{ od.id }}</strong> - NGN: {{ od.amount }} - <span class="text-danger">{{ od.status }}</span></p>
+                        {% endif %}
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</main>
+</div>
+</div>
+
+{% endblock %}

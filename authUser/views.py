@@ -6,6 +6,7 @@ from django.contrib import messages
 from .models import WishList, ShippingAddress, Measurement
 from creators.models import Style
 from creators.forms import CreateDesignerForm
+from payment.models import Order
 from django.http import JsonResponse, HttpResponse
 from rest_framework import status as st
 
@@ -110,10 +111,11 @@ def profile(request):
     shipaddr = ShippingAddress.objects.filter(user=user).first()
     wishl = WishList.objects.filter(user=request.user).first()
     styles = wishl.members.all().order_by("-created_at")[:2] if wishl else None
+    orders = Order.objects.filter(user=user).order_by('-created_at')[:2]
     form = CreateDesignerForm()
     sform = ShippingAddressForm()
     # mssform = MeasurementForm()
-    context = {"user":user, "shipaddr":shipaddr, "sty":styles, "form":form, "sform":sform}
+    context = {"user":user, "shipaddr":shipaddr, "sty":styles, "form":form, "sform":sform, "orders":orders}
     return render(request, 'account/profile.html', context)
 
 ###### add shipping address ########
@@ -148,3 +150,11 @@ def addMeasurement(request):
         messages.success(request,"Measurement Added")
         return redirect('profile')
     return HttpResponse("Invalid Method")
+
+
+@login_required(login_url='login_user')
+def list_orders(request):
+    user = request.user
+    orders = Order.objects.filter(user=user).order_by("-created_at")
+    context = {"orders": orders}
+    return render(request, 'account/orders.html', context)

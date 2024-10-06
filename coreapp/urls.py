@@ -9,6 +9,7 @@ urlpatterns = [
     path('logout', aviews.logout_user, name='logout_user'), #logo out
     path('signup', aviews.register, name='register'), # Register /Signup
     path('profile', aviews.profile, name='profile'),
+    path('profile/orders', aviews.list_orders, name='list_orders'),
     path('profile/address', aviews.shippingAddr, name='shipping'),
     path('profile/measurement', aviews.addMeasurement, name='measurement'),
     path('wishlist', aviews.wishlist, name="wishlist"), #Wishlist

@@ -1,19 +1,17 @@
 from django.db import models
-from django_resized import ResizedImageField
 from django.conf import settings
 from authUser.models import ShippingAddress, Measurement
 from creators.models import Style
-import secrets
 
 User = settings.AUTH_USER_MODEL
 
-   
 ####### order items ###################
 class Order(models.Model):
     class Status(models.TextChoices):
         Processing = 'Processing', 'Processing'
         Successful = 'Successful', 'Successful'
         Cancelled = 'Cancelled', 'Cancelled'
+        Delivered = 'Delivered', 'Delivered'
 
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     style = models.ForeignKey(Style, on_delete=models.SET_NULL, null=True)

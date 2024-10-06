@@ -60,6 +60,9 @@ def pay(request):
     ref = response_data["data"]["reference"]
 
     get_payment,new_payment = Payment.objects.get_or_create(order=order,ref=ref, amount=order.style.asking_price)
+    order_in = get_payment.order
+    order_in.status = Order.Status.Processing
+    order_in.save()
 
     return JsonResponse({"access_code": access_code,"ref":ref},status=status.HTTP_200_OK)
     
@@ -74,9 +77,12 @@ def verify_payment(request):
     if verify["status"] == True:
         va = float(verify["data"]["amount"])
         payment = Payment.objects.get(ref=ref)
+        order = payment.order
         if (va / 100) == float(payment.amount):
             payment.verified = True
             payment.save()
+            order.status = Order.Status.Successful
+            order.save()
             messages.info(request, "Payment Verification Successful")
             return render(request, "payment/success.html")
         return HttpResponse("Amount Mismatch")
