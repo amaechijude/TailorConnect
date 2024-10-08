@@ -2,8 +2,10 @@ from django.shortcuts import render
 from django.core.paginator import Paginator
 from authUser.models import WishList
 from creators.models import Style
+from django.views.decorators.cache import cache_page
 
 ####### index ##########
+@cache_page(60 * 5)
 def index(request):
     st = Style.published.all().order_by("-created_at")
     page_number = request.GET.get('page', 1)
