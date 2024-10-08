@@ -9,6 +9,7 @@ from creators.forms import CreateDesignerForm
 from payment.models import Order
 from django.http import JsonResponse, HttpResponse
 from rest_framework import status as st
+from django_ratelimit.decorators import ratelimit
 
 ####### register ######
 def register(request):
@@ -68,6 +69,7 @@ def wishlist(request):
     return render(request, 'core/wishlist.html', {"styles": styles})
 
 ####### add wishlist ######
+@ratelimit(key='user_or_ip', rate='10/m')
 def AddWishlist(request, pk):
     if request.user.is_authenticated:
        user=request.user
