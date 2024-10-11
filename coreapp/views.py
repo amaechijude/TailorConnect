@@ -5,7 +5,7 @@ from creators.models import Style
 from django.views.decorators.cache import cache_page
 
 ####### index ##########
-@cache_page(60 * 5)
+@cache_page(60 * 10)
 def index(request):
     st = Style.published.all().order_by("-created_at")
     page_number = request.GET.get('page', 1)

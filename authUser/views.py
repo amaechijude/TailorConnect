@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import cache_page
 from django.contrib.auth import authenticate, login, logout
 from .forms import RegisterForm, LoginForm, ShippingAddressForm
 from django.contrib import messages
@@ -27,6 +28,7 @@ def register(request):
     return render(request, 'account/signup.html', {'form': form})
 
 ##### Login view ###s
+@ratelimit(key="user_or_ip", rate="5/m")
 def login_user(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
@@ -35,17 +37,17 @@ def login_user(request):
             password = form.cleaned_data['password']
             user = authenticate(email=email, password=password)
 
-            if user != None:
-                messages.info(request, f"You are logged in")
+            if user:
+                messages.info(request, "You are logged in")
                 login(request, user)
                 return redirect('index')
-            messages.error(request, f"Account not found")
+            messages.error(request, "Account not found")
             return redirect('login_user')
         
         return HttpResponse(f"{form.errors}")
     
     if request.user.is_authenticated:
-        messages.info(request, f"You are logged in already")
+        messages.info(request, "You are logged in already")
         return redirect('index')
     
     form = LoginForm()
@@ -56,12 +58,13 @@ def login_user(request):
 @login_required(login_url='login_user')
 def logout_user(request):
     logout(request)
-    messages.info(request, f"You are logged out")
+    messages.info(request, "You are logged out")
     return redirect('login_user')
 
 
 ####wishlist view ######
 @login_required(login_url='login_user')
+@cache_page(60 * 10) # 60 seconds * 10 == 10 mins
 def wishlist(request):
     wishl = WishList.objects.filter(user=request.user).first()
     styles = wishl.members.all() if wishl else None
@@ -69,7 +72,7 @@ def wishlist(request):
     return render(request, 'core/wishlist.html', {"styles": styles})
 
 ####### add wishlist ######
-@ratelimit(key='user_or_ip', rate='10/m')
+@ratelimit(key='user_or_ip', rate='3/s')
 def AddWishlist(request, pk):
     if request.user.is_authenticated:
        user=request.user
@@ -83,10 +86,10 @@ def AddWishlist(request, pk):
        user.wishlist_count += 1
        user.save()
        return JsonResponse({"add": "Added to wishlist", "wcount": user.wishlist_count}, status=st.HTTP_201_CREATED)
-    
     return JsonResponse({"err": "You need to login"}, status=st.HTTP_401_UNAUTHORIZED)
 
 #### remove wishlist ########
+@ratelimit(key="user_or_ip", rate="3/s")
 def RemoveWishlist(request, pk):
     if request.user.is_authenticated:
        user=request.user
@@ -104,10 +107,9 @@ def RemoveWishlist(request, pk):
        return JsonResponse({"not": "item not in your wishlist"}, status=st.HTTP_200_OK)
     return JsonResponse({"err": "You need to login"}, status=st.HTTP_401_UNAUTHORIZED)
 
-
-
 ###### profile page ########
 @login_required(login_url='login_user')
+@cache_page(60 * 5) # 5 minutes
 def profile(request):
     user = request.user
     shipaddr = ShippingAddress.objects.filter(user=user).first()
@@ -116,7 +118,6 @@ def profile(request):
     orders = Order.objects.filter(user=user).order_by('-created_at')[:2]
     form = CreateDesignerForm()
     sform = ShippingAddressForm()
-    # mssform = MeasurementForm()
     context = {"user":user, "shipaddr":shipaddr, "sty":styles, "form":form, "sform":sform, "orders":orders}
     return render(request, 'account/profile.html', context)
 
@@ -155,6 +156,7 @@ def addMeasurement(request):
 
 
 @login_required(login_url='login_user')
+@cache_page(60 * 3)
 def list_orders(request):
     user = request.user
     orders = Order.objects.filter(user=user).order_by("-created_at")

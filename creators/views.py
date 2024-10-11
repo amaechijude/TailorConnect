@@ -3,6 +3,7 @@ from .models import Designer, Style, Review
 from authUser.models import WishList, Measurement, ShippingAddress
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django_ratelimit.decorators import ratelimit
 from rest_framework import status as st
 from django.http import HttpResponse, JsonResponse
 from .forms import UpdateBrandForm, CreateDesignerForm, ReviewForm, StyleForm, updateStyleForm
@@ -26,7 +27,7 @@ def designers(request, pk):
 def dshop(request):
     try:
         ds = get_object_or_404(Designer, user=request.user)
-    except:
+    except Exception:
         messages.info(request, "You don't have a designer profile")
         return redirect('profile')
     
@@ -40,33 +41,34 @@ def dshop(request):
    
 ##### Create Design ####
 @login_required(login_url='login_user')
+@ratelimit(key="user_or_ip", rate="5/h") #five per hour
 def createDesigner(request):
     if request.method == 'POST':
-        try:
-            ds = Designer.objects.get(user=request.user)
+        ds = Designer.objects.get(user=request.user)
+        if not ds:
             messages.info(request, "You can only create one design shop")
             return redirect('dshop')
-        except:
-            form = CreateDesignerForm(request.POST, request.FILES)
-            if form.is_valid():
-                new_designer = form.save(commit=False)
-                new_designer.user = request.user
-                new_designer.brand_phone = request.POST.get("brand_phone")
-                new_designer.save()
-                ##### send a mail to admins informing them to verify new designers #######
-                messages.info(request, "Created")
-                return redirect('dshop')
+        
+        form = CreateDesignerForm(request.POST, request.FILES)
+        if form.is_valid():
+            new_designer = form.save(commit=False)
+            new_designer.user = request.user
+            new_designer.brand_phone = request.POST.get("brand_phone")
+            new_designer.save()
+            ##### send a mail to admins informing them to verify new designers #######
+            messages.info(request, "Created")
+            return redirect('dshop')
             
-            return HttpResponse(f"{form.errors}")
+        return HttpResponse(f"{form.errors}")
     return HttpResponse("Invalid Method")
 
 ####### Update Brand Details #############
 @login_required(login_url="login_user")
+@ratelimit(key="user_or_ip", rate="5/h") # five per hour
 def updateBrand(request):
     if request.method == 'POST':
-        try:
-            ds = Designer.objects.get(user=request.user)
-        except:
+        ds = Designer.objects.get(user=request.user)
+        if not ds:
             return HttpResponse("You don't have a designer profile")
         uform = UpdateBrandForm(request.POST, request.FILES or None, instance=ds)
         if uform.is_valid():
@@ -108,9 +110,8 @@ def product(request, pk):
 @login_required(login_url='login_user')
 def createStyle(request):
     if request.method == 'POST':
-        try:
-            ds = get_object_or_404(Designer, user=request.user)
-        except:
+        ds = Designer.objects.get(user=request.user)
+        if not ds:
             return HttpResponse("You don't have a designer profile")
         form = StyleForm(request.POST, request.FILES or None)
         if form.is_valid():
@@ -125,9 +126,8 @@ def createStyle(request):
 @login_required(login_url='login_user')
 def updateStyle(request):
     if request.method == 'POST':
-        try:
-            ds = get_object_or_404(Designer, user=request.user)
-        except:
+        ds = Designer.objects.get(user=request.user)
+        if not ds:
             return HttpResponse("You don't have a designer profile")
         
         usform = StyleForm(request.POST, request.FILES or None)
@@ -141,6 +141,7 @@ def updateStyle(request):
     return HttpResponse("Method not allowed")
 
 ###### add review #############
+@ratelimit(key="user_or_ip", rate="5/h")
 def addReview(request):
     if request.method == 'POST':
         if request.user.is_authenticated:
@@ -151,7 +152,8 @@ def addReview(request):
                 styleid = request.POST.get('styleid')
                 name = request.POST.get('name')
                 user = request.user
-                user.name = name; user.save()
+                user.name = name
+                user.save()
                 style = Style.objects.get(id=styleid)
                 new_review.user = user
                 new_review.style = style
