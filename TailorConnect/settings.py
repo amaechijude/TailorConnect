@@ -148,24 +148,24 @@ MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'tmedia') #Also change in production
 
 # Azure storage settings for production
-AZURE_ACCOUNT_NAME = config('AZURE_ACCOUNT_NAME')  # Azure Storage account name
-AZURE_ACCOUNT_KEY = config('AZURE_ACCOUNT_KEY')    # Azure Storage account key
-AZURE_CONTAINER_STATIC = config('AZURE_CONTAINER_STATIC')   # name of your Azure Static container
-AZURE_CONTAINER_MEDIA = config('AZURE_CONTAINER_MEDIA')   # name of your Azure Media container
-AZURE_CUSTOM_DOMAIN = f'{AZURE_ACCOUNT_NAME}.blob.core.windows.net'
+# AZURE_ACCOUNT_NAME = config('AZURE_ACCOUNT_NAME')  # Azure Storage account name
+# AZURE_ACCOUNT_KEY = config('AZURE_ACCOUNT_KEY')    # Azure Storage account key
+# AZURE_CONTAINER_STATIC = config('AZURE_CONTAINER_STATIC')   # name of your Azure Static container
+# AZURE_CONTAINER_MEDIA = config('AZURE_CONTAINER_MEDIA')   # name of your Azure Media container
+# AZURE_CUSTOM_DOMAIN = f'{AZURE_ACCOUNT_NAME}.blob.core.windows.net'
 
-# Static files (CSS, JavaScript, Images)
-STATIC_LOCATION = 'static'
-STATIC_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{STATIC_LOCATION}/'
+# # Static files (CSS, JavaScript, Images)
+# STATIC_LOCATION = 'static'
+# STATIC_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{STATIC_LOCATION}/'
 
-STATICFILES_STORAGE = 'storages.backends.azure_storage.AzureStorage'
-AZURE_STATIC_CONTAINER = AZURE_CONTAINER_STATIC  #container for static files
+# STATICFILES_STORAGE = 'storages.backends.azure_storage.AzureStorage'
+# AZURE_STATIC_CONTAINER = AZURE_CONTAINER_STATIC  #container for static files
 
-# Media files (uploads)
-MEDIA_LOCATION = 'media'
-MEDIA_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{MEDIA_LOCATION}/'
-DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
-AZURE_MEDIA_CONTAINER = AZURE_CONTAINER_MEDIA # CONTAINER FOR MEDIA STORAGE
+# # Media files (uploads)
+# MEDIA_LOCATION = 'media'
+# MEDIA_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{MEDIA_LOCATION}/'
+# DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
+# AZURE_MEDIA_CONTAINER = AZURE_CONTAINER_MEDIA # CONTAINER FOR MEDIA STORAGE
 
 
 
