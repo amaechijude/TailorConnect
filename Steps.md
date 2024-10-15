@@ -78,3 +78,11 @@ Next {
     fixed all the forms **Done**
 }
 add shipping address and measurement from buy form
+
+
+Azure {
+    Provision free blob storage and configure
+    Profision Postgresql datatbase
+    Provision redis cache or other cache
+    Deploy on app service
+}

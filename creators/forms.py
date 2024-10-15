@@ -94,7 +94,7 @@ class StyleForm(forms.ModelForm):
         "id": "description", "class":fclass, "rows":3
     }))
     thumbnail = forms.ImageField(required=True, widget=forms.FileInput(attrs={
-        "id": "images", "class": fclass,
+        "id": "thumbnail", "class": fclass,
     }))
     can_request = forms.ChoiceField(choices=Style.rStatus, widget=forms.Select(attrs={
         "id": "can_request", "class": fclass,

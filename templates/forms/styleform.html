@@ -17,8 +17,12 @@
                         {{ form.description }}
                     </div>
                     <div class="mb-3">
-                        <label for="images" class="form-label">Image</label>
+                        <label for="thumbnail" class="form-label">Image</label>
                         {{ form.thumbnail }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="style_images"> Extra Images (max 4)</label>
+                        <input type="file" id="style_images" name="style_images" multiple accept="image/*" onchange="checkFileLimit(this)" required>
                     </div>
                     <div class="mb-3">
                         <label for="can_request" class="form-label">Can User Request</label>
@@ -44,3 +48,12 @@
         </div>
     </div>
 </div>
+
+<script>
+    function checkFileLimit(input) {
+        if (input.files.length > 4) {
+            alert("You can upload a maximum of 4 images.");
+            input.value = ''; // Clear the input field if the limit is exceeded
+        }
+    }
+</script>

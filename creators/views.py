@@ -1,5 +1,6 @@
+from django.forms import ValidationError
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Designer, Style, Review
+from .models import Designer, Style, Review, StyleImage
 from authUser.models import WishList, Measurement, ShippingAddress
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -86,6 +87,7 @@ def updateBrand(request):
 #### Product details ######
 def product(request, pk):
     style = Style.objects.get(id=pk)
+    style_images = StyleImage.objects.filter(style=style)
     reviews = Review.objects.filter(style=style).order_by("-created_at")
     usform = updateStyleForm(instance=style)
     rform = ReviewForm()
@@ -101,7 +103,7 @@ def product(request, pk):
     
     context =  {
         "style": style, "reviews": reviews, "sty":sty, "measure": measure,
-        "usform":usform, "rform":rform, "shipaddr": shipaddr,
+        "usform":usform, "rform":rform, "shipaddr": shipaddr,"style_images": style_images
         }
     return render(request, 'core/product.html', context)
 
@@ -114,10 +116,17 @@ def createStyle(request):
         if not ds:
             return HttpResponse("You don't have a designer profile")
         form = StyleForm(request.POST, request.FILES or None)
+        style_images = request.FILES.getlist('style_images') 
         if form.is_valid():
-            new_style = form.save(commit=False)
-            new_style.designer = ds
-            new_style.save()
+            if len(style_images) > 4:
+                form.add_error(None, ValidationError("You cant add more than 4 images"))
+            else:
+                style = form.save(commit=False)
+                style.designer = ds
+                style.save()
+                for image in style_images:
+                    StyleImage.objects.create(style=style, image=image)
+
             return redirect('dshop')
         return HttpResponse(f"{form.errors}")
     return HttpResponse("Method not allowed")

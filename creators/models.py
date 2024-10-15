@@ -18,7 +18,7 @@ class Designer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     brand_name= models.CharField(max_length=150, blank=False, unique=True)
     brand_email = models.EmailField(unique=True)
-    brand_logo = ResizedImageField(quality=60, size=[100, 150], crop=['middle', 'center'], upload_to=f"Designers", blank=True, null=True)
+    brand_logo = ResizedImageField(quality=60, size=[100, 150], crop=['middle', 'center'], upload_to="Designers", blank=True, null=True)
     brand_bio = models.TextField(default="description")
     brand_location = models.CharField(max_length=150, default="here")
     brand_phone = models.CharField(max_length=14)
@@ -51,7 +51,6 @@ class Style(models.Model):
     class Status(models.TextChoices):
         DRAFT = 'DF', 'Draft'
         PUBLISHED = 'PB', 'Published'
-
     class rStatus(models.TextChoices):
         No = "NO", "NO"
         YES = "YES", "YES"
@@ -62,22 +61,30 @@ class Style(models.Model):
     thumbnail = ResizedImageField(blank=False, null=False, quality=60, size=[1080, 1080], crop=['middle', 'center'], upload_to="Styles")
     likes = models.PositiveIntegerField(default=0)
     num_of_reviews = models.PositiveIntegerField(default=0)
-
     can_request = models.CharField(max_length=4, choices=rStatus, default=rStatus.No)
     asking_price = models.DecimalField(max_digits=9999999999, decimal_places=2, default=100)
     created_at = models.DateTimeField(auto_now_add=True)
-
     status = models.CharField(max_length=5, choices=Status, default=Status.DRAFT)
+
     objects = models.Manager()
     published = StyleManager()
 
     def __str__(self) -> str:
         return f"{self.title} --- created_by  {self.designer.brand_name}"
-    
     class Meta:
         verbose_name = "Style"
         verbose_name_plural = "Styles"
 
+#### Style Images ######
+
+class StyleImage(models.Model):
+    style = models.ForeignKey(Style, related_name='images', on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='Style/images/')
+    def __str__(self):
+        return f"Images for {self.style.title}"
+    class Meta:
+        verbose_name = "Style Image"
+        verbose_name_plural = "Style Images"
 
 ###### Reviews for styles#####
 class Review(models.Model):

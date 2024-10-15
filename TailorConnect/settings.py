@@ -50,6 +50,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
 
+    # for azure storage
+    'storages',
+
     #allauth
     # 'allauth',
     # 'allauth.account',
@@ -144,6 +147,28 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static') #Change in production to more rob
 MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'tmedia') #Also change in production
 
+# Azure storage settings for production
+AZURE_ACCOUNT_NAME = config('AZURE_ACCOUNT_NAME')  # Azure Storage account name
+AZURE_ACCOUNT_KEY = config('AZURE_ACCOUNT_KEY')    # Azure Storage account key
+AZURE_CONTAINER_STATIC = config('AZURE_CONTAINER_STATIC')   # name of your Azure Static container
+AZURE_CONTAINER_MEDIA = config('AZURE_CONTAINER_MEDIA')   # name of your Azure Media container
+AZURE_CUSTOM_DOMAIN = f'{AZURE_ACCOUNT_NAME}.blob.core.windows.net'
+
+# Static files (CSS, JavaScript, Images)
+STATIC_LOCATION = 'static'
+STATIC_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{STATIC_LOCATION}/'
+
+STATICFILES_STORAGE = 'storages.backends.azure_storage.AzureStorage'
+AZURE_STATIC_CONTAINER = AZURE_CONTAINER_STATIC  #container for static files
+
+# Media files (uploads)
+MEDIA_LOCATION = 'media'
+MEDIA_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{MEDIA_LOCATION}/'
+DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
+AZURE_MEDIA_CONTAINER = AZURE_CONTAINER_MEDIA # CONTAINER FOR MEDIA STORAGE
+
+
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
@@ -179,7 +204,16 @@ SIMPLE_JWT = {
 PAYSTACK_SECRET_KEY = config('PAYSTACK_SECRET_KEY')
 PAYSTACK_PUBLIC_KEY = config('PAYSTACK_PUBLIC_KEY')
 
+# Email config
+EMAIL_BACKEND = config('EMAIL_BACKEND')
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = config('EMAIL_PORT', cast=int)
+EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
 
+
+# Allauth config
 # AUTHENTICATION_BACKENDS = [
 
 #     # Needed to login by username in Django admin, regardless of `allauth`
@@ -190,15 +224,6 @@ PAYSTACK_PUBLIC_KEY = config('PAYSTACK_PUBLIC_KEY')
 
 # ]
 
-# Email config
-# EMAIL_BACKEND = config('EMAIL_BACKEND')
-# EMAIL_HOST = config('EMAIL_HOST')
-# EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-# EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
-# EMAIL_PORT = config('EMAIL_PORT', cast=int)
-# EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
-
-# Allauth config
 # SITE_ID = 1
 # ACCOUNT_LOGOUT_ON_GET = True
 # LOGIN_REDIRECT_URL = "/"
