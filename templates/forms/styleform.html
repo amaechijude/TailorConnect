@@ -17,12 +17,12 @@
                         {{ form.description }}
                     </div>
                     <div class="mb-3">
-                        <label for="thumbnail" class="form-label">Image</label>
+                        <label for="thumbnail" class="form-label">Thumbnail</label>
                         {{ form.thumbnail }}
                     </div>
                     <div class="mb-3">
-                        <label for="style_images"> Extra Images (max 4)</label>
-                        <input type="file" id="style_images" name="style_images" multiple accept="image/*" onchange="checkFileLimit(this)" required>
+                        <label for="style_images" class="form-label"> Extra Images (max 4)</label>
+                        <input type="file" id="style_images" class="form-control" name="style_images" multiple accept="image/*" onchange="checkFileLimit(this)" required>
                     </div>
                     <div class="mb-3">
                         <label for="can_request" class="form-label">Can User Request</label>

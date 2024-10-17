@@ -85,4 +85,7 @@ Azure {
     Profision Postgresql datatbase
     Provision redis cache or other cache
     Deploy on app service
-}
+} done
+
+fix product page thumbnail and extrta images
+test everything and host on azure

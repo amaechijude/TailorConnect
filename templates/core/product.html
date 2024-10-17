@@ -64,12 +64,12 @@
                                     Remove from WishList
                                 </button>
                                 {% endif %}
-                                <button class="btn btn-success" data-bs-toggle="modal"
-                                data-bs-target="#buyForm">Buy Now</button>
-                                
+                                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#buyForm">Buy
+                                    Now</button>
+
                                 {% if style.designer.user == request.user %}
                                 <button class="btn btn-outline-danger" data-bs-toggle="modal"
-                                data-bs-target="#editProduct">Edit product</button>
+                                    data-bs-target="#editProduct">Edit product</button>
                                 {% endif %}
                             </div>
 
@@ -77,39 +77,51 @@
                             <div class="mt-4">
                                 <h5>Product Specifications</h5>
                                 <ul>
-                                    <li>Weight: 1.5 kg</li>
-                                    <li>Dimensions: 12 x 10 x 8 inches</li>
-                                    <li>Material: Stainless Steel</li>
-                                    <li>Color: Silver</li>
+                                    <li>Dimensions: </li>
+                                    <li>Material:  </li>
+                                    <li>Color: </li>
                                 </ul>
                             </div>
-                        </div>
-                    </div>
-
-                    <!-- Reviews Section -->
-                    <div class="row mt-5">
-                        <h4 class="w-100 text-success">Customer Reviews</h4> <br>
-                        <button class="btn btn-outline-primary" data-bs-toggle="modal"
-                        data-bs-target="#reviewform">Add Review</button>
-                        <div id="reviewDiv" class="col-12">
-                            <!-- Review 1 -->
-                             {% if reviews %}
-                             {% for rev in reviews %}
-                            <div class="mb-3">
-                                <h4><strong> {{ rev.user.name }} </strong>
-                                    <!-- <span class="text-warning">&#9733;&#9733;&#9733;&#9733;&#9734;</span> -->
-                                </h4>
-                                <p>{{ rev.text_content }}</p>
+                            <!-- Product Image Thumbnails -->
+                             <div><br></div>
+                            <div class="product-gallery d-flex justify-content-between">
+                                {% if style_images %}
+                                {% for img in style_images %}
+                                <img src="{{ img.image.url }}" class="img-fluid" alt="Thumbnail 1" width="100">
+                                {% endfor %}
+                                {% endif %}
                             </div>
-                            <hr>
-                            {% endfor %}
-                            {% endif %}
                         </div>
                     </div>
                 </div>
-            </main>
+        </div>
+        </main>
+        <!-- Product Image Thumbnails -->
+
+    </div>
+    <!-- Reviews Section -->
+    <div class="row mt-5">
+        <h4 class="w-100 text-success">Customer Reviews</h4> <br>
+        <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#reviewform">Add Review</button>
+        <div id="reviewDiv" class="col-12">
+            <!-- Review 1 -->
+            {% if reviews %}
+            {% for rev in reviews %}
+            <div class="mb-3">
+                <h4><strong> {{ rev.user.name }} </strong>
+                    <!-- <span class="text-warning">&#9733;&#9733;&#9733;&#9733;&#9734;</span> -->
+                </h4>
+                <p>{{ rev.text_content }}</p>
+            </div>
+            <hr>
+            {% endfor %}
+            {% endif %}
         </div>
     </div>
+</div>
+</main>
+</div>
+</div>
 </div>
 
 <!-- Create Review forms -->
