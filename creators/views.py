@@ -1,5 +1,5 @@
 from django.forms import ValidationError
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from .models import Designer, Style, Review, StyleImage
 from authUser.models import WishList, Measurement, ShippingAddress
 from django.contrib.auth.decorators import login_required
@@ -27,11 +27,9 @@ def designers(request, pk):
 @login_required(login_url='login_user')
 def dshop(request):
     try:
-        ds = get_object_or_404(Designer, user=request.user)
-    except Exception:
-        messages.info(request, "You don't have a designer profile")
-        return redirect('profile')
-    
+        ds = Designer.objects.get(user=request.user)
+    except Designer.DoesNotExist:
+        return HttpResponse("You don't have a designer profile")
     styles = Style.objects.filter(designer=ds).order_by("-created_at")
     form = StyleForm()
     uform = UpdateBrandForm(instance=ds)
@@ -45,20 +43,20 @@ def dshop(request):
 @ratelimit(key="user_or_ip", rate="5/h") #five per hour
 def createDesigner(request):
     if request.method == 'POST':
-        ds = Designer.objects.get(user=request.user)
-        if not ds:
+        try:
+            Designer.objects.get(user=request.user)
             messages.info(request, "You can only create one design shop")
             return redirect('dshop')
-        
-        form = CreateDesignerForm(request.POST, request.FILES)
-        if form.is_valid():
-            new_designer = form.save(commit=False)
-            new_designer.user = request.user
-            new_designer.brand_phone = request.POST.get("brand_phone")
-            new_designer.save()
-            ##### send a mail to admins informing them to verify new designers #######
-            messages.info(request, "Created")
-            return redirect('dshop')
+        except Exception:
+            form = CreateDesignerForm(request.POST, request.FILES)
+            if form.is_valid():
+                new_designer = form.save(commit=False)
+                new_designer.user = request.user
+                new_designer.brand_phone = request.POST.get("brand_phone")
+                new_designer.save()
+                ##### send a mail to admins informing them to verify new designers #######
+                messages.info(request, "Created")
+                return redirect('dshop')
             
         return HttpResponse(f"{form.errors}")
     return HttpResponse("Invalid Method")
@@ -68,8 +66,9 @@ def createDesigner(request):
 @ratelimit(key="user_or_ip", rate="5/h") # five per hour
 def updateBrand(request):
     if request.method == 'POST':
-        ds = Designer.objects.get(user=request.user)
-        if not ds:
+        try:
+            ds = Designer.objects.get(user=request.user)
+        except Designer.DoesNotExist:
             return HttpResponse("You don't have a designer profile")
         uform = UpdateBrandForm(request.POST, request.FILES or None, instance=ds)
         if uform.is_valid():
@@ -112,8 +111,9 @@ def product(request, pk):
 @login_required(login_url='login_user')
 def createStyle(request):
     if request.method == 'POST':
-        ds = Designer.objects.get(user=request.user)
-        if not ds:
+        try:
+            ds = Designer.objects.get(user=request.user)
+        except Designer.DoesNotExist:
             return HttpResponse("You don't have a designer profile")
         form = StyleForm(request.POST, request.FILES or None)
         style_images = request.FILES.getlist('style_images') 
@@ -135,8 +135,9 @@ def createStyle(request):
 @login_required(login_url='login_user')
 def updateStyle(request):
     if request.method == 'POST':
-        ds = Designer.objects.get(user=request.user)
-        if not ds:
+        try:
+            ds = Designer.objects.get(user=request.user)
+        except Designer.DoesNotExist:
             return HttpResponse("You don't have a designer profile")
         
         usform = StyleForm(request.POST, request.FILES or None)
