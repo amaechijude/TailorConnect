@@ -49,7 +49,7 @@ class WishListModelTestCase(TestCase):
             email="wishlistuser@example.com",
             password="password123"
         )
-        self.style = Style.objects.create(name="Casual")  # Assuming the Style model has a 'name' field
+        self.style = Style.objects.create(title="Casual")
         self.wishlist = WishList.objects.create(user=self.user)
         self.wishlist.members.add(self.style)
 
