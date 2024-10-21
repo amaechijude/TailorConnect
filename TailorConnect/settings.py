@@ -157,8 +157,8 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static') #Change in production to more robust blob storage
 # # STATICFILES_DIRS = [os.path.join(BASE_DIR, 'statics'),]
 
-# MEDIA_URL = 'media/'
-# MEDIA_ROOT = os.path.join(BASE_DIR, 'tmedia') #Also change in production
+MEDIA_URL = 'media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'tmedia') #Also change in production
 
 # Azure storage settings for production
 AZURE_ACCOUNT_NAME = config('AZURE_ACCOUNT_NAME')  # Azure Storage account name
@@ -176,10 +176,10 @@ AZURE_CUSTOM_DOMAIN = f'{AZURE_ACCOUNT_NAME}.blob.core.windows.net'
 # AZURE_STATIC_CONTAINER = AZURE_CONTAINER_STATIC  #container for static files
 
 # # # Media files (uploads)
-MEDIA_LOCATION = 'media'
-MEDIA_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{MEDIA_LOCATION}/'
-DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
-AZURE_MEDIA_CONTAINER = AZURE_CONTAINER_MEDIA # CONTAINER FOR MEDIA STORAGE
+# MEDIA_LOCATION = 'media'
+# MEDIA_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{MEDIA_LOCATION}/'
+# DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
+# AZURE_MEDIA_CONTAINER = AZURE_CONTAINER_MEDIA # CONTAINER FOR MEDIA STORAGE
 
 
 
