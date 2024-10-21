@@ -5,6 +5,13 @@ from django.conf import settings
 User = settings.AUTH_USER_MODEL
 
 # Create your models here.
+def brand_path(instance, filename):
+    return "Brand/user_{0}/{1}".format(instance.user.id, filename)
+
+def style_path(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
+    return "Styles/user_{0}/{1}".format(instance.user.id, filename)
+
 
 class DesignerManager(models.Manager):
     def get_queryset(self) -> models.QuerySet:
@@ -18,7 +25,7 @@ class Designer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     brand_name= models.CharField(max_length=150, blank=False, unique=True)
     brand_email = models.EmailField(unique=True)
-    brand_logo = ResizedImageField(quality=60, size=[100, 150], crop=['middle', 'center'], upload_to="Designers", blank=True, null=True)
+    brand_logo = ResizedImageField(quality=60, size=[100, 150], crop=['middle', 'center'], upload_to=brand_path, blank=True, null=True)
     brand_bio = models.TextField(default="description")
     brand_location = models.CharField(max_length=150, default="here")
     brand_phone = models.CharField(max_length=14)
@@ -58,11 +65,11 @@ class Style(models.Model):
     designer = models.ForeignKey(Designer, on_delete=models.SET_NULL, null=True)
     title = models.CharField(max_length=150)
     description = models.TextField(blank=True)
-    thumbnail = ResizedImageField(blank=False, null=False, quality=60, size=[1080, 1080], crop=['middle', 'center'], upload_to="Styles")
+    thumbnail = ResizedImageField(blank=False, null=False, quality=60, size=[1080, 1080], crop=['middle', 'center'], upload_to=style_path)
     likes = models.PositiveIntegerField(default=0)
     num_of_reviews = models.PositiveIntegerField(default=0)
     can_request = models.CharField(max_length=4, choices=rStatus, default=rStatus.No)
-    asking_price = models.DecimalField(max_digits=100_000_000, decimal_places=2, default=100)
+    asking_price = models.DecimalField(max_digits=12, decimal_places=2, default=100)
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=5, choices=Status, default=Status.DRAFT)
 
@@ -79,7 +86,7 @@ class Style(models.Model):
 
 class StyleImage(models.Model):
     style = models.ForeignKey(Style, related_name='images', on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='Style/images/')
+    image = models.ImageField(upload_to='Stylesimages/')
     def __str__(self):
         return f"Images for {self.style.title}"
     class Meta:

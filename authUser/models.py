@@ -3,6 +3,10 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 from django_resized import ResizedImageField
 from creators.models import Style
 
+def user_directory_path(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
+    return "Users/user_{0}/{1}".format(instance.user.id, filename)
+
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extrafields):
         if not email:
@@ -30,7 +34,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     name = models.CharField(max_length=150, unique=False,null=True, blank=True)
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=250)
-    avatar = ResizedImageField(quality=60, upload_to="Users", blank=True, null=True)
+    avatar = ResizedImageField(quality=60, upload_to=user_directory_path, blank=True, null=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
