@@ -38,6 +38,7 @@ class ShippingAddressModelTestCase(TestCase):
         )
 
     def test_shipping_address_creation(self):
+        self.assertEqual(self.shipping_address.user, self.user)
         self.assertEqual(self.shipping_address.first_name, "John")
         self.assertEqual(self.shipping_address.last_name, "Doe")
         self.assertEqual(self.shipping_address.phone, "+234123456789")
@@ -49,7 +50,7 @@ class WishListModelTestCase(TestCase):
             email="wishlistuser@example.com",
             password="password123"
         )
-        self.style = Style.objects.create(name="Casual")  # Assuming the Style model has a 'name' field
+        self.style = Style.objects.create(title="Casual")
         self.wishlist = WishList.objects.create(user=self.user)
         self.wishlist.members.add(self.style)
 

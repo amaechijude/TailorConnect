@@ -62,7 +62,7 @@ class Style(models.Model):
     likes = models.PositiveIntegerField(default=0)
     num_of_reviews = models.PositiveIntegerField(default=0)
     can_request = models.CharField(max_length=4, choices=rStatus, default=rStatus.No)
-    asking_price = models.DecimalField(max_digits=9999999999, decimal_places=2, default=100)
+    asking_price = models.DecimalField(max_digits=100_000_000, decimal_places=2, default=100)
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=5, choices=Status, default=Status.DRAFT)
 

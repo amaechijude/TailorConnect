@@ -1,11 +1,8 @@
 .env
 .vim
-.dockerignore
+.gitignore
 terraform
 /terraform
 /terraform/
 /venv
 venv
-/static
-static
-
