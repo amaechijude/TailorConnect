@@ -1,0 +1,8 @@
+.env
+.vim
+.gitignore
+terraform
+/terraform
+/terraform/
+/venv
+venv

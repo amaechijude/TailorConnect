@@ -17,7 +17,7 @@ class Order(models.Model):
     style = models.ForeignKey(Style, on_delete=models.SET_NULL, null=True)
     shipp_addr = models.ForeignKey(ShippingAddress, on_delete=models.SET_NULL, null=True)
     status = models.CharField(max_length=12, choices=Status, default=Status.Processing)
-    amount = models.DecimalField(max_digits=9999999999, decimal_places=2)
+    amount = models.DecimalField(max_digits=999999999, decimal_places=2)
     measurement = models.ForeignKey(Measurement, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -31,7 +31,7 @@ class Order(models.Model):
 ###### Payment #######
 class Payment(models.Model):
     order = models.OneToOneField(Order, on_delete=models.CASCADE)
-    amount = models.DecimalField(max_digits=999999999999, decimal_places=2)
+    amount = models.DecimalField(max_digits=999999999, decimal_places=2)
     ref = models.CharField(max_length=300)
     verified = models.BooleanField(default=False)
     date_created = models.DateTimeField(auto_now_add=True)
@@ -45,7 +45,7 @@ class Payment(models.Model):
 
 class Donations(models.Model):
     email = models.EmailField()
-    amount = models.DecimalField(max_digits=9999999999, decimal_places=2)
+    amount = models.DecimalField(max_digits=999999999, decimal_places=2)
     ref = models.CharField(max_length=300)
     verified = models.BooleanField(default=False)
     date_created = models.DateTimeField(auto_now_add=True)
