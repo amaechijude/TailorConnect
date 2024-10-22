@@ -8,6 +8,7 @@ from django_ratelimit.decorators import ratelimit
 from rest_framework import status as st
 from django.http import HttpResponse, JsonResponse
 from .forms import UpdateBrandForm, CreateDesignerForm, ReviewForm, StyleForm, updateStyleForm
+from .email import DesignerVerifyEmail, DesignRequestEmail
 # Create your views here.
 
 ###### designers page ########
@@ -54,8 +55,11 @@ def createDesigner(request):
                 new_designer.user = request.user
                 new_designer.brand_phone = request.POST.get("brand_phone")
                 new_designer.save()
-                ##### send a mail to admins informing them to verify new designers #######
                 messages.info(request, "Created")
+                ##### send a mail to admins informing them to verify new designers #######
+                DesignerVerifyEmail.delay_on_commit(new_designer.brand_email)
+                DesignRequestEmail.delay_on_commit(request.user.email, new_designer.brand_name, new_designer.brand_email)
+                
                 return redirect('dshop')
             
         return HttpResponse(f"{form.errors}")

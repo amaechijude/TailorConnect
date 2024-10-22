@@ -101,23 +101,23 @@ WSGI_APPLICATION = 'TailorConnect.wsgi.application'
 # Database
     # https://docs.djangoproject.com/en/5.0/ref/settings/#database
 
-DATABASES = {
-     'default': {
-         'ENGINE': 'django.db.backends.sqlite3',
-         'NAME': BASE_DIR / 'db.sqlite3',
-     }
- }
+# DATABASES = {
+#      'default': {
+#          'ENGINE': 'django.db.backends.sqlite3',
+#          'NAME': BASE_DIR / 'db.sqlite3',
+#      }
+#  }
 
-#DATABASES = {
-#    'default': {
-#        'ENGINE': config('DATABASE_ENGINE'),
-#        'NAME': config('DATABASE_NAME'),
-#        'USER': config('DATABASE_USER'),
-#        'PASSWORD': config('DATABASE_PASSWORD'),
-#        'HOST': config('DATABASE_HOST'),
-#        'PORT': config('DATABASE_PORT', cast=int)
-#    }
-#}
+DATABASES = {
+   'default': {
+       'ENGINE': config('DATABASE_ENGINE'),
+       'NAME': config('DATABASE_NAME'),
+       'USER': config('DATABASE_USER'),
+       'PASSWORD': config('DATABASE_PASSWORD'),
+       'HOST': config('DATABASE_HOST'),
+       'PORT': config('DATABASE_PORT', cast=int)
+   }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -155,33 +155,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static') #Change in production to more robust blob storage
-# # STATICFILES_DIRS = [os.path.join(BASE_DIR, 'statics'),]
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'tmedia') #Also change in production
-
-# Azure storage settings for production
-#AZURE_ACCOUNT_NAME = config('AZURE_ACCOUNT_NAME')  # Azure Storage account name
-#AZURE_ACCOUNT_KEY = config('AZURE_ACCOUNT_KEY')    # Azure Storage account key
-#AZURE_CONTAINER_STATIC = config('AZURE_CONTAINER_STATIC')   # name of your Azure Static container
-#AZURE_CONTAINER_MEDIA = config('AZURE_CONTAINER_MEDIA')   # name of your Azure Media container
-#AZURE_CUSTOM_DOMAIN = f'{AZURE_ACCOUNT_NAME}.blob.core.windows.net'
-
-# # # # Static files (CSS, JavaScript, Images)
-# STATIC_LOCATION = 'static'
-# STATIC_ROOT = STATIC_LOCATION
-# STATIC_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{STATIC_LOCATION}/'
-
-# STATICFILES_STORAGE = 'storages.backends.azure_storage.AzureStorage'
-# AZURE_STATIC_CONTAINER = AZURE_CONTAINER_STATIC  #container for static files
-
-# # # Media files (uploads)
-# MEDIA_LOCATION = 'media'
-# MEDIA_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{MEDIA_LOCATION}/'
-# DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
-# AZURE_MEDIA_CONTAINER = AZURE_CONTAINER_MEDIA # CONTAINER FOR MEDIA STORAGE
-
-
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -191,12 +167,17 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'authUser.User'
 
 #### REDIS CACHE BACKEND ########
-#CACHES = {
-#    "default": {
-#        "BACKEND": "django.core.cache.backends.redis.RedisCache",
-#        "LOCATION": "redis://127.0.0.1:6379",
-#    }
-#}
+CACHES = {
+   "default": {
+       "BACKEND": "django.core.cache.backends.redis.RedisCache",
+       "LOCATION": "redis://127.0.0.1:6379",
+   }
+}
+
+# CELERY CONFIG
+CELERY_BROKER_URL = 'redis://localhost:6379/0' #celery broker url
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0' #celery result backend
+CELERY_TIMEZONE = 'UTC' #celery timezone
 
 ########### Rest Framework #########
 REST_FRAMEWORK = {
@@ -247,3 +228,27 @@ EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
 # ACCOUNT_USERNAME_REQUIRED = False
 # ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = True
 # ACCOUNT_LOGOUT_REDIRECT_URL = "/login"
+
+
+# Azure storage settings for production
+#AZURE_ACCOUNT_NAME = config('AZURE_ACCOUNT_NAME')  # Azure Storage account name
+#AZURE_ACCOUNT_KEY = config('AZURE_ACCOUNT_KEY')    # Azure Storage account key
+#AZURE_CONTAINER_STATIC = config('AZURE_CONTAINER_STATIC')   # name of your Azure Static container
+#AZURE_CONTAINER_MEDIA = config('AZURE_CONTAINER_MEDIA')   # name of your Azure Media container
+#AZURE_CUSTOM_DOMAIN = f'{AZURE_ACCOUNT_NAME}.blob.core.windows.net'
+
+# # # # Static files (CSS, JavaScript, Images)
+# STATIC_LOCATION = 'static'
+# STATIC_ROOT = STATIC_LOCATION
+# STATIC_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{STATIC_LOCATION}/'
+
+# STATICFILES_STORAGE = 'storages.backends.azure_storage.AzureStorage'
+# AZURE_STATIC_CONTAINER = AZURE_CONTAINER_STATIC  #container for static files
+
+# # # Media files (uploads)
+# MEDIA_LOCATION = 'media'
+# MEDIA_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{MEDIA_LOCATION}/'
+# DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
+# AZURE_MEDIA_CONTAINER = AZURE_CONTAINER_MEDIA # CONTAINER FOR MEDIA STORAGE
+
+

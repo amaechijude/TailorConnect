@@ -1,30 +1,11 @@
 from django.core.mail import send_mail
-from django.conf import settings
+# from django.conf import settings
 from authUser.models import User
-
-
-def RequestEmailToDesigner(subject:str, message, SenderEmail:str, DesignerEmail:str) -> bool:
-    body = f"""
-    A new Request from {SenderEmail}
-
-    {message}
-
-    """
-    try:
-        send_mail(
-            subject,
-            body,
-            SenderEmail,
-            [DesignerEmail, SenderEmail],
-            fail_silently=False
-        )
-    except ConnectionError:
-        return False
-    return True
-
+from celery import shared_task
 
 ##### design Request #######
-def DesignRequestEmail(userEmail,brandName, brandEmail):
+@shared_task
+def DesignRequestEmail(userEmail:str, brandName:str, brandEmail:str) -> bool:
     subject = "Request Received"
     body = f"""do not reply this mail
     
@@ -35,7 +16,8 @@ def DesignRequestEmail(userEmail,brandName, brandEmail):
 
     The Verification Team will look into your request and get back to you in the next 48 hours.
 
-    If this request was not initiated by you reachout to any of our admin on
+    If this request was not initiated by you reach out to any of our admin on
+    
     {[user.email for user in User.objects.filter(is_staff=True, is_superuser=True)[:3]]}
     """
     try:
@@ -46,13 +28,14 @@ def DesignRequestEmail(userEmail,brandName, brandEmail):
             [userEmail],
             fail_silently=False
         )
-    except:
+    except ConnectionError:
         return False
     return True
 
 ###### email verification for designers ########
+@shared_task
 def DesignerVerifyEmail(demail) -> bool:
-    subject = f"Designer Verification Request"
+    subject = "Designer Verification Request"
     body = f"""
     A new user with email {demail} is requesting to be verified as a designer.
 
@@ -63,7 +46,7 @@ def DesignerVerifyEmail(demail) -> bool:
             subject,
             body,
             demail,
-            [user.email for user in User.objects.filter(is_staff=True, is_superuser=True)[:3]],
+            [user.email for user in User.objects.filter(is_staff=True, is_superuser=True)],
             fail_silently=False
         )
     except ConnectionError:
