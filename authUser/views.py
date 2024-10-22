@@ -28,7 +28,7 @@ def register(request):
     return render(request, 'account/signup.html', {'form': form})
 
 ##### Login view ###s
-@ratelimit(key="user_or_ip", rate="5/m")
+#@ratelimit(key="user_or_ip", rate="5/m")
 def login_user(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
@@ -63,8 +63,8 @@ def logout_user(request):
 
 
 ####wishlist view ######
+#@cache_page(60 * 10) # 60 seconds * 10 == 10 mins
 @login_required(login_url='login_user')
-@cache_page(60 * 10) # 60 seconds * 10 == 10 mins
 def wishlist(request):
     wishl = WishList.objects.filter(user=request.user).first()
     styles = wishl.members.all() if wishl else None
@@ -72,7 +72,7 @@ def wishlist(request):
     return render(request, 'core/wishlist.html', {"styles": styles})
 
 ####### add wishlist ######
-@ratelimit(key='user_or_ip', rate='3/s')
+#@ratelimit(key='user_or_ip', rate='3/s')
 def AddWishlist(request, pk):
     if request.user.is_authenticated:
        user=request.user
@@ -89,7 +89,7 @@ def AddWishlist(request, pk):
     return JsonResponse({"err": "You need to login"}, status=st.HTTP_401_UNAUTHORIZED)
 
 #### remove wishlist ########
-@ratelimit(key="user_or_ip", rate="3/s")
+#@ratelimit(key="user_or_ip", rate="3/s")
 def RemoveWishlist(request, pk):
     if request.user.is_authenticated:
        user=request.user
@@ -108,8 +108,8 @@ def RemoveWishlist(request, pk):
     return JsonResponse({"err": "You need to login"}, status=st.HTTP_401_UNAUTHORIZED)
 
 ###### profile page ########
+#@cache_page(60 * 5) # 5 minutes
 @login_required(login_url='login_user')
-@cache_page(60 * 5) # 5 minutes
 def profile(request):
     user = request.user
     shipaddr = ShippingAddress.objects.filter(user=user).first()

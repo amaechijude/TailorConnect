@@ -39,8 +39,8 @@ def dshop(request):
    
    
 ##### Create Design ####
+#@ratelimit(key="user_or_ip", rate="5/h") #five per hour
 @login_required(login_url='login_user')
-@ratelimit(key="user_or_ip", rate="5/h") #five per hour
 def createDesigner(request):
     if request.method == 'POST':
         try:
@@ -62,8 +62,8 @@ def createDesigner(request):
     return HttpResponse("Invalid Method")
 
 ####### Update Brand Details #############
+#@ratelimit(key="user_or_ip", rate="5/h") # five per hour
 @login_required(login_url="login_user")
-@ratelimit(key="user_or_ip", rate="5/h") # five per hour
 def updateBrand(request):
     if request.method == 'POST':
         try:
