@@ -5,14 +5,14 @@ from creators.models import Style
 from django.views.decorators.cache import cache_page
 
 ####### index ##########
-#@cache_page(60 * 10)
+#@cache_page(60 * 5)
 def index(request):
     st = Style.published.all().order_by("-created_at")
     page_number = request.GET.get('page', 1)
-    st_paginator = Paginator(st, 20)
+    st_paginator = Paginator(st, 40)
     styles = st_paginator.get_page(page_number)
     if request.user.is_authenticated:
-        wishl = WishList.objects.filter(user=request.user).first() or None
+        wishl = WishList.objects.filter(user=request.user).first()
         sty = wishl.members.all() if wishl else None
     else:
         sty = None

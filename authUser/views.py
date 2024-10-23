@@ -11,14 +11,15 @@ from payment.models import Order
 from django.http import JsonResponse, HttpResponse
 from rest_framework import status as st
 from django_ratelimit.decorators import ratelimit
-
+from django.core.paginator import Paginator
 ####### register ######
 def register(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
             email = form.cleaned_data['email']
+            WishList.objects.create(user=user)
             messages.info(request, f"Your account is created with eamil {str(email)} You can now login")
             return redirect('login_user')
 
@@ -38,8 +39,8 @@ def login_user(request):
             user = authenticate(email=email, password=password)
 
             if user:
-                messages.info(request, "You are logged in")
                 login(request, user)
+                messages.info(request, "You are logged in")
                 return redirect('index')
             messages.error(request, "Account not found")
             return redirect('login_user')
@@ -66,8 +67,8 @@ def logout_user(request):
 #@cache_page(60 * 10) # 60 seconds * 10 == 10 mins
 @login_required(login_url='login_user')
 def wishlist(request):
-    wishl = WishList.objects.filter(user=request.user).first()
-    styles = wishl.members.all() if wishl else None
+    wishlist = WishList.objects.filter(user=request.user).first()
+    styles = wishl.members.all() if wishlist else None
     
     return render(request, 'core/wishlist.html', {"styles": styles})
 
