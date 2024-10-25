@@ -68,8 +68,8 @@ class Style(models.Model):
     thumbnail = ResizedImageField(blank=False, null=False, quality=60, size=[1080, 1080], crop=['middle', 'center'], upload_to=style_path)
     likes = models.PositiveIntegerField(default=0)
     num_of_reviews = models.PositiveIntegerField(default=0)
-    can_request = models.CharField(max_length=4, blank=False, choices=rStatus, default=rStatus.No)
-    asking_price = models.DecimalField(max_digits=10, decimal_places=2, default=100.00)
+    can_request = models.CharField(max_length=4, choices=rStatus, default=rStatus.No)
+    asking_price = models.DecimalField(max_digits=12, decimal_places=2, default=100.00)
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=5, choices=Status, default=Status.DRAFT)
 
@@ -83,7 +83,6 @@ class Style(models.Model):
         verbose_name_plural = "Styles"
 
 #### Style Images ######
-
 class StyleImage(models.Model):
     style = models.ForeignKey(Style, related_name='images', on_delete=models.CASCADE)
     image = models.ImageField(upload_to='Stylesimages/')
