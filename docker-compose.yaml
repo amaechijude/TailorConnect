@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  django:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: django_app
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
+    depends_on:
+      redis:
+        condition: service_started
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres
+    restart: always
+    # shm_size: 
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - .env
+  
+  redis:
+    image: redis:7.0-alpine
+    container_name: redis_server
+    ports:
+      - "6389:6389"
+
+volumes:
+  postgres_data:
+    driver: local

@@ -1,13 +1,15 @@
-FROM python:3.10
+FROM python:3.12-slim
 
 WORKDIR /app
 
-COPY requirements.txt .
-
-RUN pip install --no-cache-dir -r requirements.txt
+# COPY requirements.txt .
+# RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-EXPOSE 8000
+# COPY build.sh .
+RUN bash build.sh
 
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+EXPOSE 8080
+
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8080"]

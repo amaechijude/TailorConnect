@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
-from datetime import timedelta
+# from datetime import timedelta
 # from typing import cast
 from decouple import config
 
@@ -167,33 +167,44 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'authUser.User'
 
 #### REDIS CACHE BACKEND ########
+# Redis cache configuration
+redis_location = f"redis://{config('REDIS_HOST')}:{config('REDIS_PORT')}/1"
 CACHES = {
-   "default": {
-       "BACKEND": "django.core.cache.backends.redis.RedisCache",
-       "LOCATION": "redis://127.0.0.1:6379",
-   }
+    'default': {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        'LOCATION': redis_location,
+        # 'OPTIONS': {
+        #     'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        # }
+    }
 }
+# CACHES = {
+#    "default": {
+#        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+#        "LOCATION": "redis://127.0.0.1:6379",
+#    }
+# }
 
 # CELERY CONFIG
-CELERY_BROKER_URL = 'redis://localhost:6379/0' #celery broker url
-CELERY_RESULT_BACKEND = 'redis://localhost:6379/0' #celery result backend
+CELERY_BROKER_URL = redis_location#'redis://localhost:6379/0' #celery broker url
+CELERY_RESULT_BACKEND = redis_location #'redis://localhost:6379/0' #celery result backend
 CELERY_TIMEZONE = 'UTC' #celery timezone
 
 ########### Rest Framework #########
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ],
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': [
+#         'rest_framework_simplejwt.authentication.JWTAuthentication',
+#     ],
 
-}
-SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=90),
-    'REFRESH_tOKEN_LIFETIME': timedelta(days=1),
-    'ROTATE_REFRESH_TOKEN': False,
-    'BLACKLIST_AFTER_ROTATION': True,
+# }
+# SIMPLE_JWT = {
+#     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=90),
+#     'REFRESH_tOKEN_LIFETIME': timedelta(days=1),
+#     'ROTATE_REFRESH_TOKEN': False,
+#     'BLACKLIST_AFTER_ROTATION': True,
 
-    'USER_ID_FIELD': 'userId'
-}
+#     'USER_ID_FIELD': 'userId'
+# }
 
 # Paystack Configurations
 PAYSTACK_SECRET_KEY = config('PAYSTACK_SECRET_KEY')
