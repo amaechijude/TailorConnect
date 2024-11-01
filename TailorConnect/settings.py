@@ -51,16 +51,10 @@ INSTALLED_APPS = [
 
     #rest framework
     'rest_framework',
-    'rest_framework_simplejwt',
+    # 'rest_framework_simplejwt',
 
     # for azure storage
     'storages',
-
-    #allauth
-    # 'allauth',
-    # 'allauth.account',
-    # 'allauth.socialaccount',
-    # 'allauth.socialaccount.providers.github', #github
 
 ]
 
@@ -154,41 +148,71 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static') #Change in production to more robust blob storage
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = 'media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'tmedia') #Also change in production
+
+# Azure storage settings for production
+AZURE_ACCOUNT_NAME = config('AZURE_ACCOUNT_NAME')  # Azure Storage account name
+AZURE_ACCOUNT_KEY = config('AZURE_ACCOUNT_KEY')    # Azure Storage account key
+AZURE_STATIC_CONTAINER = config('AZURE_STATIC_CONTAINER')  # Container for static files
+AZURE_MEDIA_CONTAINER = config('AZURE_MEDIA_CONTAINER')    # Container for media files
+
+STORAGES = {
+    "default": {  # For media files
+        "BACKEND": "storages.backends.azure_storage.AzureStorage",
+        "OPTIONS": {
+            "account_name": AZURE_ACCOUNT_NAME,
+            "account_key": AZURE_ACCOUNT_KEY,
+            "azure_container": AZURE_MEDIA_CONTAINER,
+        },
+    },
+    "staticfiles": {  # For static files
+        "BACKEND": "storages.backends.azure_storage.AzureStorage",
+        "OPTIONS": {
+            "account_name": AZURE_ACCOUNT_NAME,
+            "account_key": AZURE_ACCOUNT_KEY,
+            "azure_container": AZURE_STATIC_CONTAINER,
+        },
+    }
+}
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
+# Custom User model
 AUTH_USER_MODEL = 'authUser.User'
 
 #### REDIS CACHE BACKEND ########
-# Redis cache configuration
 redis_location = f"redis://{config('REDIS_HOST')}:{config('REDIS_PORT')}/1"
 CACHES = {
     'default': {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
         'LOCATION': redis_location,
-        # 'OPTIONS': {
-        #     'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-        # }
+        'OPTIONS': {
+            'PASSWORD': config('REDIS_ACCESS_KEY'),
+            'SSL': True
+        }
     }
 }
-# CACHES = {
-#    "default": {
-#        "BACKEND": "django.core.cache.backends.redis.RedisCache",
-#        "LOCATION": "redis://127.0.0.1:6379",
-#    }
-# }
 
 # CELERY CONFIG
-CELERY_BROKER_URL = redis_location#'redis://localhost:6379/0' #celery broker url
-CELERY_RESULT_BACKEND = redis_location #'redis://localhost:6379/0' #celery result backend
-CELERY_TIMEZONE = 'UTC' #celery timezone
+CELERY_BROKER_URL = redis_location       #celery broker url
+CELERY_RESULT_BACKEND = redis_location   #celery result backend
+CELERY_TIMEZONE = 'UTC'                  #celery timezone
+
+# Paystack Configurations
+PAYSTACK_SECRET_KEY = config('PAYSTACK_SECRET_KEY')
+PAYSTACK_PUBLIC_KEY = config('PAYSTACK_PUBLIC_KEY')
+
+# Email config
+EMAIL_BACKEND = config('EMAIL_BACKEND')
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = config('EMAIL_PORT', cast=int)
+EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
 
 ########### Rest Framework #########
 # REST_FRAMEWORK = {
@@ -205,19 +229,6 @@ CELERY_TIMEZONE = 'UTC' #celery timezone
 
 #     'USER_ID_FIELD': 'userId'
 # }
-
-# Paystack Configurations
-PAYSTACK_SECRET_KEY = config('PAYSTACK_SECRET_KEY')
-PAYSTACK_PUBLIC_KEY = config('PAYSTACK_PUBLIC_KEY')
-
-# Email config
-EMAIL_BACKEND = config('EMAIL_BACKEND')
-EMAIL_HOST = config('EMAIL_HOST')
-EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
-EMAIL_PORT = config('EMAIL_PORT', cast=int)
-EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
-
 
 # Allauth config
 # AUTHENTICATION_BACKENDS = [
@@ -239,27 +250,5 @@ EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
 # ACCOUNT_USERNAME_REQUIRED = False
 # ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = True
 # ACCOUNT_LOGOUT_REDIRECT_URL = "/login"
-
-
-# Azure storage settings for production
-#AZURE_ACCOUNT_NAME = config('AZURE_ACCOUNT_NAME')  # Azure Storage account name
-#AZURE_ACCOUNT_KEY = config('AZURE_ACCOUNT_KEY')    # Azure Storage account key
-#AZURE_CONTAINER_STATIC = config('AZURE_CONTAINER_STATIC')   # name of your Azure Static container
-#AZURE_CONTAINER_MEDIA = config('AZURE_CONTAINER_MEDIA')   # name of your Azure Media container
-#AZURE_CUSTOM_DOMAIN = f'{AZURE_ACCOUNT_NAME}.blob.core.windows.net'
-
-# # # # Static files (CSS, JavaScript, Images)
-# STATIC_LOCATION = 'static'
-# STATIC_ROOT = STATIC_LOCATION
-# STATIC_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{STATIC_LOCATION}/'
-
-# STATICFILES_STORAGE = 'storages.backends.azure_storage.AzureStorage'
-# AZURE_STATIC_CONTAINER = AZURE_CONTAINER_STATIC  #container for static files
-
-# # # Media files (uploads)
-# MEDIA_LOCATION = 'media'
-# MEDIA_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{MEDIA_LOCATION}/'
-# DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
-# AZURE_MEDIA_CONTAINER = AZURE_CONTAINER_MEDIA # CONTAINER FOR MEDIA STORAGE
 
 

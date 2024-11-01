@@ -5,7 +5,7 @@ from creators.models import Style
 
 def user_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
-    return "Users/user_{0}/{1}".format(instance.user.id, filename)
+    return "Users/user_{0}/{1}".format(instance.userId, filename)
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extrafields):
