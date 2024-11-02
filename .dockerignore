@@ -6,3 +6,5 @@ terraform
 /terraform/
 /venv
 venv
+/creators/management/commands/fake_creators.py
+creators/management/commands/fake_creators.py

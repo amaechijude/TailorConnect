@@ -9,3 +9,5 @@ venv
 /static
 static
 
+creators/management/commands/fake_creators.py
+/creators/management/commands/fake_creators.py
