@@ -153,30 +153,33 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = 'media/'
 
-# Azure storage settings for production
-AZURE_ACCOUNT_NAME = config('AZURE_ACCOUNT_NAME')  # Azure Storage account name
-AZURE_ACCOUNT_KEY = config('AZURE_ACCOUNT_KEY')    # Azure Storage account key
-AZURE_STATIC_CONTAINER = config('AZURE_STATIC_CONTAINER')  # Container for static files
-AZURE_MEDIA_CONTAINER = config('AZURE_MEDIA_CONTAINER')    # Container for media files
+if DEBUG:
+    MEDIA_ROOT = os.path.join(BASE_DIR, "tmedia")
+else:
+    # Azure storage settings for production
+    AZURE_ACCOUNT_NAME = config('AZURE_ACCOUNT_NAME')  # Azure Storage account name
+    AZURE_ACCOUNT_KEY = config('AZURE_ACCOUNT_KEY')    # Azure Storage account key
+    AZURE_STATIC_CONTAINER = config('AZURE_STATIC_CONTAINER')  # Container for static files
+    AZURE_MEDIA_CONTAINER = config('AZURE_MEDIA_CONTAINER')    # Container for media files
 
-STORAGES = {
-    "default": {  # For media files
-        "BACKEND": "storages.backends.azure_storage.AzureStorage",
-        "OPTIONS": {
-            "account_name": AZURE_ACCOUNT_NAME,
-            "account_key": AZURE_ACCOUNT_KEY,
-            "azure_container": AZURE_MEDIA_CONTAINER,
+    STORAGES = {
+        "default": {  # For media files
+            "BACKEND": "storages.backends.azure_storage.AzureStorage",
+            "OPTIONS": {
+                "account_name": AZURE_ACCOUNT_NAME,
+                "account_key": AZURE_ACCOUNT_KEY,
+                "azure_container": AZURE_MEDIA_CONTAINER,
+            },
         },
-    },
-    "staticfiles": {  # For static files
-        "BACKEND": "storages.backends.azure_storage.AzureStorage",
-        "OPTIONS": {
-            "account_name": AZURE_ACCOUNT_NAME,
-            "account_key": AZURE_ACCOUNT_KEY,
-            "azure_container": AZURE_STATIC_CONTAINER,
-        },
+        "staticfiles": {  # For static files
+            "BACKEND": "storages.backends.azure_storage.AzureStorage",
+            "OPTIONS": {
+                "account_name": AZURE_ACCOUNT_NAME,
+                "account_key": AZURE_ACCOUNT_KEY,
+                "azure_container": AZURE_STATIC_CONTAINER,
+            },
+        }
     }
-}
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -186,17 +189,26 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'authUser.User'
 
 #### REDIS CACHE BACKEND ########
-redis_location = f"redis://{config('REDIS_HOST')}:{config('REDIS_PORT')}/1"
-CACHES = {
-    'default': {
+if DEBUG:
+    redis_location = "redis://127.0.0.1:6379"
+    CACHES = {
+    "default": {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        'LOCATION': redis_location,
-        'OPTIONS': {
-            'PASSWORD': config('REDIS_ACCESS_KEY'),
-            'SSL': True
+        "LOCATION": "redis://127.0.0.1:6379",
+    }
+    }
+else:
+    redis_location = f"redis://{config('REDIS_HOST')}:{config('REDIS_PORT')}/1"
+    CACHES = {
+        'default': {
+            "BACKEND": "django.core.cache.backends.redis.RedisCache",
+            'LOCATION': redis_location,
+            'OPTIONS': {
+                'PASSWORD': config('REDIS_ACCESS_KEY'),
+                'SSL': True
+            }
         }
     }
-}
 
 # CELERY CONFIG
 CELERY_BROKER_URL = redis_location       #celery broker url

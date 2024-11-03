@@ -1,6 +1,7 @@
 from django.test import TestCase, Client
 from django.urls import reverse
 from .models import User, ShippingAddress, WishList, Measurement
+from .forms import RegisterForm, LoginForm, ShippingAddressForm, MeasurementForm
 from creators.models import Style
 from payment.models import Order
 
@@ -30,7 +31,6 @@ class ModelTestCase(TestCase):
             zip_code="12345"
             )
 
-
     def test_user_creation(self):
         self.assertEqual(self.user.email, "testuser@example.com")
         self.assertEqual(self.user.name, "Test User")
@@ -56,7 +56,7 @@ class ModelTestCase(TestCase):
         self.assertEqual(str(self.measurement), f"Measurement of {self.user.email}")
 
 
-
+##### Views Test Case ######
 class ViewsTestCase(TestCase):
     def setUp(self):
         self.client = Client()
@@ -68,8 +68,6 @@ class ViewsTestCase(TestCase):
         self.order = Order.objects.create(
                 user=self.user,
                 style=self.style,
-                #shipp_addr=self.shipping_address,
-                #measurement=self.measurement,
                 amount=100.99
                 )
 
@@ -97,4 +95,114 @@ class ViewsTestCase(TestCase):
         response = self.client.get(reverse('profile'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'account/profile.html')
+
+    def test_add_wishlist(self):
+        self.client.login(email="test@example.com", password="password123")
+        response = self.client.post(reverse('add_wishlist', args=[self.style.id]))
+        self.assertEqual(response.status_code, 201)
+    
+    def test_remove_wishlist(self):
+        self.client.login(email="test@example.com", password="password123")
+        self.wishlist.members.add(self.style)
+        response = self.client.post(reverse('rm_wishlist', args=[self.style.id]))
+        self.assertEqual(response.status_code, 200)
+    
+    def test_shipping_address(self):
+        self.client.login(email="test@example.com", password="password123")
+        response = self.client.post(reverse('shipping'), {
+            'phone': '1234567890',
+            'country': 'Country',
+            'state': 'State',
+            'lga': 'LGA',
+        })
+        self.assertEqual(response.status_code, 200)  # Should redirect to profile on success
+    
+    def test_add_measurement(self):
+        self.client.login(email="test@example.com", password="password123")
+        response = self.client.post(reverse('measurement'), {'title': 'New Measurement', 'body': 'Details here'})
+        self.assertEqual(response.status_code, 302)  # Should redirect to profile on success
+    
+    def test_list_orders(self):
+        self.client.login(email="test@example.com", password="password123")
+        response = self.client.get(reverse('list_orders'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'account/orders.html')
+
+
+#### Form Test ######
+class FormTestCase(TestCase):
+    def test_register_form_valid_data(self):
+        form = RegisterForm(data={
+            'email': 'user@example.com',
+            'password1': 'strongpassword123',
+            'password2': 'strongpassword123'
+        })
+        self.assertTrue(form.is_valid())
+    
+    def test_register_form_missing_email(self):
+        form = RegisterForm(data={
+            'password1': 'strongpassword123',
+            'password2': 'strongpassword123'
+        })
+        self.assertFalse(form.is_valid())
+        self.assertIn('email', form.errors)
+    
+    def test_register_form_password_mismatch(self):
+        form = RegisterForm(data={
+            'email': 'user@example.com',
+            'password1': 'strongpassword123',
+            'password2': 'differentpassword'
+        })
+        self.assertFalse(form.is_valid())
+        self.assertIn('password2', form.errors)
+
+class LoginFormTest(TestCase):
+    def test_login_form_valid_data(self):
+        form = LoginForm(data={
+            'email': 'user@example.com',
+            'password': 'password123'
+        })
+        self.assertTrue(form.is_valid())
+    
+    def test_login_form_missing_password(self):
+        form = LoginForm(data={
+            'email': 'user@example.com'
+        })
+        self.assertFalse(form.is_valid())
+        self.assertIn('password', form.errors)
+
+class ShippingAddressFormTest(TestCase):
+    def test_shipping_address_form_valid_data(self):
+        form = ShippingAddressForm(data={
+            'first_name': 'John',
+            'last_name': 'Doe',
+            'address': '123 Main St',
+            'zip_code': '123456'
+        })
+        self.assertTrue(form.is_valid())
+    
+    def test_shipping_address_form_missing_zip_code(self):
+        form = ShippingAddressForm(data={
+            'first_name': 'John',
+            'last_name': 'Doe',
+            'address': '123 Main St'
+        })
+        self.assertFalse(form.is_valid())
+        self.assertIn('zip_code', form.errors)
+
+class MeasurementFormTest(TestCase):
+    def test_measurement_form_valid_data(self):
+        form = MeasurementForm(data={
+            'title': 'Waist Measurement',
+            'body': '30 inches'
+        })
+        self.assertTrue(form.is_valid())
+    
+    def test_measurement_form_missing_title(self):
+        form = MeasurementForm(data={
+            'body': '30 inches'
+        })
+        self.assertFalse(form.is_valid())
+        self.assertIn('title', form.errors)
+
 
