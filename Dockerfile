@@ -17,3 +17,10 @@ RUN pip install -r requirements.txt
 
 # Copy everything
 COPY . .
+#Collect static files
+RUN python manage.py collectstatic --no-input
+
+# Migrate Database
+RUN python manage.py makemigrations
+RUN python manage.py migrate
+

@@ -10,7 +10,8 @@ def DesignRequestEmail(userEmail:str, brandName:str, brandEmail:str) -> bool:
     body = f"""do not reply this mail
     
     Hello {userEmail};
-    Your request for creating a designer profile with the following detaial is recieved.
+    Your request for creating a designer profile with the following details is recieved.
+
     Brand Name:-> {brandName}.
     Brand Email:-> {brandEmail}.
 
