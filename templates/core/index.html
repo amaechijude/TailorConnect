@@ -100,7 +100,7 @@
             <li class="page-item"><a class="page-link" href="?page={{ styles.previous_page_number }}">previous</a></li>
             {% endif %}
 
-            <li class="page-item"><a class="page-link" href="?page={{ styles.number}}">page {{ styles.number }} of {{ styles.paginator.num_pages }}</a></li>
+            <li class="page-item" style="background-color: green;"><a class="page-link" href="?page={{ styles.number}}" style="background-color: green;">page {{ styles.number }} of {{ styles.paginator.num_pages }}</a></li>
 
             {% if styles.has_next %}
             <li class="page-item"><a class="page-link" href="?page={{ styles.next_page_number }}">next</a></li>
@@ -119,12 +119,13 @@
     // Get the current page from the URL
 const urlParams = new URLSearchParams(window.location.search);
 const page = urlParams.get('page');
+const num = '{{ styles.number }}';
 
 // Check if the page is 3 and apply the style change to the button
-if (page === '3') {
-    const button = document.getElementById('myButton'); // Replace with your button's ID or class
+if (page === num) {
+    const button = document.getElementById(`page_num_${num}`); // Replace with your button's ID or class
     if (button) {
-        button.style.backgroundColor = 'yourColor'; // Set your desired color
+        button.style.backgroundColor = 'green'; // Set your desired color
     }
 }
 
