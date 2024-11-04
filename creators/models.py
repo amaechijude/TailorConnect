@@ -10,7 +10,11 @@ def brand_path(instance, filename):
 
 def style_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
-    return "Styles/user_{0}/{1}".format(instance.userId, filename)
+    return "Styles/style_{0}/{1}".format(instance.id, filename)
+
+def style_image_path(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
+    return "Styles/style_{0}/{1}".format(instance.style.id, filename)
 
 
 class DesignerManager(models.Manager):
