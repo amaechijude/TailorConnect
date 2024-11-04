@@ -6,7 +6,7 @@ User = settings.AUTH_USER_MODEL
 
 # Create your models here.
 def brand_path(instance, filename):
-    return "Brand/user_{0}/{1}".format(instance.userId, filename)
+    return "Brand/brand_{0}/{1}".format(instance.id, filename)
 
 def style_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>

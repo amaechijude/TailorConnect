@@ -43,7 +43,7 @@
                             <p class="text-muted">Brand: <a href="{% url 'designer' style.designer.id %}">
                                     {{ style.designer.brand_name}}</a>
                             </p>
-                            <h3 class="fw-bold">${{ style.asking_price }} </h3>
+                            <h3 class="fw-bold">₦ {{ style.asking_price }} </h3>
                             <p class="text-success"> Can Request: {{ style.can_request }} </p>
                             <p class="lead">{{ style.description }}.</p>
 

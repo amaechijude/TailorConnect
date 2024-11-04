@@ -3,15 +3,10 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/index.css' %}">
 <style>
-    .pagination {
-    position: relative;
-    top: 90%;
-    width: 100%;
-    padding: 5px;
-    text-align: center;
-    box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.1);
+   .page-item:hover {
+    transform: scale(1.1); /* Makes the button pop up */
+    background-color: aqua;
 }
-
 </style>
 <!-- Sidebar -->
 <div class="sidebar">
@@ -36,7 +31,7 @@
                 <div class="product-item" style="text-align: center;">
                     <div class="shop-name-inside">
                         Made By <br>
-                        <a target="_blank" href="{% url 'designer' style.designer.id %}"
+                        <a href="{% url 'designer' style.designer.id %}"
                             style="text-decoration: none;">{{ style.designer.brand_name }}</a>
                     </div>
                     <hr style="border: 1px solid #333; width: 100%; margin-top: -0.5%;">
@@ -47,7 +42,7 @@
                         </a>
                         <p class="product-description">{{ style.description }} </p>
 
-                        <div class="product-price">${{ style.asking_price }}</div>
+                        <div class="product-price">₦ {{ style.asking_price }}</div>
                         {% if sty and style in sty%}
                         <button id="btn_{{ style.id }}_irm" onclick="irmWishlist('{{ style.id }}')"
                             class="btn btn-danger w-100">Remove from wishlistt</button>
@@ -93,19 +88,19 @@
         <ul class="pagination justify-content-center">
             {% if styles.has_previous %}
             <li class="page-item">
-                <a class="page-link" href="?page=1" aria-label="Previous">
+                <a class="page-link" href="?page=1" aria-label="Previous" style="background-color: beige; color: blue;">
                     <span aria-hidden="true"> first &laquo;</span>
                 </a>
             </li>
-            <li class="page-item"><a class="page-link" href="?page={{ styles.previous_page_number }}">previous</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ styles.previous_page_number }}" style="background-color: beige; color: blue;">previous</a></li>
             {% endif %}
 
-            <li class="page-item" style="background-color: green;"><a class="page-link" href="?page={{ styles.number}}" style="background-color: green;">page {{ styles.number }} of {{ styles.paginator.num_pages }}</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ styles.number}}" style="background-color: blue; color: beige;">page {{ styles.number }} of {{ styles.paginator.num_pages }}</a></li>
 
             {% if styles.has_next %}
-            <li class="page-item"><a class="page-link" href="?page={{ styles.next_page_number }}">next</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ styles.next_page_number }}" style="background-color: beige; color: blue;">next</a></li>
             <li class="page-item">
-                <a class="page-link" href="?page={{ styles.paginator.num_pages }}" aria-label="Next">
+                <a class="page-link" href="?page={{ styles.paginator.num_pages }}" aria-label="Next" style="background-color: beige; color: blue;">
                     <span aria-hidden="true">last&raquo;</span>
                 </a>
             </li>

@@ -1,6 +1,5 @@
 .env
 .vim
-.gitignore
 terraform
 /terraform
 /terraform/

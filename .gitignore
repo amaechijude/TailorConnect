@@ -1,6 +1,5 @@
 .env
 .vim
-.dockerignore
 terraform
 /terraform
 /terraform/
