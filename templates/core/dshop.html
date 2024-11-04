@@ -75,6 +75,33 @@
             {% endif %}
         </div>
     </div>
+
+    <div class="container mt-5">
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                {% if styles.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1" aria-label="Previous" style="background-color: beige; color: blue;">
+                        <span aria-hidden="true"> first &laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item"><a class="page-link" href="?page={{ styles.previous_page_number }}" style="background-color: beige; color: blue;">previous</a></li>
+                {% endif %}
+    
+                <li class="page-item"><a class="page-link" href="?page={{ styles.number}}" style="background-color: blue; color: beige;">page {{ styles.number }} of {{ styles.paginator.num_pages }}</a></li>
+    
+                {% if styles.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ styles.next_page_number }}" style="background-color: beige; color: blue;">next</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ styles.paginator.num_pages }}" aria-label="Next" style="background-color: beige; color: blue;">
+                        <span aria-hidden="true">last&raquo;</span>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    
 </div>
 
 <!-- Create new style forms -->

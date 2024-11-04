@@ -9,12 +9,16 @@ from rest_framework import status as st
 from django.http import HttpResponse, JsonResponse
 from .forms import UpdateBrandForm, CreateDesignerForm, ReviewForm, StyleForm, updateStyleForm
 from .email import DesignerVerifyEmail, DesignRequestEmail
+from django.core.paginator import Paginator
 # Create your views here.
 
 ###### designers page ########
 def designers(request, pk):
     ds = Designer.objects.get(id=pk)
-    styles = Style.published.filter(designer=ds)
+    st = Style.published.filter(designer=ds).order_by('-created_at')
+    page_number = request.GET.get('page', 1)
+    st_paginator = Paginator(st, 6)
+    styles = st_paginator.get_page(page_number)
     if request.user.is_authenticated:
         wishl = WishList.objects.filter(user=request.user).first() or None
         sty = wishl.members.all() if wishl else None
@@ -31,7 +35,10 @@ def dshop(request):
         ds = Designer.objects.get(user=request.user)
     except Designer.DoesNotExist:
         return HttpResponse("You don't have a designer profile")
-    styles = Style.objects.filter(designer=ds).order_by("-created_at")
+    st = Style.objects.filter(designer=ds).order_by("-created_at")
+    page_number = request.GET.get('page', 1)
+    st_paginator = Paginator(st, 6)
+    styles = st_paginator.get_page(page_number)
     form = StyleForm()
     uform = UpdateBrandForm(instance=ds)
     context = {"ds":ds, "styles": styles, "form": form, "uform": uform}
