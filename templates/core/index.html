@@ -110,18 +110,4 @@
 </div>
 
 {% endblock %}
-<script>
-    // Get the current page from the URL
-const urlParams = new URLSearchParams(window.location.search);
-const page = urlParams.get('page');
-const num = '{{ styles.number }}';
 
-// Check if the page is 3 and apply the style change to the button
-if (page === num) {
-    const button = document.getElementById(`page_num_${num}`); // Replace with your button's ID or class
-    if (button) {
-        button.style.backgroundColor = 'green'; // Set your desired color
-    }
-}
-
-</script>

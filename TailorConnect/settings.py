@@ -189,7 +189,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'authUser.User'
 
 #### REDIS CACHE BACKEND ########
-if DEBUG == False:
+if DEBUG:
     redis_location = "redis://127.0.0.1:6379"
     CACHES = {
     "default": {
