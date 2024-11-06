@@ -14,6 +14,7 @@ RUN pip install --upgrade pip
 # copy and install requirements
 COPY requirements.txt .
 RUN pip install -r requirements.txt
+RUN pip install redis[ssl]
 
 # Copy everything
 COPY . .

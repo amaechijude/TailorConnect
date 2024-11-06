@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
+import ssl
 # from datetime import timedelta
 # from typing import cast
 from decouple import config
@@ -55,7 +56,8 @@ INSTALLED_APPS = [
 
     # for azure storage
     'storages',
-
+    #celery result
+    'django_celery_results',
 ]
 
 MIDDLEWARE = [
@@ -195,8 +197,11 @@ if DEBUG:
     "default": {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
         "LOCATION": "redis://127.0.0.1:6379",
+        }
     }
-    }
+    # CELERY CONFIG
+    CELERY_BROKER_URL = "redis://127.0.0.1:6379/0"     #celery broker url
+    CELERY_RESULT_BACKEND = "redis://127.0.0.1:6379/0"   #celery result
 else:
     redis_location = f"redis://{config('REDIS_HOST')}:{config('REDIS_PORT')}/1"
     CACHES = {
@@ -209,12 +214,14 @@ else:
             }
         }
     }
+    # CELERY CONFIG
+    #CELERY_BROKER_URL = redis_location
+    CELERY_BROKER_URL = f"rediss://:{config('REDIS_ACCESS_KEY')}@{config('REDIS_HOST')}:{config('REDIS_PORT')}/0?ssl_cert_reqs=required"
+    CELERY_BROKER_USE_SSL = {'ssl_cert_reqs': ssl.CERT_REQUIRED}
+    CELERY_RESULT_BACKEND = f"rediss://:{config('REDIS_ACCESS_KEY')}@{config('REDIS_HOST')}:{config('REDIS_PORT')}/2?ssl_cert_reqs=required"   #celery result
+    CELERY_REDIS_BACKEND_USE_SSL = {'ssl_cert_reqs': ssl.CERT_REQUIRED}
 
-# CELERY CONFIG
-CELERY_BROKER_URL = redis_location       #celery broker url
-CELERY_RESULT_BACKEND = redis_location   #celery result backend
-CELERY_TIMEZONE = 'UTC'                  #celery timezone
-
+CELERY_CACHE_BACKEND = 'default'
 # Paystack Configurations
 PAYSTACK_SECRET_KEY = config('PAYSTACK_SECRET_KEY')
 PAYSTACK_PUBLIC_KEY = config('PAYSTACK_PUBLIC_KEY')
