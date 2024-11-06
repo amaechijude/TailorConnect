@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  django:
+  tailorapp:
     build: .
     env_file:
       - .env
@@ -10,6 +10,9 @@ services:
       - "8000:8000"
     networks:
        - external_network
+    depends_on:
+      redis:
+        condition: service_started
     
     # development
     command: python manage.py runserver 0.0.0.0:8000
@@ -22,10 +25,24 @@ services:
     command: celery -A TailorConnect worker -l info
     env_file:
       - .env
+    depends_on:
+      redis:
+        condition: service_started
     networks:
       - external_network
     volumes:
       - .:/app
+
+  redis:
+    image: redis:7.0-alpine
+    container_name: redis
+    env_file:
+      - .env
+    ports:
+      - "6380:6380"
+    networks:
+      - external_network
+
 
 networks:
   external_network:
