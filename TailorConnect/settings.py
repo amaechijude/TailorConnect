@@ -188,20 +188,22 @@ else:
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 # Custom User model
 AUTH_USER_MODEL = 'authUser.User'
 
 #### REDIS CACHE BACKEND ########
-redis_location = "redis://127.0.0.1:6379"
+# redis_location = "redis://127.0.0.1:6379"
 CACHES = {
 "default": {
     "BACKEND": "django.core.cache.backends.redis.RedisCache",
-    "LOCATION": redis_location,
+    "LOCATION": 'redis://redis:6379/',
     }
 }
 # CELERY CONFIG
-CELERY_BROKER_URL = redis_location     #celery broker url
-CELERY_RESULT_BACKEND = redis_location   #celery result
+CELERY_BROKER_URL = 'redis://redis:6379/0'
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
+CELERY_RESULT_BACKEND = 'redis://redis:6379/1'
 
 
 # Paystack Configurations

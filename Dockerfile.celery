@@ -18,4 +18,4 @@ RUN pip install redis[ssl]
 
 # Copy everything
 COPY . .
-
+EXPOSE 6389
