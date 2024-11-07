@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     # for azure storage
     'storages',
     #celery result
+    'django_redis',
     'django_celery_results',
 ]
 
@@ -191,37 +192,18 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'authUser.User'
 
 #### REDIS CACHE BACKEND ########
-if DEBUG:
-    redis_location = "redis://127.0.0.1:6379"
-    CACHES = {
-    "default": {
-        "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379",
-        }
+redis_location = "redis://127.0.0.1:6379"
+CACHES = {
+"default": {
+    "BACKEND": "django.core.cache.backends.redis.RedisCache",
+    "LOCATION": redis_location,
     }
-    # CELERY CONFIG
-    CELERY_BROKER_URL = "redis://127.0.0.1:6379/0"     #celery broker url
-    CELERY_RESULT_BACKEND = "redis://127.0.0.1:6379/0"   #celery result
-else:
-    redis_location = f"redis://{config('REDIS_HOST')}:{config('REDIS_PORT')}/1"
-    CACHES = {
-        'default': {
-            "BACKEND": "django.core.cache.backends.redis.RedisCache",
-            'LOCATION': redis_location,
-            'OPTIONS': {
-                'PASSWORD': config('REDIS_ACCESS_KEY'),
-                'SSL': True
-            }
-        }
-    }
-    # CELERY CONFIG
-    #CELERY_BROKER_URL = redis_location
-    CELERY_BROKER_URL = f"rediss://:{config('REDIS_ACCESS_KEY')}@{config('REDIS_HOST')}:{config('REDIS_PORT')}/0?ssl_cert_reqs=required"
-    CELERY_BROKER_USE_SSL = {'ssl_cert_reqs': ssl.CERT_REQUIRED}
-    CELERY_RESULT_BACKEND = f"rediss://:{config('REDIS_ACCESS_KEY')}@{config('REDIS_HOST')}:{config('REDIS_PORT')}/2?ssl_cert_reqs=required"   #celery result
-    CELERY_REDIS_BACKEND_USE_SSL = {'ssl_cert_reqs': ssl.CERT_REQUIRED}
+}
+# CELERY CONFIG
+CELERY_BROKER_URL = redis_location     #celery broker url
+CELERY_RESULT_BACKEND = redis_location   #celery result
 
-CELERY_CACHE_BACKEND = 'default'
+
 # Paystack Configurations
 PAYSTACK_SECRET_KEY = config('PAYSTACK_SECRET_KEY')
 PAYSTACK_PUBLIC_KEY = config('PAYSTACK_PUBLIC_KEY')
