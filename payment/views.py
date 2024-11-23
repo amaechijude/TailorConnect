@@ -11,7 +11,7 @@ from django.http import HttpResponse, JsonResponse
 from rest_framework import status
 import requests
 from pprint import pprint
-from .email import initiate_donation_email, initiate_order_email
+from .email import initiate_donation_email, initiate_order_email, order_payment_confirmation_email
 # Create your views here.
 
 @login_required(login_url="login_user")
@@ -83,6 +83,7 @@ def verify_payment(request):
             payment.save()
             order.status = Order.Status.Successful
             order.save()
+            order_payment_confirmation_email.delay_on_commit(order.user.email, order.style.title, order.amount, order.ref)
             messages.info(request, "Payment Verification Successful")
             return render(request, "payment/success.html")
         return HttpResponse("Amount Mismatch")

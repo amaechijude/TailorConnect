@@ -29,16 +29,33 @@ def initiate_order_email(user_email:str, style_name:str, amount):
     return
 
 @shared_task
-def order_payment_confirmation(parameter_list):
+def order_payment_confirmation_email(user_email:str, style_title:str, order_amount:str, order_ref:str) -> None:
     """
-    docstring
+    Email sent on payment verification
     """
-    pass
+    subject = "Order Payment Confirmation"
+    body = f"""
+        Your payment of the sum of {order_amount} for {style_title} has been confirmed.
+        Your order refrence number is {order_ref}. And your purchase will be delivered at the appointed time.
+        
+        Thanks for your patronage.
+        """
+    try:
+            send_mail(
+                subject,
+                body,
+                company_email,
+                [user_email],
+                fail_silently=False
+            )
+    except ConnectionError:
+        return
+    return
 
 
 
 @shared_task
-def initiate_donation_email(donor_email:str, amount:str):
+def initiate_donation_email(donor_email:str, amount:str) -> None:
     """
     email that is sent on donation initiation
     """
@@ -58,5 +75,5 @@ def initiate_donation_email(donor_email:str, amount:str):
             fail_silently=False
         )
     except ConnectionError:
-        return False
-    return True
+        return 
+    return
