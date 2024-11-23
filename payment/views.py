@@ -11,6 +11,7 @@ from django.http import HttpResponse, JsonResponse
 from rest_framework import status
 import requests
 from pprint import pprint
+from .email import initiate_donation_email, initiate_order_email
 # Create your views here.
 
 @login_required(login_url="login_user")
@@ -25,46 +26,45 @@ def initiate_order(request):
     style = get_object_or_404(Style, id=styleId)
     shipp = ShippingAddress.objects.get(id=shipId, user=request.user) if request.user.is_authenticated else None
     amount = round(float(style.asking_price), 2)
-
+    user = request.user
     new_order = Order.objects.create(
-        user=request.user,style=style,shipp_addr=shipp,
+        user=user,style=style,shipp_addr=shipp,
         amount=amount, measurement=measurement
         )
     new_order.save()
-
+    initiate_order_email.delay_on_commit(new_order.user.email, new_order.style.title, new_order.amount)
     return render(request, 'payment/make_payment.html', {"order": new_order})
 
 
 ##### pay ####
 def pay(request):
-    if not request.user.is_authenticated:
-        return JsonResponse({"error": "You need to login"}, status=status.HTTP_401_UNAUTHORIZED)
-    
-    if request.method != 'POST':
-        return JsonResponse({"error": "Method not supported"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
-    pk = request.POST.get("orderId")
-    try:
-        order = get_object_or_404(Order, id=pk)
-        amount = float(order.style.asking_price)
-    except:
-        return HttpResponse("Order no longer exist")
-    
-    ps = Paystack()
-    response = ps.Initiate_transaction(f"{request.user.email}", amount)
-    if response.status_code != 200:
-        return JsonResponse({"error": "Request not succesful"}, status=status.HTTP_400_BAD_REQUEST)
-    
-    response_data = response.json()
-    
-    access_code = response_data["data"]["access_code"]
-    ref = response_data["data"]["reference"]
+    if request.user.is_authenticated:  
+        if request.method != 'POST':
+            return JsonResponse({"error": "Method not supported"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        pk = request.POST.get("orderId")
+        try:
+            order = get_object_or_404(Order, id=pk)
+            amount = float(order.style.asking_price)
+        except:
+            return HttpResponse("Order no longer exist")
+        
+        ps = Paystack()
+        response = ps.Initiate_transaction(f"{request.user.email}", amount)
+        if response.status_code != 200:
+            return JsonResponse({"error": "Request not succesful"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        response_data = response.json()
+        
+        access_code = response_data["data"]["access_code"]
+        ref = response_data["data"]["reference"]
 
-    get_payment,new_payment = Payment.objects.get_or_create(order=order,ref=ref, amount=order.style.asking_price)
-    order_in = get_payment.order
-    order_in.status = Order.Status.Processing
-    order_in.save()
+        get_payment, new_payment = Payment.objects.get_or_create(order=order,ref=ref, amount=order.style.asking_price)
+        order_in = get_payment.order
+        order_in.status = Order.Status.Processing
+        order_in.save()
 
-    return JsonResponse({"access_code": access_code,"ref":ref},status=status.HTTP_200_OK)
+        return JsonResponse({"access_code": access_code,"ref":ref},status=status.HTTP_200_OK)
+    return JsonResponse({"error": "You need to login"}, status=status.HTTP_401_UNAUTHORIZED)
     
 
 ####### Verify Payment
@@ -106,6 +106,7 @@ def donate(request):
         ref = response_data["data"]["reference"]
         new_donation = Donations.objects.create(email=email, amount=amount, ref=ref)
         new_donation.save()
+        initiate_donation_email.delay_on_commit(email, str(amnt))
         return JsonResponse({"access_code": access_code,"ref":ref},status=status.HTTP_200_OK)
     return JsonResponse({"error": "Method not supported"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
     
