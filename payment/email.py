@@ -21,7 +21,7 @@ def initiate_order_email(user_email:str, style_name:str, amount):
             subject,
             body,
             company_email,
-            user_email,
+            [user_email],
             fail_silently=False
         )
     except ConnectionError:

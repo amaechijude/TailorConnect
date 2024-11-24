@@ -16,12 +16,12 @@
                         {% if request.user.is_authenticated %}
                         {% if measure %}
                         <select name="m_id" id="m_id" required>
-                            <option value=""></option>
+                            <option value="">Select or add measurement</option>
                             {% for ms in measure %}
                             <option value="{{ ms.id }}">
                                 <div row="3">
                                     <p>{{ ms.title }}</p><br>
-                                    <p>{{ ms.body|safe }}</p><br>
+                                    <p>{{ ms.body }}</p><br>
                                 </div>
                             </option>
                             {% endfor %}
@@ -34,7 +34,7 @@
                         {% if request.user.is_authenticated %}
                         {% if shipaddr %}
                         <select name="shipId" id="shipaddr" required>
-                            <option value=""></option>
+                            <option value="">Select or add Shipping address</option>
                             {% for sp in shipaddr %}
                             <option value="{{ sp.id }}">
                                 <div row="3">
@@ -51,7 +51,7 @@
                     </div>
                     <input type="hidden" name="styleid" value="{{ style.id }}">
                     <div class="mb-3">
-                        <button type="submit" class="btn btn-primary w-100" data-bs-dismiss="modal">place Order</button>
+                        <button type="submit" class="btn btn-primary w-100">place Order</button>
                     </div>
                 </form>
                 <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editInfoModal">Add
