@@ -16,6 +16,17 @@ from .email import initiate_donation_email, initiate_order_email, order_payment_
 
 @login_required(login_url="login_user")
 def initiate_order(request):
+    """
+    This function handles the process of initiating a new order. It checks if the request method is POST,
+    retrieves necessary data from the request, creates a new Order object, and sends an email notification.
+
+    Parameters:
+    request (HttpRequest): The incoming request object containing POST data.
+
+    Returns:
+    HttpResponse: If the request method is not POST, returns an HttpResponse with a message indicating the method not supported.
+    render: If the request method is POST, creates a new Order object, sends an email notification, and renders the 'payment/make_payment.html' template with the new order details.
+    """
     if request.method != 'POST':
         return HttpResponse("Method not supported")
     styleId = request.POST.get('styleId')

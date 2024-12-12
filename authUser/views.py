@@ -12,6 +12,7 @@ from django.http import JsonResponse, HttpResponse
 from rest_framework import status as st
 from django_ratelimit.decorators import ratelimit
 from django.core.paginator import Paginator
+
 ####### register ######
 def register(request):
     if request.method == 'POST':
