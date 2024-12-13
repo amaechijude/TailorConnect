@@ -59,8 +59,8 @@ def pay(request):
         except:
             return HttpResponse("Order no longer exist")
         
-        ps = Paystack()
-        response = ps.Initiate_transaction(f"{request.user.email}", amount)
+        paystack = Paystack()
+        response = paystack.Initiate_transaction(f"{request.user.email}", amount)
         if response.status_code != 200:
             return JsonResponse({"error": "Request not succesful"}, status=status.HTTP_400_BAD_REQUEST)
         

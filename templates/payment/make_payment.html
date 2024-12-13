@@ -70,7 +70,7 @@
 			body: formData
 		});
 		if (!response.ok) {
-			const data = response.json();
+			const data = await response.json();
 			alert(`${data.error}`)
 		}
 		const data = await response.json();

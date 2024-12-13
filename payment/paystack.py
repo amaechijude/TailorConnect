@@ -17,7 +17,7 @@ class Paystack:
 			"email": f"{user_email}",
 			"amount": f"{round(amount * 100, 2)}",
 			"currency": "NGN",
-			"callback_url": "https://dqcmdqv5-8000.uks1.devtunnels.ms/payment/verify"
+			# "callback_url": "https://dqcmdqv5-8000.uks1.devtunnels.ms/payment/verify"
 			}
 		response = requests.post(url, headers=headers, json=data)
 		return response
