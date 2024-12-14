@@ -4,7 +4,7 @@ import requests
 
 class Ercaspay:
     def __init__(self):
-        self.pk = settings.ERCASPAY_PUBLIC_KEY
+        self.pk = settings.ERCASPAY_API_KEY
         self.sk = settings.ERCASPAY_SECRET_KEY
         self.base_url = "https://api.ercaspay.com/api/v1"
         return None
@@ -37,7 +37,7 @@ class Ercaspay:
         json_body = {
             "amount": amount, # mandatory parameter
             "paymentReference": payment_reference, # mandatory parameter
-            "paymentMethods": "card,bank-transfer,ussd,qrcode", #optional parameter
+            "paymentMethods": "bank-transfer,ussd", #optional parameter default to those on your dashboard
             "customerName": customer_name, # mandatory parameter
             "customerEmail": customer_email, # mandatory parameter
             "customerPhoneNumber": customer_phone, # optional parameter,

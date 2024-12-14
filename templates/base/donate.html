@@ -73,7 +73,6 @@
         event.preventDefault();
         const formData = new FormData(donateform);
 
-        donateform.reset();
         const response = await fetch('/payment/donate', {
             method: 'POST',
             body: formData
@@ -88,13 +87,16 @@
         openPopup(data.chekout_url);
 
         ref_c = data.transaction_reference;
+        
+        donateform.reset();
+        ShowCButton();
 
     });
 
     // popup
     function openPopup(paramURL) {
         const name = "popupWindow"; // Name of the popup window
-        const specs = "width=600,height=400,top=100,left=100,resizable=yes,scrollbars=yes"; // Features
+        const specs = "width=600,height=600,top=100,left=100,resizable=yes,scrollbars=yes"; // Features
 
         // Open the popup window
         const popup = window.open(paramURL, name, specs);

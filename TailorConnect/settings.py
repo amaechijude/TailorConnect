@@ -94,10 +94,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'TailorConnect.wsgi.application'
 
-SECURE_SSL_REDIRECT = True
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# SECURE_SSL_REDIRECT = True
+# CSRF_COOKIE_SECURE = True
+# SESSION_COOKIE_SECURE = True
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
 # Database
@@ -197,17 +197,17 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'authUser.User'
 
 #### REDIS CACHE BACKEND ########
-# redis_location = "redis://127.0.0.1:6379"
+redis_location = "redis://127.0.0.1:6379"
 CACHES = {
 "default": {
     "BACKEND": "django.core.cache.backends.redis.RedisCache",
-    "LOCATION": 'redis://redis:6379/',
+    "LOCATION": redis_location #'redis://redis:6379/',
     }
 }
 # CELERY CONFIG
-CELERY_BROKER_URL = 'redis://redis:6379/0'
+CELERY_BROKER_URL = redis_location #'redis://redis:6379/0'
 CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
-CELERY_RESULT_BACKEND = 'redis://redis:6379/1'
+CELERY_RESULT_BACKEND = redis_location #'redis://redis:6379/1'
 
 
 # Paystack Configurations
