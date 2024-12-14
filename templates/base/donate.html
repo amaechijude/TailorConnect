@@ -1,5 +1,5 @@
 {% load static %}
-<script src="https://js.paystack.co/v2/inline.js"></script>
+<!-- <script src="https://js.paystack.co/v2/inline.js"></script> -->
 <style>
     .tweet-button {
         position: fixed;
@@ -44,7 +44,8 @@
                 {% include 'forms/donateform.html' %}
             </div>
             <div class="modal-footer">
-                <button id="Confirm-btn" onclick="VerifyCPayment()" style="display: none;" class="btn btn-outline-success w-100">Confirm</button>
+                <button id="Confirm-btn" onclick="VerifyCPayment()" style="display: none;"
+                    class="btn btn-outline-success w-100">Confirm</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
             </div>
         </div>
@@ -61,11 +62,11 @@
     // ref code
     let ref_c;
 
-    function ResumeTransaction(a_code) {
-        const popup = new PaystackPop();
-        popup.resumeTransaction(a_code);
-        // VerifyPayment(r_code);
-    }
+    // function ResumeTransaction(a_code) {
+    //     const popup = new PaystackPop();
+    //     popup.resumeTransaction(a_code);
+    //     // VerifyPayment(r_code);
+    // }
 
     const donateform = document.getElementById("donateform");
     donateform.addEventListener('submit', async (event) => {
@@ -83,12 +84,26 @@
         }
         const data = await response.json();
 
-        //Resume Transaction
-        const popup = new PaystackPop();
-        popup.resumeTransaction(data.access_code);
+        // Ercas Popup
+        openPopup(data.chekout_url);
 
-        ref_c = data.ref;
+        ref_c = data.transaction_reference;
+
     });
+
+    // popup
+    function openPopup(paramURL) {
+        const name = "popupWindow"; // Name of the popup window
+        const specs = "width=600,height=400,top=100,left=100,resizable=yes,scrollbars=yes"; // Features
+
+        // Open the popup window
+        const popup = window.open(paramURL, name, specs);
+
+        // Optional: Check if the popup was successfully created
+        if (!popup || popup.closed || typeof popup.closed === 'undefined') {
+            alert("Popup blocked by the browser. Please allow popups.");
+        }
+    }
 
     // Verify payment
     function VerifyCPayment() {

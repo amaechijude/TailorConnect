@@ -1,5 +1,37 @@
 {
-    "status": true,
+  "requestSuccessful": true,
+  "responseCode": "success",
+  "responseMessage": "Transaction fetched successfully",
+  "responseBody": {
+    "domain": "test",
+    "status": "SUCCESSFUL",
+    "ercs_reference": "ERCS|20231112152333|1699799013942",
+    "tx_reference": "CSHM|WLTP|48606GWR",
+    "amount": 100,
+    "description": null,
+    "paid_at": "2023-11-12T14:24:58.000000Z",
+    "created_at": "2023-11-12T14:23:33.000000Z",
+    "channel": "BANK_TRANSFER",
+    "currency": "NGN",
+    "metadata": "{\"firstname\":\"Ola\",\"lastname\":\"Benson\",\"email\":\"iie@mail.com\"}",
+    "fee": 1.4,
+    "fee_bearer": "customer",
+    "settled_amount": 100,
+    "customer": {
+      "name": "Olayemi Olaomo",
+      "phone_number": "09061628409",
+      "email": "ola@gmail.com",
+      "reference": "ZEKvFI-N8lMHY"
+    }
+  }
+}
+
+
+
+
+
+
+{{ "status": true,
     "message": "Verification successful",
     "data": {
       "id": 4099260516,

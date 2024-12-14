@@ -3,7 +3,7 @@
 {% block content %}
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/index.css' %}">
-<!-- <script src="https://js.paystack.co/v2/inline.js"></script> -->
+<script src="https://js.paystack.co/v2/inline.js"></script>
 <!-- Sidebar -->
 <div class="sidebar">
 	<a href="{% url 'index' %}">Home</a>
@@ -54,11 +54,11 @@
 	// ref code
 	let ref_c;
 
-	// function ResumeTransaction(a_code) {
-	// 	const popup = new PaystackPop();
-	// 	popup.resumeTransaction(a_code);
-	// 	// VerifyPayment(r_code);
-	// }
+	function ResumeTransaction(a_code) {
+		const popup = new PaystackPop();
+		popup.resumeTransaction(a_code);
+		// VerifyPayment(r_code);
+	}
 
 	const form = document.getElementById("payForm");
 	form.addEventListener('submit', async (event) => {
@@ -75,24 +75,12 @@
 		}
 		const data = await response.json();
 
-		// Ercas Popup
-		openPopup(data.chekout_url);
+		//Resume Transaction
+		const popup = new PaystackPop();
+		popup.resumeTransaction(data.access_code);
 
-		ref_c = data.transaction_reference;
+		ref_c = data.ref;
 	});
-
-	function openPopup(paramURL) {
-		const name = "popupWindow"; // Name of the popup window
-		const specs = "width=600,height=400,top=100,left=100,resizable=yes,scrollbars=yes"; // Features
-
-		// Open the popup window
-		const popup = window.open(paramURL, name, specs);
-
-		// Optional: Check if the popup was successfully created
-		if (!popup || popup.closed || typeof popup.closed === 'undefined') {
-			alert("Popup blocked by the browser. Please allow popups.");
-		}
-	}
 
 	// Verify payment
 	function VerifyPayment() {

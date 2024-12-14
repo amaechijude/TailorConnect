@@ -3,6 +3,10 @@
 <form id="donateform" method="post">
     {% csrf_token %}
     <div class="mb-3">
+        <label for="name" class="form-label">Full Name</label>
+        <input type="text" name="name" class="form-control" id="name" placeholder="Full name" required>
+    </div>
+    <div class="mb-3">
         <label for="email" class="form-label">Email</label>
         <input type="email" name="email" class="form-control" id="dtemail" placeholder="Dummy Email is okay" required>
     </div>

@@ -53,10 +53,11 @@ class Ercaspay:
         }
 
         response = requests.post(url, headers=headers, json=json_body)
+        return response
 
         if response.status_code in [200, 201]:
             output = response.json()
-            if output["requestSuccessful"] and output["responseCode": "success",]:
+            if output["requestSuccessful"] and output["responseCode"] == "success":
                 response_body = output["responseBody"]
                 return (response_body["transactionReference"], response_body["checkoutUrl"])
             raise Exception(f"Initialisation failed: {response.text}")

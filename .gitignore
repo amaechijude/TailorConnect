@@ -7,6 +7,7 @@ terraform
 venv
 /static
 static
+*/__pycache__/*.pyc
 
 creators/management/commands/fake_creators.py
 /creators/management/commands/fake_creators.py

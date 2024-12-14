@@ -1,7 +1,11 @@
+from enum import unique
 from django.db import models
 from django.conf import settings
 from authUser.models import ShippingAddress, Measurement
 from creators.models import Style
+from uuid6 import uuid7
+
+import payment
 
 User = settings.AUTH_USER_MODEL
 
@@ -20,6 +24,8 @@ class Order(models.Model):
     amount = models.DecimalField(max_digits=12, decimal_places=2)
     measurement = models.ForeignKey(Measurement, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    payment_refrence = models.UUIDField(default=uuid7, unique=True, editable=False, blank=False)
+    transaction_refrence = models.CharField(max_length=300, blank=True)
 
     def __str__(self) -> str:
         return f"Ordered by {self.user.email} -- on {self.created_at}"
@@ -32,7 +38,8 @@ class Order(models.Model):
 class Payment(models.Model):
     order = models.OneToOneField(Order, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=12, decimal_places=2)
-    ref = models.CharField(max_length=300)
+    payment_refrence = models.CharField(max_length=300, blank=True)
+    transaction_refrence = models.CharField(max_length=300, blank=True)
     verified = models.BooleanField(default=False)
     date_created = models.DateTimeField(auto_now_add=True)
 
@@ -44,9 +51,11 @@ class Payment(models.Model):
 
 
 class Donations(models.Model):
+    name = models.CharField(max_length=300, blank=True)
     email = models.EmailField()
     amount = models.DecimalField(max_digits=12, decimal_places=2)
-    ref = models.CharField(max_length=300)
+    payment_refrence = models.UUIDField(default=uuid7, unique=True, editable=False, blank=False)
+    transaction_refrence = models.CharField(max_length=300, blank=True)
     verified = models.BooleanField(default=False)
     date_created = models.DateTimeField(auto_now_add=True)
     
