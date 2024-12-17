@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
-import ssl
+# import ssl
 # from datetime import timedelta
 # from typing import cast
 from decouple import config
@@ -25,11 +25,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-5%&98mrff3s=wk^ee9#u^es@w0n1ylz4_r3bc69zzzzg=25hcf'
-
+SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
+# DEBUG = config('DEBUG', cast=bool)
 DEBUG = True
-
 ALLOWED_HOSTS = ["*"]
 
 
@@ -156,12 +155,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = 'media/'
 
 if DEBUG:
     MEDIA_ROOT = os.path.join(BASE_DIR, "tmedia")
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 else:
     # Azure storage settings for production
     AZURE_ACCOUNT_NAME = config('AZURE_ACCOUNT_NAME')  # Azure Storage account name
@@ -201,13 +200,13 @@ redis_location = "redis://127.0.0.1:6379"
 CACHES = {
 "default": {
     "BACKEND": "django.core.cache.backends.redis.RedisCache",
-    "LOCATION": redis_location #'redis://redis:6379/',
+    "LOCATION": 'redis://redis:6379/',
     }
 }
 # CELERY CONFIG
-CELERY_BROKER_URL = redis_location #'redis://redis:6379/0'
+CELERY_BROKER_URL = 'redis://redis:6379/0'
 CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
-CELERY_RESULT_BACKEND = redis_location #'redis://redis:6379/1'
+CELERY_RESULT_BACKEND = 'redis://redis:6379/1'
 
 
 # Paystack Configurations
