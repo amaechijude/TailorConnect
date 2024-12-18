@@ -14,7 +14,7 @@ and includes the styles in the wishlist in the context.
 
 The function is decorated with @cache_page to cache the response for 3 minutes.
 """
-# @cache_page(60 * 3)
+@cache_page(60 * 3)
 def index(request):
     """
     Main page view function.

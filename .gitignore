@@ -7,7 +7,16 @@ terraform
 venv
 /static
 static
-*/__pycache__/*.pyc
+*/__pycache__/*
+authUser/__pycache__
+coreapp/__pycache__
+creators/__pycache__
+payment/__pycache__
+
+authuser/migrations/__pycache__
+coreapp/migrations/__pycache__
+creators/migrations/__pycache__
+payment/migrations/__pycache__
 
 creators/management/commands/fake_creators.py
 /creators/management/commands/fake_creators.py
