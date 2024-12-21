@@ -1,17 +1,17 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.conf import settings
+from django.shortcuts import render, get_object_or_404
+# from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from creators.models import Style
 from payment.ercaspay import Ercaspay
-from .paystack import Paystack
+# from .paystack import Paystack
 from authUser.models import ShippingAddress, Measurement
 from django.contrib import messages
 from .models import Order, Payment, Donations
 # from authUser.forms import mForm
 from django.http import HttpResponse, JsonResponse
 from rest_framework import status
-import requests
-from pprint import pprint
+# import requests
+# from pprint import pprint
 from .email import initiate_donation_email, initiate_order_email, order_payment_confirmation_email
 # Create your views here.
 
@@ -77,7 +77,7 @@ def pay(request):
 
     ercas = Ercaspay()
     response = ercas.Initiate_transaction(amount, order.payment_refrence, order.user.name, order.user.email, f"payment for {order.style.title}")
-    if not response.status_code in [200, 201]:
+    if response.status_code not in [200, 201]:
         return HttpResponse({"error":"Request not succesful"})
 
     response_data = response.json()
@@ -104,7 +104,7 @@ def verify_payment(request):
         return HttpResponse("Payment  verification Incomplete")
     ercas = Ercaspay()
     verify = ercas.Verify_transaction(transaction_ref=ref)
-    if verify == True:
+    if verify is True:
         payment = Payment.objects.get(transaction_refrence=ref)
         order = payment.order
         payment.verified = True
@@ -126,7 +126,7 @@ def donate(request):
         new_donation.save()
         ercas = Ercaspay()
         response = ercas.Initiate_transaction(new_donation.amount, new_donation.payment_refrence, new_donation.name, new_donation.email, descrption="A goodwill donation")
-        if not response.status_code in [200, 201]:
+        if response.status_code not in [200, 201]:
             return HttpResponse({"error": "Request not succesful"})
 
         response_data = response.json()
@@ -147,7 +147,7 @@ def verify_donations(request):
         return HttpResponse("Payment  verification Incomplete")
     ercas = Ercaspay()
     verify = ercas.Verify_transaction(ref)
-    if verify == True:
+    if verify is True:
         donation = Donations.objects.get(transactiom_refrence=ref)
         donation.verified = True
         donation.save()
