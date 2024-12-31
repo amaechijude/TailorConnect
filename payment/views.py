@@ -1,3 +1,4 @@
+import pprint
 from django.shortcuts import render, get_object_or_404
 # from django.conf import settings
 from django.contrib.auth.decorators import login_required
@@ -65,28 +66,28 @@ def pay(request):
     HttpResponse: If the payment request fails, returns an HTTP response with an error message and HTTP 400 status.
     """
     if not request.user.is_authenticated:
-        return JsonResponse({"error": "You need to login"}, status=status.HTTP_401_UNAUTHORIZED) 
+        return HttpResponse({"error": "You need to login"}, status=status.HTTP_401_UNAUTHORIZED) 
     if request.method != 'POST':
-        return JsonResponse({"error": "Method not supported"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        return HttpResponse({"error": "Method not supported"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
     pk = request.POST.get("orderId")
     try:
         order = get_object_or_404(Order, id=pk)
         amount = float(order.style.asking_price)
-    except:
+    except Order.DoesNotExist:
         return HttpResponse("Order no longer exist")
 
     ercas = Ercaspay()
-    response = ercas.Initiate_transaction(amount, order.payment_refrence, order.user.name, order.user.email, f"payment for {order.style.title}")
-    if response.status_code not in [200, 201]:
-        return HttpResponse({"error":"Request not succesful"})
-
+    response = ercas.Initiate_transaction(amount, order.payment_refrence, order.user.name, order.user.email, descrption=f"payment for {order.style.title}")
+    if response.status_code not in [200, 201, 202]:
+        return HttpResponse(f"error: Payment Initiation Request not succesful {response.json()}")
+    pprint.pprint(response.json())
     response_data = response.json()
     if response_data["requestSuccessful"] and response_data["responseCode"] == "success":
         response_body = response_data["responseBody"]
         chekout_url = response_body["checkoutUrl"]
         transaction_ref = response_body["transactionReference"]
 
-        get_payment, new_payment = Payment.objects.get_or_create(order=order, amount=amount, payment_reference=order.payment_refrence,
+        get_payment, new_payment = Payment.objects.get_or_create(order=order, amount=amount, payment_refrence=order.payment_refrence,
                                                                  transaction_refrence=transaction_ref)
         order_in = get_payment.order
         order_in.transaction_refrence = transaction_ref

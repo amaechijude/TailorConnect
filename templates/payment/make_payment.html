@@ -52,7 +52,7 @@
 		btn.style.display = "block";
 	}
 	// ref code
-	let ref_c;
+	let transaction_reference
 
 	// function ResumeTransaction(a_code) {
 	// 	const popup = new PaystackPop();
@@ -74,14 +74,16 @@
 			alert(`${data.error}`)
 		}
 		const data = await response.json();
+		console.log(data);
 
 		// Ercas Popup
-		openPopup(data.chekout_url);
+		await OpenPopup(data.chekout_url);
+		console.log(data.transaction_reference);
 
-		ref_c = data.transaction_reference;
+		transaction_reference = data.transaction_reference;
 	});
 
-	function openPopup(paramURL) {
+	async function OpenPopup(paramURL) {
 		const name = "popupWindow"; // Name of the popup window
 		const specs = "width=600,height=400,top=100,left=100,resizable=yes,scrollbars=yes"; // Features
 
@@ -96,7 +98,7 @@
 
 	// Verify payment
 	function VerifyPayment() {
-		const ref = `${ref_c}`;
+		const ref = `${transaction_reference}`;
 		window.location.href = `/payment/verify?reference=${ref}`;
 	}
 </script>

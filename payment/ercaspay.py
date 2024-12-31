@@ -1,10 +1,8 @@
 from django.conf import settings
-from django.shortcuts import redirect
 import requests
 
 class Ercaspay:
-    def __init__(self):
-        self.pk = settings.ERCASPAY_API_KEY
+    def __init__(self) -> None:
         self.sk = settings.ERCASPAY_SECRET_KEY
         self.base_url = "https://api.ercaspay.com/api/v1"
         return None
@@ -24,10 +22,10 @@ class Ercaspay:
         descrption (str, optional): A description of the transaction. Defaults to None.
 
         Returns:
-        dict: A dictionary containing the response from the API. If the transaction is successfully initiated,
-              the dictionary will contain transaction details. If there is an error, an exception will be raised.
+                HttpsResponse.
         """
         url = f"{self.base_url}/payment/initiate"
+        customer_names = customer_name if customer_name else "Firstname Lastname"
 
         headers = {
             "Authorization": f"Bearer {self.sk}",
@@ -38,7 +36,7 @@ class Ercaspay:
             "amount": amount, # mandatory parameter
             "paymentReference": payment_reference, # mandatory parameter
             "paymentMethods": "bank-transfer,ussd", #optional parameter default to those on your dashboard
-            "customerName": customer_name, # mandatory parameter
+            "customerName": customer_names, # mandatory parameter
             "customerEmail": customer_email, # mandatory parameter
             "customerPhoneNumber": customer_phone, # optional parameter,
             "redirectUrl": redirect_url, # optional parameter
@@ -54,15 +52,7 @@ class Ercaspay:
 
         response = requests.post(url, headers=headers, json=json_body)
         return response
-
-        if response.status_code in [200, 201]:
-            output = response.json()
-            if output["requestSuccessful"] and output["responseCode"] == "success":
-                response_body = output["responseBody"]
-                return (response_body["transactionReference"], response_body["checkoutUrl"])
-            raise Exception(f"Initialisation failed: {response.text}")
-        else:
-            raise Exception(f"Error initiating transaction: {response.text}")
+    
 
     def Verify_transaction(self, transaction_ref: str) -> bool:
         """

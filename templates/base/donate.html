@@ -82,7 +82,7 @@
             alert(`${data.error}`)
         }
         const data = await response.json();
-
+        console.log(data);
         // Ercas Popup
         openPopup(data.chekout_url);
 
@@ -99,7 +99,7 @@
         const specs = "width=600,height=600,top=100,left=100,resizable=yes,scrollbars=yes"; // Features
 
         // Open the popup window
-        const popup = window.open(paramURL, name, specs);
+        const popup = window.open(paramURL, name, specs); 
 
         // Optional: Check if the popup was successfully created
         if (!popup || popup.closed || typeof popup.closed === 'undefined') {
