@@ -7,3 +7,10 @@ terraform
 venv
 /creators/management/commands/fake_creators.py
 creators/management/commands/fake_creators.py
+.git
+*__pycache__
+__pycache__*
+__pycache__
+*.pyc
+*.pyo
+env/

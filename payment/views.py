@@ -1,19 +1,20 @@
+import json
 import pprint
 from django.shortcuts import render, get_object_or_404
 # from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from TailorConnect.settings import ERCASPAY_SECRET_KEY
 from creators.models import Style
-from payment.ercaspay import Ercaspay
 # from .paystack import Paystack
 from authUser.models import ShippingAddress, Measurement
 from django.contrib import messages
 from .models import Order, Payment, Donations
-# from authUser.forms import mForm
 from django.http import HttpResponse, JsonResponse
 from rest_framework import status
-# import requests
-# from pprint import pprint
 from .email import initiate_donation_email, initiate_order_email, order_payment_confirmation_email
+
+from Ercarsng.ercaspay import Ercaspay
+ercas_object = Ercaspay(ERCASPAY_SECRET_KEY)
 # Create your views here.
 
 @login_required(login_url="login_user")
@@ -76,26 +77,26 @@ def pay(request):
     except Order.DoesNotExist:
         return HttpResponse("Order no longer exist")
 
-    ercas = Ercaspay()
-    response = ercas.Initiate_transaction(amount, order.payment_refrence, order.user.name, order.user.email, descrption=f"payment for {order.style.title}")
-    if response.status_code not in [200, 201, 202]:
-        return HttpResponse(f"error: Payment Initiation Request not succesful {response.json()}")
-    pprint.pprint(response.json())
-    response_data = response.json()
-    if response_data["requestSuccessful"] and response_data["responseCode"] == "success":
-        response_body = response_data["responseBody"]
-        chekout_url = response_body["checkoutUrl"]
-        transaction_ref = response_body["transactionReference"]
+    ngn_init = ercas_object.naira_initiate_transaction(amount, order.payment_refrence, order.user.name,
+                                                       order.user.email, descrption=f"payment for {order.style.title}")
+    if not ngn_init["tx_status"]:
+        data = {
+            "Error_Message": "Payment Initiation Request not succesful",
+            "Error_Body": ngn_init
+        }
+        return HttpResponse(json.dumps(data, indent=4))
+    pprint.pprint(ngn_init)
 
-        get_payment, new_payment = Payment.objects.get_or_create(order=order, amount=amount, payment_refrence=order.payment_refrence,
-                                                                 transaction_refrence=transaction_ref)
-        order_in = get_payment.order
-        order_in.transaction_refrence = transaction_ref
-        order_in.status = Order.Status.Processing
-        order_in.save()
+    transaction_ref = ngn_init["tx_body"]["tx_reference"]
+    checkout_url = ngn_init["tx_body"]["checkoutUrl"]
+    get_payment, new_payment = Payment.objects.get_or_create(order=order, amount=amount, payment_refrence=order.payment_refrence,
+                                                                transaction_refrence=transaction_ref)
+    order_in = get_payment.order
+    order_in.transaction_refrence = transaction_ref
+    order_in.status = Order.Status.Processing
+    order_in.save()
 
-        return JsonResponse({"chekout_url":chekout_url, "transaction_reference":transaction_ref})
-    return HttpResponse({"error": "Payment request failed"}, status=status.HTTP_400_BAD_REQUEST)
+    return JsonResponse({"chekout_url": checkout_url, "transaction_reference":transaction_ref})
 
 
 ####### Verify Payment
@@ -103,56 +104,61 @@ def verify_payment(request):
     ref = request.GET.get("reference")
     if ref is None:
         return HttpResponse("Payment  verification Incomplete")
-    ercas = Ercaspay()
-    verify = ercas.Verify_transaction(transaction_ref=ref)
-    if verify is True:
-        payment = Payment.objects.get(transaction_refrence=ref)
-        order = payment.order
-        payment.verified = True
-        payment.save()
-        order.status = Order.Status.Successful
-        order.save()
-        order_payment_confirmation_email.delay_on_commit(order.user.email, order.style.title, order.amount, order.ref)
-        messages.info(request, "Payment Verification Successful")
-        return render(request, "payment/success.html")
-    return HttpResponse("Verification failed")
+    verify_tx = ercas_object.verify_transaction(ref)
+
+    if not verify_tx["tx_status"]:
+        return HttpResponse(json.dumps(verify_tx, indent=4))
+    
+    payment = Payment.objects.get(transaction_refrence=ref)
+    order = payment.order
+    payment.verified = True
+    payment.save()
+    order.status = Order.Status.Successful
+    order.save()
+    order_payment_confirmation_email.delay_on_commit(order.user.email, order.style.title, order.amount, order.ref)
+    messages.info(request, "Payment Verification Successful")
+    return render(request, "payment/success.html")
 
 #### Donate ####
 def donate(request):
-    if request.method == 'POST':
-        name = request.POST.get("name")
-        email = request.POST.get("email")
-        amnt = request.POST.get("amount")
-        new_donation = Donations.objects.create(name=name, email=email, amount=round(float(amnt), 2))
-        new_donation.save()
-        ercas = Ercaspay()
-        response = ercas.Initiate_transaction(new_donation.amount, new_donation.payment_refrence, new_donation.name, new_donation.email, descrption="A goodwill donation")
-        if response.status_code not in [200, 201]:
-            return HttpResponse({"error": "Request not succesful"})
-
-        response_data = response.json()
-        if response_data["requestSuccessful"] and response_data["responseCode"] == "success":
-            response_body = response_data["responseBody"]
-            chekout_url = response_body["checkoutUrl"]
-            transaction_ref = response_body["transactionReference"]
-            initiate_donation_email.delay_on_commit(new_donation.email, new_donation.amount)
-            return JsonResponse({"chekout_url":chekout_url, "transaction_reference":transaction_ref})
-        return HttpResponse({"error": "Payment request failed"}, status=status.HTTP_400_BAD_REQUEST)
-    return JsonResponse({"error": "Method not supported"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    if request.method != 'POST':
+        return JsonResponse({"error": "Method not supported"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    
+    name = request.POST.get("name")
+    email = request.POST.get("email")
+    amnt = request.POST.get("amount")
+    new_donation = Donations.objects.create(name=name, email=email, amount=round(float(amnt), 2))
+    new_donation.save()
+    ngn_init = ercas_object.naira_initiate_transaction(new_donation.amount, new_donation.payment_refrence,new_donation.name,
+                                                       new_donation.email,descrption="A goodwill donation")
+    
+    if not ngn_init["tx_status"]:
+        data = {
+            "Error_Message": "Donation Initialization Request not succesful",
+            "Error_Body": ngn_init
+            }
+        pprint.pprint(ngn_init)
+        return HttpResponse(json.dumps(data, indent=4))
+    
+    transaction_ref = ngn_init["tx_body"]["tx_reference"]
+    checkout_url = ngn_init["tx_body"]["checkoutUrl"]
+    initiate_donation_email.delay_on_commit(new_donation.email, new_donation.amount)
+    return JsonResponse({"chekout_url":checkout_url, "transaction_reference":transaction_ref})
     
 
 ####### Verify Donations #####
 def verify_donations(request):
     ref = request.GET.get("reference")
     if ref is None:
-        return HttpResponse("Payment  verification Incomplete")
-    ercas = Ercaspay()
-    verify = ercas.Verify_transaction(ref)
-    if verify is True:
-        donation = Donations.objects.get(transactiom_refrence=ref)
-        donation.verified = True
-        donation.save()
-        messages.info(request, "Donation Verification Successful")
-        return render(request, "payment/success.html")
-    return HttpResponse("Verification Failed")
+        return HttpResponse("Donation verification Incomplete")
+    
+    verify_tx = ercas_object.verify_transaction(ref)
+    if not verify_tx["tx_status"]:
+        return HttpResponse(json.dumps(verify_tx, indent=4))
+    
+    donation = Donations.objects.get(transactiom_refrence=ref)
+    donation.verified = True
+    donation.save()
+    messages.info(request, "Donation Verification Successful")
+    return render(request, "payment/success.html")
     

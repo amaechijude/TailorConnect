@@ -23,3 +23,10 @@ creators/management/commands/fake_creators.py
 /creators/management/commands/
 /creators/management/commands
 creators/management/commands/
+
+*__pycache__
+__pycache__*
+__pycache__
+*.pyc
+*.pyo
+env/
