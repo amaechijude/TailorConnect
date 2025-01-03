@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  tailorapp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    container_name: tailorapp
+    ports:
+      - "8000:8000"
+    depends_on:
+      redis:
+        condition: service_started
+    # development
+    command: python manage.py runserver 0.0.0.0:8000
+
+  celery_worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.celery
+    container_name: celery_worker
+    env_file:
+      - .env
+    command: celery -A TailorConnect worker -l info
+    volumes:
+      - .:/app
+    depends_on:
+      redis:
+        condition: service_started
+
+  redis:
+    image: redis:7.0-alpine
+    container_name: redis_alpine
+    ports:
+      - "6389:6389"
+
+
+# networks:
+#   external_network:
+#     #  external: true

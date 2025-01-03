@@ -13,9 +13,6 @@ services:
     depends_on:
       redis:
         condition: service_started
-    # development
-    # command: python manage.py runserver 0.0.0.0:8000
-      # production
     command: gunicorn TailorConnect.wsgi:application --bind 0.0.0.0:8000
 
   celery_worker:
